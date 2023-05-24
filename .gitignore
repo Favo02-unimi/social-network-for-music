@@ -1,8 +1,11 @@
 # modules
 **/node_modules
 
-# production build
+# frontend build
 **/build
+
+# backend build
+**/dist
 
 # environment variables
 .env
