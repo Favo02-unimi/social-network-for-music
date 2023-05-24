@@ -23,7 +23,7 @@
   },
   "scripts": {
     "build": "npx tsc",
-    "start": "node dist/server.js",
+    "start": "npm run build && node dist/server.js",
     "dev": "./node_modules/nodemon/bin/nodemon.js",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ."
   }
