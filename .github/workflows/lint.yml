@@ -16,12 +16,12 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: '19.x'
+          node-version: '19.7'
       - name: Lint
         run: |
           cd backend
-          npm ci
+          npm ci --legacy-peer-deps
           npm run lint
           cd ../frontend
-          npm ci
+          npm ci --legacy-peer-deps
           npm run lint
