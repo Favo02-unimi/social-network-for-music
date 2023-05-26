@@ -17,12 +17,12 @@ const userSchema = new mongoose.Schema(
       required: true,
       match: [REGEX.email, `Please fill a valid username: ${REGEX.emailDesc}`]
     },
-    favouriteArtists: { // TODO: check artists type
+    favouriteArtists: { // TODO: check artists type, add validation (match)
       type: [String],
       required: false,
       default: []
     },
-    favouriteGenres: { // TODO: check genres type
+    favouriteGenres: { // TODO: check genres type, add validation (match)
       type: [String],
       required: false,
       default: []
