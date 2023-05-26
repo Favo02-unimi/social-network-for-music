@@ -4,9 +4,6 @@
 # frontend build
 **/build
 
-# backend build
-**/dist
-
 # environment variables
 .env
 .env.local
