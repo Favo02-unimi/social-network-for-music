@@ -31,8 +31,28 @@ const playlistSchema = new mongoose.Schema(
       default: []
     },
     followers: { // TODO: check reference is working
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "User",
+      type: [{
+        userId: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "User"
+        },
+        username: {
+          type: String,
+          required: true,
+          match: [REGEX.username, `Please fill a valid username: ${REGEX.usernameDesc}`]
+        },
+        isCreator: {
+          type: Boolean,
+          required: false,
+          default: false
+        },
+        isCollaborator: {
+          type: Boolean,
+          required: false,
+          default: false
+        }
+      }],
       required: false,
       default: []
     }
@@ -42,10 +62,7 @@ const playlistSchema = new mongoose.Schema(
 
 playlistSchema.set("toJSON", {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
-    delete returnedObject._id
     delete returnedObject.__v
-    delete returnedObject.passwordHash
   }
 })
 
