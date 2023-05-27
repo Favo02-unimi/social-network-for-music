@@ -13,9 +13,13 @@ dotenv.config({
 const PORT = process.env.PORT
 const MONGODB_URI = process.env.MONGODB_URI
 const SECRET = process.env.SECRET
+const CLIENT_ID = process.env.CLIENT_ID
+const CLIENT_SECRET = process.env.CLIENT_SECRET
 
 export default {
   MONGODB_URI,
   PORT,
-  SECRET
+  SECRET,
+  CLIENT_ID,
+  CLIENT_SECRET
 }
