@@ -2,7 +2,7 @@ import express from "express"
 import "express-async-errors"
 import Database from "./db/database.js"
 
-// controllers imports
+import spotifyRouter from "./controllers/spotify.js"
 
 import unknownEndpoint from "./middlewares/unknownEndpoint.js"
 import requestLogger from "./middlewares/requestLogger.js"
@@ -15,7 +15,7 @@ await db.connect()
 app.use(express.json())
 app.use(requestLogger)
 
-// paths use
+app.use("/api/spotify", spotifyRouter)
 
 app.use(unknownEndpoint)
 
