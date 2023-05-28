@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import express from "express"
 import User from "../models/User.js"
+import authenticateUser from "../middlewares/authenticateUser.js"
 
 const loginRouter = express.Router()
 
@@ -46,5 +47,15 @@ loginRouter.post("/", async (req, res) => {
       id: user._id
     })
 })
+
+/**
+ * Verify login
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+loginRouter.get("/verify", authenticateUser, async (req, res) => (
+
+  res.status(200).json({ body: "valid token" })
+))
 
 export default loginRouter
