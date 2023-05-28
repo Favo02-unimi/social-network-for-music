@@ -17,7 +17,7 @@ playlistsRouter.post("/", async (request, response) => {
     description,
     tags,
     isPublic,
-    songs
+    tracks
   } = request.body
 
   // TODO: proper fields validation
@@ -33,7 +33,7 @@ playlistsRouter.post("/", async (request, response) => {
     description: description,
     tags: tags ?? [],
     isPublic: isPublic ?? false,
-    songs: songs ?? []
+    tracks: tracks ?? []
     // TODO: add creator as follower
   }
 

@@ -25,7 +25,7 @@ const playlistSchema = new mongoose.Schema(
       type: Boolean,
       required: true
     },
-    songs: { // TODO: check songs type, add validation (match)
+    tracks: { // TODO: check tracks type, add validation (match)
       type: [String],
       required: false,
       default: []
