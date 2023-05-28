@@ -16,8 +16,9 @@ spotifyRouter.get("/token", async (req, res) => {
 
 /**
  * Search albums filtered by @param query
- * @param query to filter albums
+ * @param {string} query to filter albums
  * @requires spotifyauthorization header (Bearer token)
+ * @returns {Response}
  */
 spotifyRouter.get("/albums/:query", async (req, res) => {
 
@@ -32,8 +33,9 @@ spotifyRouter.get("/albums/:query", async (req, res) => {
 
 /**
  * Search artists filtered by @param query
- * @param query to filter artists
+ * @param {string} query to filter artists
  * @requires spotifyauthorization header (Bearer token)
+ * @returns {Response}
  */
 spotifyRouter.get("/artists/:query", async (req, res) => {
 
@@ -48,8 +50,9 @@ spotifyRouter.get("/artists/:query", async (req, res) => {
 
 /**
  * Search tracks filtered by @param query
- * @param query to filter tracks
+ * @param {string} query to filter tracks
  * @requires spotifyauthorization header (Bearer token)
+ * @returns {Response}
  */
 spotifyRouter.get("/tracks/:query", async (req, res) => {
 
@@ -64,8 +67,9 @@ spotifyRouter.get("/tracks/:query", async (req, res) => {
 
 /**
  * Search albums, artists or tracks filtered by @param query
- * @param query to filter albums, artists or tracks
+ * @param {string} query to filter albums, artists or tracks
  * @requires spotifyauthorization header (Bearer token)
+ * @returns {Response}
  */
 spotifyRouter.get("/all/:query", async (req, res) => {
 
