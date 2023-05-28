@@ -4,6 +4,7 @@ import Database from "./db/database.js"
 
 import spotifyRouter from "./controllers/spotify.js"
 import playlistsRouter from "./controllers/playlists.js"
+import genresRouter from "./controllers/genres.js"
 
 import unknownEndpoint from "./middlewares/unknownEndpoint.js"
 import requestLogger from "./middlewares/requestLogger.js"
@@ -18,6 +19,7 @@ app.use(requestLogger)
 
 app.use("/api/spotify", spotifyRouter)
 app.use("/api/playlists", playlistsRouter)
+app.use("/api/genres", genresRouter)
 
 app.use(unknownEndpoint)
 
