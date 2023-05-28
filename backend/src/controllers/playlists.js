@@ -3,6 +3,10 @@ import Playlist from "../models/Playlist.js"
 
 const playlistsRouter = express.Router()
 
+/**
+ * Get all playlists
+ * @returns {Response}
+ */
 playlistsRouter.get("/", async (req, res) => {
 
   const playlists = await Playlist.find()
@@ -10,6 +14,11 @@ playlistsRouter.get("/", async (req, res) => {
   res.json(playlists)
 })
 
+/**
+ * Create new playlist
+ * @param {Playlist} body playlist to add
+ * @returns {Response}
+ */
 playlistsRouter.post("/", async (request, response) => {
 
   const {
