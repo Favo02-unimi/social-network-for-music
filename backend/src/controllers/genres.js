@@ -5,7 +5,7 @@ const genresRouter = express.Router()
 
 /**
  * Search genres filtered by @param query
- * @param query to filter genres
+ * @param {string} query to filter genres
  * @returns {Response}
  */
 genresRouter.get("/:query", async (req, res) => {
