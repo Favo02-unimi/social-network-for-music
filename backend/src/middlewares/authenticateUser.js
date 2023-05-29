@@ -17,9 +17,11 @@ const authenticateUser = (req, res, next) => {
     jwt.verify(token, config.SECRET)
 
     const jwtPayload = jwt.decode(token)
-    const user = jwtPayload.id
 
-    req.user = user
+    req.user = {
+      user: jwtPayload.username,
+      id: jwtPayload.id
+    }
   }
   catch (err) {
     return res.status(401).json({ error: "invalid token" })

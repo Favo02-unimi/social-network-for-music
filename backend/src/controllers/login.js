@@ -18,7 +18,12 @@ loginRouter.post("/", async (req, res) => {
     password
   } = req.body
 
-  // TODO: fields validation
+  if (!username) {
+    return res.status(401).json({ error: "missing username" })
+  }
+  if (!password) {
+    return res.status(401).json({ error: "missing password" })
+  }
 
   // username check
   const user = await User.findOne({ username })
