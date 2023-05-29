@@ -1,17 +1,19 @@
 import bcrypt from "bcrypt"
 import express from "express"
+import authenticateUser from "../middlewares/authenticateUser.js"
 import User from "../models/User.js"
 
 const usersRouter = express.Router()
 
 /**
- * Get all users
+ * Get current user (logged user)
+ * @requires authorization header (JWT token)
  * @returns {Response}
  */
-usersRouter.get("/all", async (req, res) => {
+usersRouter.get("/me", authenticateUser, async (req, res) => {
 
-  const users = await User.find()
-  res.json(users)
+  const user = await User.find({ _id: req.user })
+  res.json(user)
 })
 
 /**
