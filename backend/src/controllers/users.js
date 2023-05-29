@@ -13,7 +13,7 @@ const usersRouter = express.Router()
  */
 usersRouter.get("/me", authenticateUser, async (req, res) => {
 
-  const user = await User.find({ _id: req.user })
+  const user = await User.find({ _id: req.user.id })
   res.json(user)
 })
 
