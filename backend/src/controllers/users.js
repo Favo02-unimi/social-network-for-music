@@ -152,5 +152,31 @@ usersRouter.patch("/edit", authenticateUser, async (req, res) => {
   res.status(200).json(updatedUser)
 })
 
+/**
+ * Delete current user (logged user)
+ * @requires authorization header (JWT token)
+ * @requires oldPassword in body to successfully delete user
+ * @returns {Response}
+ */
+usersRouter.delete("/delete", authenticateUser, async (req, res) => {
+
+  const user = await User.findById(req.user.id)
+
+  // old password check
+  if (!req.body?.oldPassword) {
+    return res.status(400).json({ error: "Missing old password" })
+  }
+  const passwordCorrect = await bcrypt.compare(req.body.oldPassword, user.passwordHash)
+  if (!passwordCorrect) {
+    return res.status(401).json({ error: "Invalid old password" })
+  }
+
+  // TODO: delete all user resources (playlists, ...)
+
+  await User.findByIdAndDelete(req.user.id)
+
+  res.status(204).end()
+})
+
 
 export default usersRouter
