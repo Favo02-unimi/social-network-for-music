@@ -4,6 +4,9 @@
 const username = /^[\w\s\-.,!?:]{4,50}$/
 const usernameDesc = "4-16 characters long, alphanumeric with underscore"
 
+const password = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/
+const passwordDesc = "8-20 characters, at least one letter, one number and one special character (@$!%*#?&)"
+
 const email = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 const emailDesc = "local username before '@', domain after '@'"
 
@@ -18,6 +21,7 @@ const tagDesc = "2-16 characters long, alphanumeric with underscore"
 
 export default {
   username, usernameDesc,
+  password, passwordDesc,
   email, emailDesc,
   title, titleDesc,
   description, descriptionDesc,
