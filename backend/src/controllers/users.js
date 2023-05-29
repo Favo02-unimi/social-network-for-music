@@ -12,6 +12,10 @@ const usersRouter = express.Router()
  * @returns {Response}
  */
 usersRouter.get("/me", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Users"]
+    #swagger.summary = "Get current logged user (AUTH required)"
+  */
 
   const user = await User.find({ _id: req.user.id })
   res.json(user)
@@ -23,6 +27,10 @@ usersRouter.get("/me", authenticateUser, async (req, res) => {
  * @returns {Response}
  */
 usersRouter.post("/create", async (req, res) => {
+  /*
+    #swagger.tags = ["Users"]
+    #swagger.summary = "Create new user"
+  */
 
   const {
     username,
@@ -80,6 +88,10 @@ usersRouter.post("/create", async (req, res) => {
  * @returns {Response}
  */
 usersRouter.patch("/edit", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Users"]
+    #swagger.summary = "Edit current logged user (AUTH required)"
+  */
 
   const user = await User.findById(req.user.id)
 
@@ -159,6 +171,10 @@ usersRouter.patch("/edit", authenticateUser, async (req, res) => {
  * @returns {Response}
  */
 usersRouter.delete("/delete", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Users"]
+    #swagger.summary = "Delete current logged user (AUTH required)"
+  */
 
   const user = await User.findById(req.user.id)
 

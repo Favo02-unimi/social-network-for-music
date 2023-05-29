@@ -12,6 +12,10 @@ const loginRouter = express.Router()
  * @returns {Response}
  */
 loginRouter.post("/", async (req, res) => {
+  /*
+    #swagger.tags = ["Login"]
+    #swagger.summary = "Login an existing user (generate JWT token)"
+  */
 
   const {
     username,
@@ -59,6 +63,10 @@ loginRouter.post("/", async (req, res) => {
  * @returns {Response}
  */
 loginRouter.get("/verify", authenticateUser, async (req, res) => (
+  /*
+    #swagger.tags = ["Login"]
+    #swagger.summary = "Verify login verifying JWT token"
+  */
 
   res.status(200).json({ body: "valid token" })
 ))

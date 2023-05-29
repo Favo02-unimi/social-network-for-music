@@ -4,6 +4,9 @@
 # frontend build
 **/build
 
+# backend build
+swagger.json
+
 # environment variables
 .env
 .env.local
