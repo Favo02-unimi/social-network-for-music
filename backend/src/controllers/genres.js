@@ -9,6 +9,10 @@ const genresRouter = express.Router()
  * @returns {Response}
  */
 genresRouter.get("/:query", async (req, res) => {
+  /*
+    #swagger.tags = ["Genres"]
+    #swagger.summary = "Get genres filtered by {query}"
+  */
 
   const exact = new RegExp(`^${req.params.query}$`, "i")
   const like = new RegExp(`${req.params.query}`, "i")

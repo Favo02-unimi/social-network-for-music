@@ -9,6 +9,10 @@ const spotifyRouter = express.Router()
  * @returns {Response}
  */
 spotifyRouter.get("/token", async (req, res) => {
+  /*
+    #swagger.tags = ["Spotify"]
+    #swagger.summary = "Generate a spotify API token"
+  */
 
   const spotifyResponse = await fetchToken()
   return res.status(spotifyResponse.status).json(await spotifyResponse.json())
@@ -21,6 +25,10 @@ spotifyRouter.get("/token", async (req, res) => {
  * @returns {Response}
  */
 spotifyRouter.get("/albums/:query", async (req, res) => {
+  /*
+    #swagger.tags = ["Spotify"]
+    #swagger.summary = "Get albums filtered by {query}"
+  */
 
   // TODO: req has spotifyauthorization header
   const token = req.headers.spotifyauthorization
@@ -38,6 +46,10 @@ spotifyRouter.get("/albums/:query", async (req, res) => {
  * @returns {Response}
  */
 spotifyRouter.get("/artists/:query", async (req, res) => {
+  /*
+    #swagger.tags = ["Spotify"]
+    #swagger.summary = "Get artists filtered by {query}"
+  */
 
   // TODO: req has spotifyauthorization header
   const token = req.headers.spotifyauthorization
@@ -55,6 +67,10 @@ spotifyRouter.get("/artists/:query", async (req, res) => {
  * @returns {Response}
  */
 spotifyRouter.get("/tracks/:query", async (req, res) => {
+  /*
+    #swagger.tags = ["Spotify"]
+    #swagger.summary = "Get tracks filtered by {query}"
+  */
 
   // TODO: req has spotifyauthorization header
   const token = req.headers.spotifyauthorization
@@ -72,6 +88,10 @@ spotifyRouter.get("/tracks/:query", async (req, res) => {
  * @returns {Response}
  */
 spotifyRouter.get("/all/:query", async (req, res) => {
+  /*
+    #swagger.tags = ["Spotify"]
+    #swagger.summary = "Get albums, artists, tracks filtered by {query}"
+  */
 
   // TODO: req has spotifyauthorization header
   const token = req.headers.spotifyauthorization
