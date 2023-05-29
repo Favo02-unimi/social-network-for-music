@@ -21,7 +21,7 @@ usersRouter.get("/me", authenticateUser, async (req, res) => {
  * @param {User} body user to add
  * @returns {Response}
  */
-usersRouter.post("/", async (req, res) => {
+usersRouter.post("/create", async (req, res) => {
 
   const {
     username,
