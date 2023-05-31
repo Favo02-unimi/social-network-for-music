@@ -1,5 +1,5 @@
 import express from "express"
-import Genre from "../models/Genre.js"
+import genresJson from "../utils/genres.json" assert { type: "json"}
 
 const genresRouter = express.Router()
 
@@ -14,17 +14,12 @@ genresRouter.get("/:query", async (req, res) => {
     #swagger.summary = "Get genres filtered by {query}"
   */
 
-  const exact = new RegExp(`^${req.params.query}$`, "i")
-  const like = new RegExp(`${req.params.query}`, "i")
-
-  // exact match
-  const genresExact = await Genre.find({ title: exact })
-  // like match
-  const genresLike = await Genre.find({ title: like })
+  const exactMatch = genresJson.filter(g => new RegExp(`^${req.params.query}$`, "i").test(g.title))
+  const likeMatch = genresJson.filter(g => new RegExp(`${req.params.query}`, "i").test(g.title))
 
   // join exact and like match ignoring duplicates
-  const genres = genresExact.concat(
-    genresLike.filter(gl => !genresExact.find(ge => gl.id === ge.id))
+  const genres = exactMatch.concat(
+    likeMatch.filter(gl => !exactMatch.find(ge => gl.title === ge.title))
   )
 
   res.json(genres)
