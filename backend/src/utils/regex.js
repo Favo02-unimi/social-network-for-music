@@ -19,11 +19,15 @@ const descriptionDesc = "4-200 characters long, alphanumeric with underscore, sp
 const tag = /^[\w\s\-.,!?:]{2,16}$/
 const tagDesc = "2-16 characters long, alphanumeric with underscore"
 
+const query = /^[\w\s\-.,!?:]{2,50}$/
+const queryDesc = "2-50 characters long, alphanumeric with underscore, space, hyphen, period, comma, exclamation mark, question mark, colon"
+
 export default {
   username, usernameDesc,
   password, passwordDesc,
   email, emailDesc,
   title, titleDesc,
   description, descriptionDesc,
-  tag, tagDesc
+  tag, tagDesc,
+  query, queryDesc
 }
