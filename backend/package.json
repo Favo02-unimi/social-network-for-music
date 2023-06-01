@@ -21,6 +21,9 @@
     "swagger-ui-express": "^4.6.3"
   },
   "devDependencies": {
+    "@babel/core": "^7.22.1",
+    "@babel/eslint-parser": "^7.21.8",
+    "@babel/plugin-syntax-import-assertions": "^7.20.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.13.0",
     "swagger-autogen": "^2.23.1"
