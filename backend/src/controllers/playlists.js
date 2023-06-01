@@ -1,4 +1,5 @@
 import express from "express"
+import REGEX from "../utils/regex.js"
 import authenticateUser from "../middlewares/authenticateUser.js"
 import Playlist from "../models/Playlist.js"
 
@@ -57,39 +58,57 @@ playlistsRouter.get("/public", async (req, res) => {
 /**
  * Create new playlist
  * @param {Playlist} body playlist to add
+ * @requires authorization header (JWT token)
  * @returns {Response}
  */
-playlistsRouter.post("/", async (request, response) => {
+playlistsRouter.post("/create", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = "Create new playlist (AUTH required)"
+  */
 
   const {
     title,
     description,
     tags,
-    isPublic,
-    tracks
-  } = request.body
+    isPublic
+  } = req.body
 
-  // TODO: proper fields validation
-  if (!title) {
-    return response.status(400).json({ error: "Enter a valid title" })
+  // fields validation
+  if (!title || !REGEX.title.test(title)) {
+    return res.status(400).json({ error: `Enter a valid title: ${REGEX.titleDesc}` })
   }
-  if (!description) {
-    return response.status(400).json({ error: "Enter a valid description" })
+  if (!description || !REGEX.description.test(description)) {
+    return res.status(400).json({ error: `Enter a valid description: ${REGEX.descriptionDesc}` })
+  }
+  if (tags && Array.isArray(tags)) { // tags can be empty
+    tags.forEach(t => {
+      if (!t || !REGEX.tag.test(t)) {
+        return res.status(400).json({ error: `Enter a valid tag: ${REGEX.tagDesc}` })
+      }
+    })
   }
 
   const playlist = {
     title: title,
     description: description,
-    tags: tags ?? [],
+    tags: tags,
     isPublic: isPublic ?? false,
-    tracks: tracks ?? []
-    // TODO: add creator as follower
+    followers: [{
+      userId: req.user.id,
+      isCreator: true
+    }]
   }
 
   const newPlaylist = new Playlist(playlist)
   const savedPlaylist = await newPlaylist.save()
 
-  response.status(201).json(savedPlaylist)
+  res.status(201).json(savedPlaylist)
 })
+
+// edit
+// delete
+// follow
+// unfollow
 
 export default playlistsRouter
