@@ -37,11 +37,6 @@ const playlistSchema = new mongoose.Schema(
           required: true,
           ref: "User"
         },
-        username: {
-          type: String,
-          required: true,
-          match: [REGEX.username, `Please fill a valid username: ${REGEX.usernameDesc}`]
-        },
         isCreator: {
           type: Boolean,
           required: false,
@@ -53,8 +48,7 @@ const playlistSchema = new mongoose.Schema(
           default: false
         }
       }],
-      required: false,
-      default: []
+      required: true
     }
   },
   { collection: "playlists" }
