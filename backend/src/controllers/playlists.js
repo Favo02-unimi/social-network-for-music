@@ -176,8 +176,34 @@ playlistsRouter.patch("/edit/:id", authenticateUser, async (req, res) => {
   res.status(200).json(updatedPlaylist)
 })
 
-// delete
-// follow
-// unfollow
+/**
+ * Delete @param id playlist
+ * @param {String} id id of playlist to edit
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+playlistsRouter.delete("/delete/:id", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = "Delete id playlist (AUTH required)"
+  */
+
+  const playlist = await Playlist.findById(req.params.id)
+
+  // check user is creator/collaborator
+  const userInFollowers = playlist.followers.find(f => f.id === req.user.id)
+  if (!userInFollowers) {
+    return res.status(401).json({ error: "You need to be the creator or a collaborator to delete this playlist" })
+  }
+  if (!(userInFollowers.isCreator || userInFollowers.isCollaborator)) {
+    return res.status(401).json({ error: "You need to ne the creator or a collaborator to delete this playlist" })
+  }
+
+  // TODO: update all followers
+
+  await Playlist.findByIdAndDelete(req.params.id)
+
+  res.status(204).end()
+})
 
 export default playlistsRouter
