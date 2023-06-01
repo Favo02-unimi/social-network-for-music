@@ -1,105 +1,160 @@
 import express from "express"
-import fetchToken from "../utils/spotifyToken.js"
-import spotifyAPI from "../utils/spotifyAPI.js"
+import REGEX from "../utils/regex.js"
+import authenticateUser from "../middlewares/authenticateUser.js"
+
+import fetchSpotify from "../spotify_utils/fetchSpotify.js"
+import generateSpotifyToken from "../spotify_utils/generateSpotifyToken.js"
+import checkSpotifyError from "../spotify_utils/checkSpotifyError.js"
+
 
 const spotifyRouter = express.Router()
 
 /**
- * Generate a Bearer token for Spotify API
- * @returns {Response}
- */
-spotifyRouter.get("/token", async (req, res) => {
-  /*
-    #swagger.tags = ["Spotify"]
-    #swagger.summary = "Generate a spotify API token"
-  */
-
-  const spotifyResponse = await fetchToken()
-  return res.status(spotifyResponse.status).json(await spotifyResponse.json())
-})
-
-/**
  * Search albums filtered by @param query
  * @param {string} query to filter albums
- * @requires spotifyauthorization header (Bearer token)
+ * @requires authorization header (JWT token)
  * @returns {Response}
  */
-spotifyRouter.get("/albums/:query", async (req, res) => {
+spotifyRouter.get("/albums/:query", authenticateUser, async (req, res) => {
   /*
     #swagger.tags = ["Spotify"]
-    #swagger.summary = "Get albums filtered by {query}"
+    #swagger.summary = "Get albums filtered by {query} (AUTH required)"
   */
 
-  // TODO: req has spotifyauthorization header
-  const token = req.headers.spotifyauthorization
-  // TODO: query validation
-  const query = req.params.query
+  const token = req.app.locals?.spotifyToken
 
-  const spotifyResponse = await spotifyAPI.albums(token, query)
-  return res.status(spotifyResponse.status).json(await spotifyResponse.json())
+  const query = req.params.query
+  if (!query || !REGEX.query.test(query)) {
+    return res.status(400).json({ error: `Enter a valid search query: ${REGEX.queryDesc}` })
+  }
+
+  let spotifyResponse = await fetchSpotify.albums(token, query)
+
+  // invalid token: refresh spotify token and retry one time
+  if (spotifyResponse.status === 401) {
+    const token = await generateSpotifyToken(req.app)
+    spotifyResponse = await fetchSpotify.albums(token, query)
+  }
+
+  // check for spotify api errors after token refresh
+  // undefined == no errors
+  const errorJson = checkSpotifyError(spotifyResponse.status)
+
+  return res
+    .status(spotifyResponse.status)
+    // if error found return errorJson, otherwise response json
+    .json(errorJson ?? await spotifyResponse.json())
 })
 
 /**
  * Search artists filtered by @param query
  * @param {string} query to filter artists
- * @requires spotifyauthorization header (Bearer token)
+ * @requires authorization header (JWT token)
  * @returns {Response}
  */
-spotifyRouter.get("/artists/:query", async (req, res) => {
+spotifyRouter.get("/artists/:query", authenticateUser, async (req, res) => {
   /*
     #swagger.tags = ["Spotify"]
     #swagger.summary = "Get artists filtered by {query}"
   */
 
-  // TODO: req has spotifyauthorization header
-  const token = req.headers.spotifyauthorization
-  // TODO: query validation
-  const query = req.params.query
+  const token = req.app.locals?.spotifyToken
 
-  const spotifyResponse = await spotifyAPI.artists(token, query)
-  return res.status(spotifyResponse.status).json(await spotifyResponse.json())
+  const query = req.params.query
+  if (!query || !REGEX.query.test(query)) {
+    return res.status(400).json({ error: `Enter a valid search query: ${REGEX.queryDesc}` })
+  }
+
+  let spotifyResponse = await fetchSpotify.artists(token, query)
+
+  // invalid token: refresh spotify token and retry one time
+  if (spotifyResponse.status === 401) {
+    const token = await generateSpotifyToken(req.app)
+    spotifyResponse = await fetchSpotify.artists(token, query)
+  }
+
+  // check for spotify api errors after token refresh
+  // undefined == no errors
+  const errorJson = checkSpotifyError(spotifyResponse.status)
+
+  return res
+    .status(spotifyResponse.status)
+    // if error found return errorJson, otherwise response json
+    .json(errorJson ?? await spotifyResponse.json())
 })
 
 /**
  * Search tracks filtered by @param query
  * @param {string} query to filter tracks
- * @requires spotifyauthorization header (Bearer token)
+ * @requires authorization header (JWT token)
  * @returns {Response}
  */
-spotifyRouter.get("/tracks/:query", async (req, res) => {
+spotifyRouter.get("/tracks/:query", authenticateUser, async (req, res) => {
   /*
     #swagger.tags = ["Spotify"]
     #swagger.summary = "Get tracks filtered by {query}"
   */
 
-  // TODO: req has spotifyauthorization header
-  const token = req.headers.spotifyauthorization
-  // TODO: query validation
-  const query = req.params.query
+  const token = req.app.locals?.spotifyToken
 
-  const spotifyResponse = await spotifyAPI.tracks(token, query)
-  return res.status(spotifyResponse.status).json(await spotifyResponse.json())
+  const query = req.params.query
+  if (!query || !REGEX.query.test(query)) {
+    return res.status(400).json({ error: `Enter a valid search query: ${REGEX.queryDesc}` })
+  }
+
+  let spotifyResponse = await fetchSpotify.tracks(token, query)
+
+  // invalid token: refresh spotify token and retry one time
+  if (spotifyResponse.status === 401) {
+    const token = await generateSpotifyToken(req.app)
+    spotifyResponse = await fetchSpotify.tracks(token, query)
+  }
+
+  // check for spotify api errors after token refresh
+  // undefined == no errors
+  const errorJson = checkSpotifyError(spotifyResponse.status)
+
+  return res
+    .status(spotifyResponse.status)
+    // if error found return errorJson, otherwise response json
+    .json(errorJson ?? await spotifyResponse.json())
 })
 
 /**
  * Search albums, artists or tracks filtered by @param query
  * @param {string} query to filter albums, artists or tracks
- * @requires spotifyauthorization header (Bearer token)
+ * @requires authorization header (JWT token)
  * @returns {Response}
  */
-spotifyRouter.get("/all/:query", async (req, res) => {
+spotifyRouter.get("/all/:query", authenticateUser, async (req, res) => {
   /*
     #swagger.tags = ["Spotify"]
     #swagger.summary = "Get albums, artists, tracks filtered by {query}"
   */
 
-  // TODO: req has spotifyauthorization header
-  const token = req.headers.spotifyauthorization
-  // TODO: query validation
-  const query = req.params.query
+  const token = req.app.locals?.spotifyToken
 
-  const spotifyResponse = await spotifyAPI.all(token, query)
-  return res.status(spotifyResponse.status).json(await spotifyResponse.json())
+  const query = req.params.query
+  if (!query || !REGEX.query.test(query)) {
+    return res.status(400).json({ error: `Enter a valid search query: ${REGEX.queryDesc}` })
+  }
+
+  let spotifyResponse = await fetchSpotify.all(token, query)
+
+  // invalid token: refresh spotify token and retry one time
+  if (spotifyResponse.status === 401) {
+    const token = await generateSpotifyToken(req.app)
+    spotifyResponse = await fetchSpotify.all(token, query)
+  }
+
+  // check for spotify api errors after token refresh
+  // undefined == no errors
+  const errorJson = checkSpotifyError(spotifyResponse.status)
+
+  return res
+    .status(spotifyResponse.status)
+    // if error found return errorJson, otherwise response json
+    .json(errorJson ?? await spotifyResponse.json())
 })
 
 export default spotifyRouter
