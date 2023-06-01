@@ -25,22 +25,17 @@ const playlistSchema = new mongoose.Schema(
       type: Boolean,
       required: true
     },
-    tracks: { // TODO: check tracks type, add validation (match)
-      type: [String],
+    tracks: { // TODO: validate tracks Object
+      type: [Object],
       required: false,
       default: []
     },
-    followers: { // TODO: check reference is working
+    followers: {
       type: [{
         userId: {
           type: mongoose.Schema.Types.ObjectId,
           required: true,
           ref: "User"
-        },
-        username: {
-          type: String,
-          required: true,
-          match: [REGEX.username, `Please fill a valid username: ${REGEX.usernameDesc}`]
         },
         isCreator: {
           type: Boolean,
@@ -53,8 +48,7 @@ const playlistSchema = new mongoose.Schema(
           default: false
         }
       }],
-      required: false,
-      default: []
+      required: true
     }
   },
   { collection: "playlists" }

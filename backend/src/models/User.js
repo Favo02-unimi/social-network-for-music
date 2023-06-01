@@ -17,23 +17,23 @@ const userSchema = new mongoose.Schema(
       required: true,
       match: [REGEX.email, `Please fill a valid username: ${REGEX.emailDesc}`]
     },
-    favouriteArtists: { // TODO: check artists type, add validation (match)
+    favouriteArtists: { // TODO: validate artists Object
+      type: [Object],
+      required: false,
+      default: []
+    },
+    favouriteGenres: {
       type: [String],
       required: false,
       default: []
     },
-    favouriteGenres: { // TODO: check genres type, add validation (match)
-      type: [String],
-      required: false,
-      default: []
-    },
-    followedPlaylists: { // TODO: check reference is working
+    followedPlaylists: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "Playlist",
       required: false,
       default: []
     },
-    createdPlaylists: { // TODO: check reference is working
+    createdPlaylists: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "Playlist",
       required: false,
