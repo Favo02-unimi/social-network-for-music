@@ -1,13 +1,16 @@
-import config from "./config.js"
+import LOGGER from "../utils/logger.js"
+import config from "../utils/config.js"
 
 const URL = "https://accounts.spotify.com/api/token"
 
 /**
- * Request a Bearer token to Spotify API, returning a promise
+ * Generate a new Spotify API token
  * @requires .env CLIENT_ID and CLIENT_SECRET
- * @returns {Promise}
+ * @returns {String} token
  */
-const fetchToken = async () => {
+const generateSpotifyToken = async (app) => {
+
+  LOGGER.info("generating/refreshing spotify token")
 
   const basicAuth = new Buffer.from(`${config.CLIENT_ID}:${config.CLIENT_SECRET}`).toString("base64")
 
@@ -20,7 +23,12 @@ const fetchToken = async () => {
     body: "grant_type=client_credentials"
   })
 
-  return res
+  const { access_token: token } = await res.json()
+
+  // set spotifyToken in app.locals variable
+  app.locals.spotifyToken = token
+
+  return token
 }
 
-export default fetchToken
+export default generateSpotifyToken

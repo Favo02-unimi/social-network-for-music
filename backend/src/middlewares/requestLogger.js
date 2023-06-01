@@ -6,7 +6,7 @@ const requestLogger = (req, res, next) => {
   logger.info("Method:", req.method)
   logger.info("Path:  ", req.path)
   logger.info("Body:  ", req.body)
-  logger.info("Headers:  ", req.headers)
+  logger.info("Auth headers:  ", req.headers?.authorization)
   logger.info("---")
   next()
 }
