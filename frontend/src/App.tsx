@@ -1,3 +1,5 @@
+import "../src/assets/styles/index.css"
+
 function App() {
   return (
     <div>Social Network for Music</div>
