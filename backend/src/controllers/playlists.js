@@ -1,15 +1,55 @@
 import express from "express"
+import authenticateUser from "../middlewares/authenticateUser.js"
 import Playlist from "../models/Playlist.js"
 
 const playlistsRouter = express.Router()
 
 /**
- * Get all playlists
+ * Get details of a single playlist
+ * @requires authorization header (JWT token)
  * @returns {Response}
  */
-playlistsRouter.get("/", async (req, res) => {
+playlistsRouter.get("/:id", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = "Get details of {id} playlist (AUTH required)"
+  */
 
-  const playlists = await Playlist.find()
+  const playlist = await Playlist.findOneById(req.params.id)
+
+  // if not public check user is creator/collaborator
+  if (!playlist.isPublic) {
+    const userInFollowers = playlist.followers.find(f => f.id === req.user.id)
+    if (!userInFollowers) {
+      return res.status(401).json({ error: "Unauthorized" })
+    }
+    if (!(userInFollowers.isCreator || userInFollowers.isCollaborator)) {
+      return res.status(401).json({ error: "Unauthorized" })
+    }
+  }
+
+  res.json(playlist)
+})
+
+/**
+ * Get all public playlists metadata
+ * @returns {Response}
+ */
+playlistsRouter.get("/public", async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = "Get all public playlists metadata"
+  */
+
+  const playlists = await Playlist
+    .find({ isPublic: true })
+    .map(p => ({
+      title: p.title,
+      description: p.description,
+      tags: p.tags,
+      tracksNumber: p.tracks.length,
+      followersNumber: p.followers.length
+    }))
 
   res.json(playlists)
 })
