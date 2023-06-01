@@ -106,7 +106,76 @@ playlistsRouter.post("/create", authenticateUser, async (req, res) => {
   res.status(201).json(savedPlaylist)
 })
 
-// edit
+/**
+ * Edit @param id playlist
+ * @param {String} id id of playlist to edit
+ * @param {User} body fields of the playlist to edit
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+playlistsRouter.patch("/edit/:id", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = "Edit id playlist (AUTH required)"
+  */
+
+  const playlist = await Playlist.findById(req.params.id)
+
+  // check user is creator/collaborator
+  const userInFollowers = playlist.followers.find(f => f.id === req.user.id)
+  if (!userInFollowers) {
+    return res.status(401).json({ error: "You need to be the creator or a collaborator to edit this playlist" })
+  }
+  if (!(userInFollowers.isCreator || userInFollowers.isCollaborator)) {
+    return res.status(401).json({ error: "You need to ne the creator or a collaborator to edit this playlist" })
+  }
+
+  // title
+  if (req.body?.title) {
+    const title = req.body.title
+
+    if (!REGEX.title.test(title)) {
+      return res.status(400).json({ error: `Enter a valid title: ${REGEX.titleDesc}` })
+    }
+
+    playlist.title = title
+  }
+
+  // description
+  if (req.body?.description) {
+    const description = req.body.description
+
+    if (!REGEX.description.test(description)) {
+      return res.status(400).json({ error: `Enter a valid description: ${REGEX.description}` })
+    }
+
+    playlist.description = description
+  }
+
+  // tags
+  if (req.body?.tags) {
+    const tags = req.body.tags
+
+    if (Array.isArray(tags)) {
+      tags.forEach(t => {
+        if (!t || !REGEX.tag.test(t)) {
+          return res.status(400).json({ error: `Enter a valid tag: ${REGEX.tagDesc}` })
+        }
+      })
+    }
+
+    playlist.tags = tags
+  }
+
+  // isPublic
+  if("isPublic" in req.body) {
+    playlist.isPublic = req.body.isPublic
+  }
+
+  const updatedPlaylist = await playlist.save()
+  res.status(200).json(updatedPlaylist)
+})
+
 // delete
 // follow
 // unfollow
