@@ -18,4 +18,5 @@ RUN cd frontend && mv ./build/ ../backend/
 RUN cd backend && npm ci
 
 # start backend
-CMD node ./backend/src/index.js
+CMD node ./backend/src/utils/swaggerGenerator.js
+
