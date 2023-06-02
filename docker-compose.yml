@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+
+  express-socialnetworkformusic:
+    build: .
+    container_name: express-socialnetworkformusic
+    restart: unless-stopped
+    ports:
+      - 3003:3003
