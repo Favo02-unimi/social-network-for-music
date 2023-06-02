@@ -1,7 +1,7 @@
 import type { FC } from "react"
 import { Navigate } from "react-router-dom"
 
-import LoginForm from "../components/LoginForm"
+import LoginForm from "../components/Login/LoginForm"
 import useAuth from "../hooks/useAuth"
 
 const Login : FC = () => {
