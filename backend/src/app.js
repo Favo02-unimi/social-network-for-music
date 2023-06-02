@@ -1,5 +1,7 @@
 import express from "express"
 import "express-async-errors"
+import path from "path"
+import url from "url"
 import swaggerUi from "swagger-ui-express"
 
 // eslint warning as it does not support yet "assert" keyword, but running the code just works
@@ -34,6 +36,15 @@ app.use("/api/spotify", spotifyRouter)
 app.use("/api/playlists", playlistsRouter)
 app.use("/api/genres", genresRouter)
 
-app.use(unknownEndpoint)
+app.use("/api/*", unknownEndpoint)
+
+// frontend
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+app.use(express.static(path.join(__dirname, "/../build")))
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/../build/index.html"))
+})
 
 export default app
