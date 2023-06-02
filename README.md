@@ -2,6 +2,9 @@
 
 "Programmazione web e mobile" final exam assignment.
 
+Deployed _(automatically)_ at [socialnetworkformusic.favo02.dev](https://socialnetworkformusic.favo02.dev).
+
+<br>
 
 ## Workflow
 
