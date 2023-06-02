@@ -6,7 +6,13 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {},
+      colors: {
+        spotify: {
+          black: "#191414",
+          green: "#1DB954",
+          greendark: "#19823E"
+        }
+      },
       animation: {
         fadeout: "fade 0.3s linear reverse",
         fadein: "fade 0.3s linear"
