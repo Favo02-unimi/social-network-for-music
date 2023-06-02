@@ -55,7 +55,7 @@ spotifyRouter.get("/albums/:query", authenticateUser, async (req, res) => {
 spotifyRouter.get("/artists/:query", authenticateUser, async (req, res) => {
   /*
     #swagger.tags = ["Spotify"]
-    #swagger.summary = "Get artists filtered by {query}"
+    #swagger.summary = "Get artists filtered by {query} (AUTH required)"
   */
 
   const token = req.app.locals?.spotifyToken
@@ -92,7 +92,7 @@ spotifyRouter.get("/artists/:query", authenticateUser, async (req, res) => {
 spotifyRouter.get("/tracks/:query", authenticateUser, async (req, res) => {
   /*
     #swagger.tags = ["Spotify"]
-    #swagger.summary = "Get tracks filtered by {query}"
+    #swagger.summary = "Get tracks filtered by {query} (AUTH required)"
   */
 
   const token = req.app.locals?.spotifyToken
@@ -129,7 +129,7 @@ spotifyRouter.get("/tracks/:query", authenticateUser, async (req, res) => {
 spotifyRouter.get("/all/:query", authenticateUser, async (req, res) => {
   /*
     #swagger.tags = ["Spotify"]
-    #swagger.summary = "Get albums, artists, tracks filtered by {query}"
+    #swagger.summary = "Get albums, artists, tracks filtered by {query} (AUTH required)"
   */
 
   const token = req.app.locals?.spotifyToken
