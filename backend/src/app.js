@@ -2,33 +2,39 @@ import express from "express"
 import "express-async-errors"
 import path from "path"
 import url from "url"
-import swaggerUi from "swagger-ui-express"
 
-// eslint warning as it does not support yet "assert" keyword, but running the code just works
-// running the code without "assert" causes a "ERR_IMPORT_ASSERTION_TYPE_MISSING" error
+// swagger imports
+import swaggerUi from "swagger-ui-express"
 import swaggerDocument from "./utils/swagger.json" assert { type: "json" }
 
+// database imports
 import Database from "./db/database.js"
 
+// controllers imports
 import usersRouter from "./controllers/users.js"
 import loginRouter from "./controllers/login.js"
 import spotifyRouter from "./controllers/spotify.js"
 import playlistsRouter from "./controllers/playlists.js"
 import genresRouter from "./controllers/genres.js"
 
+// middlewares / utils imports
 import unknownEndpoint from "./middlewares/unknownEndpoint.js"
 import requestLogger from "./middlewares/requestLogger.js"
 
 const app = express()
-const db = new Database()
 
+// connect to db
+const db = new Database()
 await db.connect()
 
+// util middlewares
 app.use(express.json())
 app.use(requestLogger)
 
+// swagger
 app.use("/api/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
+// api endpoints
 app.use("/api/users", usersRouter)
 app.use("/api/login", loginRouter)
 
