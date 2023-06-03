@@ -1,38 +1,79 @@
 import type { FC } from "react"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 
+import Loading from "./components/Loading"
+import Sidebar from "./components/Sidebar"
+import useAuth from "./hooks/useAuth"
+import Home from "./pages/Home"
 import Login from "./pages/Login"
-import ProtectedRoute from "./utils/ProtectedRoute"
 
 import "../src/assets/styles/index.css"
 
+const App : FC = () => {
 
-const App : FC = () => (
-  <div className="h-screen w-screen bg-spotify-black text-white">
-    <BrowserRouter>
-      <Routes>
+  const [auth, isLoading] = useAuth()
 
-        <Route path="*" element={
-          <Navigate to="/home" replace />
-        } />
+  if (isLoading) {
+    return (
+      <div className="h-screen w-screen bg-spotify-black text-white">
+        <Loading />
+      </div>
+    )
+  }
 
-        <Route path="/home" element={
-          <>Home (no login required)</>
-        } />
+  // no login routes
+  if (!auth) {
+    return (
+      <div className="h-screen w-screen bg-spotify-black text-white">
+        <BrowserRouter>
+          <Routes>
 
-        <Route path="/login" element={
-          <Login />
-        } />
+            <Route path="/" element={
+              <Navigate to="/home" replace />
+            } />
 
-        <Route path="/afterlogin" element={
-          <ProtectedRoute>
-            <>Login successfull</>
-          </ProtectedRoute>
-        } />
+            <Route path="/home" element={
+              <Sidebar
+                sideContent={<>side</>}
+                content={<Home />}
+              />
+            } />
 
-      </Routes>
-    </BrowserRouter>
-  </div>
-)
+            <Route path="/login" element={
+              <Login />
+            } />
+
+            <Route path="*" element={
+              <Navigate to="/login" replace />
+            } />
+
+          </Routes>
+        </BrowserRouter>
+      </div>
+    )
+  }
+
+  // logged in routes
+  return (
+    <div className="h-screen w-screen bg-spotify-black text-white">
+      <Sidebar
+        sideContent={<>side</>}
+        content={
+          <BrowserRouter>
+            <Routes>
+
+              <Route path="/home" element={<Home />} />
+
+              <Route path="/afterlogin" element={<>Login successfull</>} />
+
+              <Route path="*" element={<Navigate to="/home" replace />} />
+
+            </Routes>
+          </BrowserRouter>
+        }
+      />
+    </div>
+  )
+}
 
 export default App
