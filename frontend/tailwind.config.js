@@ -15,13 +15,18 @@ module.exports = {
       },
       animation: {
         fadeout: "fade 0.3s linear reverse",
-        fadein: "fade 0.3s linear"
+        fadein: "fade 0.3s linear",
+        spin: "spin 1.5s linear infinite"
       },
       keyframes: {
         fade: {
           "0%": { display: "block", opacity: "1" },
           "99%": { display: "block", opacity: "0.1" },
           "100%": { display: "hidden", opacity: "0" }
+        },
+        spin: {
+          "0%": { transform: "rotate(0)" },
+          "100%": { transform: "rotate(360deg)" }
         }
       }
     },
