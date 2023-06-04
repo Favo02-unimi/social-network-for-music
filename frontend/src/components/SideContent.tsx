@@ -1,0 +1,44 @@
+import type { FC } from "react"
+import { FaUser } from "react-icons/fa"
+import { NavLink } from "react-router-dom"
+
+const SideContent : FC = () => {
+
+  const links = [
+    { to: "/home", text: "Homepage" },
+    { to: "/afterlogin", text: "After login" }
+  ]
+
+  return (
+    <div className="w-full h-full border border-white/20 rounded-md flex flex-col justify-between text-center py-6">
+
+      <div className="">
+        <h1 className="text-6xl font-bold -skew-y-3 bg-spotify-green pb-1">SNM</h1>
+        <h3 className="-skew-y-3 text-lg font-bold">Social Network for Music</h3>
+      </div>
+
+      <div className="mt-10">
+        {links.map(l =>
+          <NavLink
+            key={l.to}
+            to={l.to}
+            className={({ isActive } : {isActive : boolean}) => ( isActive
+              ? "block my-2 py-0.5 -skew-y-3 text-lg font-bold bg-spotify-greendark "
+              : "block my-2 -skew-y-3 text-lg font-bold hover:bg-spotify-greendark/50 transition-all duration-500"
+            )}
+          >{l.text}</NavLink>
+        )}
+      </div>
+
+      <div>
+        <NavLink
+          to="profile"
+          className="inline-block px-10 py-1 bg-spotify-greendark hover:bg-spotify-green rounded-2xl tracking-widest font-medium text-lg transition-all duration-500"
+        ><FaUser className="inline text-sm -mt-1.5 mr-2" />PROFILE</NavLink>
+      </div>
+
+    </div>
+  )
+}
+
+export default SideContent

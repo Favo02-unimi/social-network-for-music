@@ -8,18 +8,18 @@ const ProtectedRoute : FC<{children : React.ReactNode}> = ({ children }) => {
 
   const [auth, isLoading] = useAuth()
 
-  if(isLoading) {
-    return <Loading />
-  }
-
-  if (!auth) {
+  if (!auth && !isLoading) {
     localStorage.removeItem("user")
     localStorage.removeItem("token")
     return <Navigate to="/login" />
   }
 
-  return <>{children}</>
-
+  return (
+    <>
+      {isLoading && <Loading />}
+      {children}
+    </>
+  )
 }
 
 export default ProtectedRoute
