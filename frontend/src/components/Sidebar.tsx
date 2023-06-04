@@ -1,11 +1,11 @@
 import type { FC, ReactElement } from "react"
 import { useCallback, useEffect, useRef, useState } from "react"
 
-const Sidebar : FC<{sideContent : ReactElement, content : ReactElement}> = ({ sideContent, content }) => {
+const Sidebar : FC<{sideContent : ReactElement, children ?: ReactElement}> = ({ sideContent, children }) => {
 
   const sidebarRef = useRef<HTMLDivElement>(null)
   const [isResizing, setIsResizing] = useState<boolean>(false)
-  const [sidebarWidth, setSidebarWidth] = useState<number>(268)
+  const [sidebarWidth, setSidebarWidth] = useState<number>(300)
 
   const startResizing = useCallback(() => {
     setIsResizing(true)
@@ -44,7 +44,7 @@ const Sidebar : FC<{sideContent : ReactElement, content : ReactElement}> = ({ si
         <div className="grow-0 shrink-0 basis-1 justify-self-end cursor-col-resize resize-x hover:w-1 bg-spotify-greendark rounded my-4" onMouseDown={startResizing} />
       </div>
       <div className="grow shrink h-screen p-4">
-        {content}
+        {children}
       </div>
     </div>
   )
