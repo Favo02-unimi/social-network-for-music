@@ -2,8 +2,15 @@ import type { FC } from "react"
 
 import type Track from "../../interfaces/Track"
 
-const TrackCard : FC<{track : Track}> = ({ track }) => (
-  <div className="m-4 w-40 pb-2 h-60 flex flex-col items-center border border-white/20 rounded-md text-center">
+const TrackCard : FC<{
+  track : Track,
+  openTrack ?: Track,
+  setOpenTrack : ((t : Track) => void)
+}> = ({ track, openTrack, setOpenTrack }) => (
+
+  <div
+    onClick={() => setOpenTrack(track)}
+    className={`${openTrack?.id === track.id ? "bg-white/20 border-spotify-greendark" : ""} -skew-y-2 m-4 w-40 pb-2 h-60 flex flex-col items-center border border-white/20 rounded-md text-center hover:bg-white/20 cursor-pointer transition-all duration-700`}>
 
     <img src={track.album.images[0].url} className="w-40 h-40 rounded-t-md opacity-80" />
 

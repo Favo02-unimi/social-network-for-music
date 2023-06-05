@@ -1,7 +1,7 @@
 import type { FC } from "react"
 
 const FakeTrackCard : FC = () => (
-  <div className="m-4 w-40 pb-2 h-60 flex flex-col items-center border border-white/20 rounded-md text-center opacity-30 text-white/20">
+  <div className="-skew-y-2 m-4 w-40 pb-2 h-60 flex flex-col items-center border border-white/20 rounded-md text-center opacity-30 text-white/20">
 
     <div className="w-40 h-40 rounded-t-md bg-gradient-to-tr from-gray-700/40 to-spotify-greendark/30" />
 
