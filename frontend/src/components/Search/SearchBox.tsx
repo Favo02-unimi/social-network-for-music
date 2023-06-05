@@ -31,17 +31,14 @@ const SearchBox : FC<{
       </div>
       :
       <div className="w-full h-full mt-4 flex flex-wrap justify-center items-center overflow-y-auto">
-        {tracks
-          ?.sort((a, b) => b.popularity - a.popularity)
-          .map(t =>
-            <TrackCard
-              track={t}
-              key={t.id}
-              openTrack={openTrack}
-              setOpenTrack={setOpenTrack}
-            />
-          )
-        }
+        {tracks.map(t =>
+          <TrackCard
+            track={t}
+            key={t.id}
+            openTrack={openTrack}
+            setOpenTrack={setOpenTrack}
+          />
+        )}
       </div>
     }
   </div>
