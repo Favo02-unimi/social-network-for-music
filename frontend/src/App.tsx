@@ -7,6 +7,7 @@ import SideContent from "./components/SideContent"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
+import Search from "./pages/Search"
 
 import "../src/assets/styles/index.css"
 
@@ -33,7 +34,7 @@ const App : FC = () => {
       path: "/",
       element: <ProtectedRoute><Sidebar sideContent={<SideContent />}><Outlet /></Sidebar></ProtectedRoute>,
       children: [
-        { path: "afterlogin", element: <>Afterlogin</> }
+        { path: "search", element: <Search /> }
       ]
     }
   ])
