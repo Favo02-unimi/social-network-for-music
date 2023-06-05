@@ -27,7 +27,7 @@ const OpenTrack : FC<{
     <div className=" -skew-y-2 relative p-4 text-center ml-2 w-1/3 h-full border-l-2 border-white/20 flex flex-col justify-center items-center">
       <IoCloseSharp
         onClick={() => setOpenTrack(undefined)}
-        className="absolute top-2 right-2 h-6 w-6"
+        className="absolute top-2 right-2 h-6 w-6 cursor-pointer"
       />
 
       <img src={track.album.images[0].url} className="w-72 h-72 rounded-md" />
