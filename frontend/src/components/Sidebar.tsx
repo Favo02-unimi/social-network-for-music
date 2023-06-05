@@ -34,7 +34,7 @@ const Sidebar : FC<{sideContent : ReactElement, children ?: ReactElement}> = ({ 
     <div className="h-screen flex flex-row">
       <div
         ref={sidebarRef}
-        className="grow-0 shrink-0 min-w-[150px] max-w-[600px] flex flex-row shadow-md"
+        className="grow-0 shrink-0 min-w-[255px] max-w-[600px] flex flex-row shadow-md"
         style={{ width: sidebarWidth }}
         onMouseDown={(e) => e.preventDefault()}
       >
