@@ -3,6 +3,7 @@ import { useState } from "react"
 import cogoToast from "cogo-toast"
 
 import Loading from "../components/Loading"
+import OpenTrack from "../components/Search/OpenTrack"
 import SearchBox from "../components/Search/SearchBox"
 import type Track from "../interfaces/Track"
 import spotifyService from "../services/spotify"
@@ -50,9 +51,12 @@ const Search : FC = () => {
           setOpenTrack={setOpenTrack}
         />
 
-        <div className="ml-2 w-1/3 h-full border-l-2 border-white/20">
-          {openTrack?.id}
-        </div>
+        {openTrack &&
+          <OpenTrack
+            track={openTrack}
+            setOpenTrack={setOpenTrack}
+          />
+        }
 
       </div>
     </>
