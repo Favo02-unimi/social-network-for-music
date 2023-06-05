@@ -2,7 +2,6 @@ import type { FC } from "react"
 import { useState } from "react"
 import cogoToast from "cogo-toast"
 
-import Loading from "../components/Loading"
 import OpenTrack from "../components/Search/OpenTrack"
 import SearchBox from "../components/Search/SearchBox"
 import type Track from "../interfaces/Track"
@@ -41,7 +40,6 @@ const Search : FC = () => {
 
   return (
     <>
-      {isLoading && <Loading />}
       <div className="w-full h-full border border-white/20 rounded-md p-6 flex justify-center items-center">
 
         <SearchBox
@@ -49,6 +47,7 @@ const Search : FC = () => {
           handleSearch={handleSearch}
           openTrack={openTrack}
           setOpenTrack={setOpenTrack}
+          isLoading={isLoading}
         />
 
         {openTrack &&

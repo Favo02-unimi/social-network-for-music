@@ -1,6 +1,7 @@
 import type { FC } from "react"
 
 import type Track from "../../interfaces/Track"
+import Loading from "../Loading"
 
 import FakeTrackCard from "./FakeTrackCard"
 import TrackCard from "./TrackCard"
@@ -9,8 +10,9 @@ const SearchBox : FC<{
   tracks ?: Track[],
   handleSearch : ((query : string) => void),
   openTrack ?: Track,
-  setOpenTrack : ((t : Track) => void)
-}> = ({ tracks, handleSearch, openTrack, setOpenTrack }) => (
+  setOpenTrack : ((t : Track) => void),
+  isLoading : boolean
+}> = ({ tracks, handleSearch, openTrack, setOpenTrack, isLoading }) => (
 
   <div className={`${openTrack ? "w-2/3" : "w-full"} h-full flex flex-col justify-center items-center`}>
     <h1 className="text-2xl font-bold text-center">Search <span className="text-spotify-green italic">tracks</span> to fill your <span className="text-spotify-green italic">playlists</span>!</h1>
@@ -27,10 +29,12 @@ const SearchBox : FC<{
       ?
       <div className="relative w-full h-full mt-4 flex flex-wrap justify-center items-center overflow-y-auto">
         <div className="absolute w-full h-full flex justify-center items-center uppercase font-bold text-2xl -mt-10 opacity-60">Start typing to search tracks...</div>
+        {isLoading && <Loading small={true} />}
         {Array(20).fill(true).map((_, i) => <FakeTrackCard key={i} />)}
       </div>
       :
-      <div className="w-full h-full mt-4 flex flex-wrap justify-center items-center overflow-y-auto">
+      <div className="relative w-full h-full mt-4 flex flex-wrap justify-center items-center overflow-y-auto">
+        {isLoading && <Loading small={true} />}
         {tracks.map(t =>
           <TrackCard
             track={t}
