@@ -6,6 +6,7 @@ import Sidebar from "./components/Sidebar"
 import SideContent from "./components/SideContent"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
+import Register from "./pages/Register"
 
 import "../src/assets/styles/index.css"
 
@@ -23,6 +24,10 @@ const App : FC = () => {
     {
       path: "/login",
       element: <Login />
+    },
+    {
+      path: "/register",
+      element: <Register />
     },
     {
       path: "/",
