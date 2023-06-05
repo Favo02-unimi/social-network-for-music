@@ -1,5 +1,5 @@
 import type { FC } from "react"
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
+import { createBrowserRouter, Navigate, Outlet, RouterProvider } from "react-router-dom"
 
 import ProtectedRoute from "./components/ProtectedRoute"
 import Sidebar from "./components/Sidebar"
@@ -31,7 +31,7 @@ const App : FC = () => {
     },
     {
       path: "/",
-      element: <ProtectedRoute><Sidebar sideContent={<SideContent />} /></ProtectedRoute>,
+      element: <ProtectedRoute><Sidebar sideContent={<SideContent />}><Outlet /></Sidebar></ProtectedRoute>,
       children: [
         { path: "afterlogin", element: <>Afterlogin</> }
       ]
