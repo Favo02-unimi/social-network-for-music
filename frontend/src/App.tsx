@@ -1,12 +1,14 @@
 import type { FC } from "react"
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from "react-router-dom"
 
+import CreatePlaylist from "./components/Playlists/CreatePlaylist"
 import ProtectedRoute from "./components/ProtectedRoute"
 import Sidebar from "./components/Sidebar"
 import SideContent from "./components/SideContent"
 import Explore from "./pages/Explore"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
+import Playlists from "./pages/Playlists"
 import Register from "./pages/Register"
 
 import "../src/assets/styles/index.css"
@@ -35,7 +37,9 @@ const App : FC = () => {
       element: <ProtectedRoute><Sidebar sideContent={<SideContent />}><Outlet /></Sidebar></ProtectedRoute>,
       children: [
         { path: "*", element: <Navigate to="/home" replace /> },
-        { path: "explore", element: <Explore /> }
+        { path: "explore", element: <Explore /> },
+        { path: "playlists", element: <Playlists /> },
+        { path: "playlists/create", element: <CreatePlaylist /> },
       ]
     }
   ])
