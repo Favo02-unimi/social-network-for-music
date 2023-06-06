@@ -15,7 +15,7 @@ const App : FC = () => {
 
   const router = createBrowserRouter([
     {
-      path: "*",
+      path: "/",
       element: <Navigate to="/home" replace />
     },
     {
@@ -31,9 +31,10 @@ const App : FC = () => {
       element: <Register />
     },
     {
-      path: "/",
+      path: "*",
       element: <ProtectedRoute><Sidebar sideContent={<SideContent />}><Outlet /></Sidebar></ProtectedRoute>,
       children: [
+        { path: "*", element: <Navigate to="/home" replace /> },
         { path: "search", element: <Search /> }
       ]
     }
