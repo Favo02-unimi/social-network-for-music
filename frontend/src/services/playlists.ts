@@ -9,11 +9,20 @@ const getPublic = async () => {
   return res.data
 }
 
-const get = async (id : string) => {
+const getSingle = async (id : string) => {
 
   const headers = { headers: { "authorization": localStorage.getItem("token") } }
 
   const res = await axios.get(`${baseUrl}/${id}`, headers)
+
+  return res.data
+}
+
+const getAll = async () => {
+
+  const headers = { headers: { "authorization": localStorage.getItem("token") } }
+
+  const res = await axios.get(`${baseUrl}/`, headers)
 
   return res.data
 }
@@ -41,7 +50,8 @@ const create = async (
 
 const playlistsService = {
   getPublic,
-  get,
+  getSingle,
+  getAll,
   create
 }
 
