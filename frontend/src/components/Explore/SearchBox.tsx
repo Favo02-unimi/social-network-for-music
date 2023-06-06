@@ -44,7 +44,7 @@ const SearchBox : FC<{
 
   return (
     <div className={`${openTrack ? "w-2/3" : "w-full"} h-full flex flex-col justify-center items-center`}>
-      <h1 className="text-2xl font-bold text-center">Search <span className="text-spotify-green italic">tracks</span> to fill your <span className="text-spotify-green italic">playlists</span>!</h1>
+      <h1 className="text-2xl font-bold text-center">Explore <span className="text-spotify-green italic">tracks</span> to fill your <span className="text-spotify-green italic">playlists</span>!</h1>
 
       <div className="flex flex-col justify-center items-center">
         <input
