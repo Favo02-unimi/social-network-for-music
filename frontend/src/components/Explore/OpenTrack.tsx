@@ -32,9 +32,11 @@ const OpenTrack : FC<{
 
       <img src={track.album.images[0].url} className="w-72 h-72 rounded-md" />
 
-      <h1 className="my-4 text-2xl font-bold">{track.name}</h1>
+      <h1 className="mt-4 text-2xl font-bold">{track.name}</h1>
 
-      <div className="text-center bg-spotify-greendark rounded-md font-bold px-4 py-1">
+      {track.explicit && <span className="mt-1 text-xs uppercase font-bold text-red-800 border border-red-900 px-1 py-0.5 rounded-md">Explicit</span>}
+
+      <div className="mt-4 text-center bg-spotify-greendark rounded-md font-bold px-4 py-1">
         {track.artists.map((a, i) =>
           <h2 className="uppercase px-2 text-ellipsis whitespace-nowrap overflow-hidden" key={a.id}>
             {a.name}{i < track.artists.length - 1 ? ", " : ""}

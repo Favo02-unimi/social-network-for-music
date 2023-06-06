@@ -4,10 +4,10 @@ import { createBrowserRouter, Navigate, Outlet, RouterProvider } from "react-rou
 import ProtectedRoute from "./components/ProtectedRoute"
 import Sidebar from "./components/Sidebar"
 import SideContent from "./components/SideContent"
+import Explore from "./pages/Explore"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
-import Search from "./pages/Search"
 
 import "../src/assets/styles/index.css"
 
@@ -15,7 +15,7 @@ const App : FC = () => {
 
   const router = createBrowserRouter([
     {
-      path: "*",
+      path: "/",
       element: <Navigate to="/home" replace />
     },
     {
@@ -31,10 +31,11 @@ const App : FC = () => {
       element: <Register />
     },
     {
-      path: "/",
+      path: "*",
       element: <ProtectedRoute><Sidebar sideContent={<SideContent />}><Outlet /></Sidebar></ProtectedRoute>,
       children: [
-        { path: "search", element: <Search /> }
+        { path: "*", element: <Navigate to="/home" replace /> },
+        { path: "explore", element: <Explore /> }
       ]
     }
   ])

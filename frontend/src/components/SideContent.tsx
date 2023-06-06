@@ -8,7 +8,7 @@ const SideContent : FC = () => {
 
   const links = [
     { to: "/home", text: "Homepage" },
-    { to: "/search", text: "Search" }
+    { to: "/explore", text: "Explore" }
   ]
 
   return (

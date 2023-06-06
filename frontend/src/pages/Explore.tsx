@@ -1,11 +1,11 @@
 import type { FC } from "react"
 import { useState } from "react"
 
-import OpenTrack from "../components/Search/OpenTrack"
-import SearchBox from "../components/Search/SearchBox"
+import OpenTrack from "../components/Explore/OpenTrack"
+import SearchBox from "../components/Explore/SearchBox"
 import type Track from "../interfaces/Track"
 
-const Search : FC = () => {
+const Explore : FC = () => {
 
   const [openTrack, setOpenTrack] = useState<Track>()
 
@@ -30,4 +30,4 @@ const Search : FC = () => {
   )
 }
 
-export default Search
+export default Explore
