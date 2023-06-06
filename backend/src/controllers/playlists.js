@@ -7,6 +7,23 @@ import User from "../models/User.js"
 const playlistsRouter = express.Router()
 
 /**
+ * Get all playlists followed, created or collaborated by current user
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+playlistsRouter.get("/", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = "Get all playlists followed, created or collaborated by current user (AUTH required)"
+  */
+
+  const user = await User.findById(req.user.id).populate("playlists.id")
+
+  res.json(user.playlists)
+})
+
+
+/**
  * Get details of a single playlist
  * @requires authorization header (JWT token)
  * @returns {Response}
