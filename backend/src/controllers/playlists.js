@@ -17,7 +17,11 @@ playlistsRouter.get("/:id", authenticateUser, async (req, res) => {
     #swagger.summary = "Get details of {id} playlist (AUTH required)"
   */
 
-  const playlist = await Playlist.findOneById(req.params.id)
+  const playlist = await Playlist.findById(req.params.id)
+
+  if (!playlist) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
 
   // if not public check user is creator/collaborator
   if (!playlist.isPublic) {
@@ -126,6 +130,10 @@ playlistsRouter.patch("/edit/:id", authenticateUser, async (req, res) => {
 
   const playlist = await Playlist.findById(req.params.id)
 
+  if (!playlist) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
   // check user is creator/collaborator
   const userInFollowers = playlist.followers.find(f => f.id === req.user.id)
   if (!userInFollowers) {
@@ -195,13 +203,17 @@ playlistsRouter.delete("/delete/:id", authenticateUser, async (req, res) => {
 
   const playlist = await Playlist.findById(req.params.id)
 
+  if (!playlist) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
   // check user is creator/collaborator
   const userInFollowers = playlist.followers.find(f => f.id === req.user.id)
   if (!userInFollowers) {
-    return res.status(401).json({ error: "You need to be the creator or a collaborator to delete this playlist" })
+    return res.status(401).json({ error: "You need to be the creator to delete this playlist" })
   }
-  if (!(userInFollowers.isCreator || userInFollowers.isCollaborator)) {
-    return res.status(401).json({ error: "You need to ne the creator or a collaborator to delete this playlist" })
+  if (!(userInFollowers.isCreator)) {
+    return res.status(401).json({ error: "You need to be the creator to delete this playlist" })
   }
 
   // TODO: update all followers
