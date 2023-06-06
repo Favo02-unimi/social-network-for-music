@@ -19,7 +19,14 @@ playlistsRouter.get("/", authenticateUser, async (req, res) => {
 
   const user = await User.findById(req.user.id).populate("playlists.id")
 
-  res.json(user.playlists)
+  // "normalize" population
+  const playlists = user.playlists.map(p => ({
+    ...p.id._doc,
+    isCreator: p.isCreator,
+    isCollaborator: p.isCollaborator
+  }))
+
+  res.json(playlists)
 })
 
 
