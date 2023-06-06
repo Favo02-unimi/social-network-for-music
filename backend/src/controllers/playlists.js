@@ -2,6 +2,7 @@ import express from "express"
 import REGEX from "../utils/regex.js"
 import authenticateUser from "../middlewares/authenticateUser.js"
 import Playlist from "../models/Playlist.js"
+import User from "../models/User.js"
 
 const playlistsRouter = express.Router()
 
@@ -102,6 +103,10 @@ playlistsRouter.post("/create", authenticateUser, async (req, res) => {
 
   const newPlaylist = new Playlist(playlist)
   const savedPlaylist = await newPlaylist.save()
+
+  const user = await User.findById(req.user.id)
+  user.playlists.push({ id: newPlaylist._id, isCreator: true })
+  await user.save()
 
   res.status(201).json(savedPlaylist)
 })
