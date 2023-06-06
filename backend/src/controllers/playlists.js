@@ -123,6 +123,7 @@ playlistsRouter.post("/create", authenticateUser, async (req, res) => {
     description: description,
     tags: tags,
     isPublic: isPublic ?? false,
+    creator: req.user.username,
     followers: [{
       userId: req.user.id,
       isCreator: true

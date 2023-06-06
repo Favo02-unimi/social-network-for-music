@@ -23,7 +23,7 @@ const authenticateUser = (req, res, next) => {
     const jwtPayload = jwt.decode(token)
 
     req.user = {
-      user: jwtPayload.username,
+      username: jwtPayload.username,
       id: jwtPayload.id
     }
   }
