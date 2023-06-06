@@ -27,15 +27,24 @@ const userSchema = new mongoose.Schema(
       required: false,
       default: []
     },
-    followedPlaylists: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "Playlist",
-      required: false,
-      default: []
-    },
-    createdPlaylists: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "Playlist",
+    playlists: {
+      type: [{
+        id: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "Playlist"
+        },
+        isCreator: {
+          type: Boolean,
+          required: false,
+          default: false
+        },
+        isCollaborator: {
+          type: Boolean,
+          required: false,
+          default: false
+        }
+      }],
       required: false,
       default: []
     }
