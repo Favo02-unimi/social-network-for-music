@@ -43,7 +43,7 @@ const UserPlaylists : FC = () => {
 
   if ((isLoading || !isLoading) || playlists?.length === 0) {
     return (
-      <div className="relative w-full h-full mt-4 flex flex-wrap my-auto justify-center items-center overflow-y-auto">
+      <div className="relative w-full h-full mt-4 flex flex-wrap my-auto justify-center overflow-y-auto">
         {isLoading && <Loading small />}
         <div className="absolute w-full h-full flex flex-col justify-center items-center font-bold text-2xl -mt-10 z-10">
           <h1 className="uppercase opacity-80">No playlists found...</h1>
