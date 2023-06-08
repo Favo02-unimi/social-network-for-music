@@ -49,7 +49,8 @@ playlistsRouter.get("/:id", authenticateUser, async (req, res) => {
 
   // if not public check user is creator/collaborator
   if (!playlist.isPublic) {
-    const userInFollowers = playlist.followers.find(f => f.id === req.user.id)
+    const userInFollowers = playlist.followers.find(f => f.userId.toString() === req.user.id)
+
     if (!userInFollowers) {
       return res.status(401).json({ error: "Unauthorized" })
     }
