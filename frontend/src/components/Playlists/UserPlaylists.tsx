@@ -41,7 +41,7 @@ const UserPlaylists : FC = () => {
 
   }, [])
 
-  if ((isLoading || !isLoading) || playlists?.length === 0) {
+  if (isLoading || playlists?.length === 0) {
     return (
       <div className="relative w-full h-full mt-4 flex flex-wrap my-auto justify-center overflow-y-auto">
         {isLoading && <Loading small />}
