@@ -30,6 +30,11 @@ const playlistSchema = new mongoose.Schema(
       required: false,
       default: []
     },
+    creator: {
+      type: String,
+      required: true,
+      match: [REGEX.username, `Please fill a creator username: ${REGEX.usernameDesc}`]
+    },
     followers: {
       type: [{
         userId: {

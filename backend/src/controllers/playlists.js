@@ -2,8 +2,33 @@ import express from "express"
 import REGEX from "../utils/regex.js"
 import authenticateUser from "../middlewares/authenticateUser.js"
 import Playlist from "../models/Playlist.js"
+import User from "../models/User.js"
 
 const playlistsRouter = express.Router()
+
+/**
+ * Get all playlists followed, created or collaborated by current user
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+playlistsRouter.get("/", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = "Get all playlists followed, created or collaborated by current user (AUTH required)"
+  */
+
+  const user = await User.findById(req.user.id).populate("playlists.id")
+
+  // "normalize" population
+  const playlists = user.playlists.map(p => ({
+    ...p.id._doc,
+    isCreator: p.isCreator,
+    isCollaborator: p.isCollaborator
+  }))
+
+  res.json(playlists)
+})
+
 
 /**
  * Get details of a single playlist
@@ -16,7 +41,11 @@ playlistsRouter.get("/:id", authenticateUser, async (req, res) => {
     #swagger.summary = "Get details of {id} playlist (AUTH required)"
   */
 
-  const playlist = await Playlist.findOneById(req.params.id)
+  const playlist = await Playlist.findById(req.params.id)
+
+  if (!playlist) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
 
   // if not public check user is creator/collaborator
   if (!playlist.isPublic) {
@@ -94,6 +123,7 @@ playlistsRouter.post("/create", authenticateUser, async (req, res) => {
     description: description,
     tags: tags,
     isPublic: isPublic ?? false,
+    creator: req.user.username,
     followers: [{
       userId: req.user.id,
       isCreator: true
@@ -102,6 +132,10 @@ playlistsRouter.post("/create", authenticateUser, async (req, res) => {
 
   const newPlaylist = new Playlist(playlist)
   const savedPlaylist = await newPlaylist.save()
+
+  const user = await User.findById(req.user.id)
+  user.playlists.push({ id: newPlaylist._id, isCreator: true })
+  await user.save()
 
   res.status(201).json(savedPlaylist)
 })
@@ -120,6 +154,10 @@ playlistsRouter.patch("/edit/:id", authenticateUser, async (req, res) => {
   */
 
   const playlist = await Playlist.findById(req.params.id)
+
+  if (!playlist) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
 
   // check user is creator/collaborator
   const userInFollowers = playlist.followers.find(f => f.id === req.user.id)
@@ -190,13 +228,17 @@ playlistsRouter.delete("/delete/:id", authenticateUser, async (req, res) => {
 
   const playlist = await Playlist.findById(req.params.id)
 
+  if (!playlist) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
   // check user is creator/collaborator
   const userInFollowers = playlist.followers.find(f => f.id === req.user.id)
   if (!userInFollowers) {
-    return res.status(401).json({ error: "You need to be the creator or a collaborator to delete this playlist" })
+    return res.status(401).json({ error: "You need to be the creator to delete this playlist" })
   }
-  if (!(userInFollowers.isCreator || userInFollowers.isCollaborator)) {
-    return res.status(401).json({ error: "You need to ne the creator or a collaborator to delete this playlist" })
+  if (!(userInFollowers.isCreator)) {
+    return res.status(401).json({ error: "You need to be the creator to delete this playlist" })
   }
 
   // TODO: update all followers

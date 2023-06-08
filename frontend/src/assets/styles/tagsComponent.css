@@ -1,0 +1,19 @@
+.rti--container {
+  transition: all 0.7s;
+  border: 2px solid #d1d5db !important;
+  color: #191414 !important;
+  padding: 0.5rem 0.75rem !important;
+}
+
+.rti--container:focus-within {
+  border: 2px solid #1DB954 !important;
+  box-shadow: none !important;
+}
+
+.rti--tag {
+  background: #d1d5db !important;
+}
+
+.rti--tag button:hover {
+  color: #1DB954 !important;
+}

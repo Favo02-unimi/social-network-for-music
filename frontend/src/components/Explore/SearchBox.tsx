@@ -56,7 +56,7 @@ const SearchBox : FC<{
 
       {!tracks || tracks.length === 0
         ?
-        <div className="relative w-full h-full mt-4 flex flex-wrap justify-center items-center overflow-y-auto">
+        <div className="relative w-full h-full mt-4 flex flex-wrap justify-center overflow-y-auto">
           <div className="absolute w-full h-full flex justify-center items-center uppercase font-bold text-2xl -mt-10 opacity-60">Start typing to search tracks...</div>
           {isLoading && <Loading small={true} />}
           {Array(20).fill(true).map((_, i) => <FakeTrackCard key={i} />)}
