@@ -39,7 +39,7 @@ const App : FC = () => {
         { path: "*", element: <Navigate to="/home" replace /> },
         { path: "explore", element: <Explore /> },
         { path: "playlists", element: <Playlists /> },
-        { path: "playlists/create", element: <CreatePlaylist /> },
+        { path: "playlists/create", element: <CreatePlaylist /> }
       ]
     }
   ])
