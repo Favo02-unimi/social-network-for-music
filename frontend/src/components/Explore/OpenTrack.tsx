@@ -4,6 +4,7 @@ import { IoCloseSharp } from "react-icons/io5"
 import { Link } from "react-router-dom"
 
 import type Track from "../../interfaces/Track"
+import AddToPlaylist from "../Playlists/AddToPlaylist"
 
 import PlayPreview from "./PlayPreview"
 
@@ -56,6 +57,9 @@ const OpenTrack : FC<{
       </Link>
 
       <PlayPreview url={track.preview_url} />
+
+      <AddToPlaylist track={track} />
+
     </div>
   )
 }
