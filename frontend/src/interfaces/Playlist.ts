@@ -14,7 +14,8 @@ interface Playlist {
     isCollaborator : boolean
   }],
   isCreator : boolean,
-  isCollaborator : boolean
+  isCollaborator : boolean,
+  isFollower : boolean
 }
 
 export default Playlist
