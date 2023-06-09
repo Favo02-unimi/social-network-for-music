@@ -2,7 +2,7 @@ import type { FC, FormEvent } from "react"
 import { useState } from "react"
 import { FaLock, FaUser } from "react-icons/fa"
 import { Link, useNavigate } from "react-router-dom"
-import cogoToast from "cogo-toast"
+import { toast } from "react-toastify"
 
 import loginService from "../../services/login"
 import REGEX from "../../utils/regex"
@@ -23,12 +23,12 @@ const LoginForm : FC = () => {
     setIsLoading(true)
 
     if (!REGEX.username.test(username)) {
-      cogoToast.error("Invalid username")
+      toast.error("Invalid username")
       setIsLoading(false)
       return
     }
     if (!REGEX.password.test(password)) {
-      cogoToast.error("Invalid password")
+      toast.error("Invalid password")
       setIsLoading(false)
       return
     }
@@ -36,7 +36,7 @@ const LoginForm : FC = () => {
     try {
       const loggedUser = await loginService.login(username, password)
 
-      cogoToast.success("Login successfull")
+      toast.success("Login successfull")
 
       localStorage.setItem("user", loggedUser.username)
       localStorage.setItem("token", loggedUser.token)
@@ -44,7 +44,7 @@ const LoginForm : FC = () => {
       navigate("/afterlogin", { replace: true })
     }
     catch(e) {
-      cogoToast.error("Invalid username or password")
+      toast.error("Invalid username or password")
     }
     finally {
       setIsLoading(false)

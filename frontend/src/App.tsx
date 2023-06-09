@@ -1,5 +1,6 @@
 import type { FC } from "react"
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from "react-router-dom"
+import { Slide, ToastContainer } from "react-toastify"
 
 import CreatePlaylist from "./components/Playlists/CreatePlaylist"
 import ProtectedRoute from "./components/ProtectedRoute"
@@ -12,6 +13,7 @@ import Playlists from "./pages/Playlists"
 import Register from "./pages/Register"
 
 import "../src/assets/styles/index.css"
+import "react-toastify/dist/ReactToastify.css"
 
 const App : FC = () => {
 
@@ -46,6 +48,13 @@ const App : FC = () => {
 
   return (
     <div className="h-screen w-screen bg-spotify-black text-white">
+      <ToastContainer
+        position="top-center"
+        transition={Slide}
+        autoClose={5000}
+        theme="colored"
+        limit={3}
+      />
       <RouterProvider router={router} />
     </div>
   )
