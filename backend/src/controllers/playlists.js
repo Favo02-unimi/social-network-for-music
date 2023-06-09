@@ -23,7 +23,8 @@ playlistsRouter.get("/", authenticateUser, async (req, res) => {
   const playlists = user.playlists.map(p => ({
     ...p.id._doc,
     isCreator: p.isCreator,
-    isCollaborator: p.isCollaborator
+    isCollaborator: p.isCollaborator,
+    isFollower: true
   }))
 
   res.json(playlists)
@@ -69,7 +70,8 @@ playlistsRouter.get("/:id", authenticateUser, async (req, res) => {
   res.json({
     ...playlist._doc,
     isCreator,
-    isCollaborator
+    isCollaborator,
+    isFollower: userInFollowers
   })
 })
 
