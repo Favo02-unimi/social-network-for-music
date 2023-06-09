@@ -249,4 +249,33 @@ playlistsRouter.delete("/delete/:id", authenticateUser, async (req, res) => {
   res.status(204).end()
 })
 
+/**
+ * Add track to @param id playlist
+ * @param {String} id id of playlist to add track
+ * @param {Track} body track to add
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+playlistsRouter.post("/:id/add", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = "Add track to playlist (AUTH required)"
+  */
+
+  const playlist = await Playlist.findById(req.params.id)
+
+  if (!playlist) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
+  const { track } = req.body
+
+  // TODO: fields validation
+
+  playlist.tracks.push(track)
+  const savedPlaylist = await playlist.save()
+
+  res.status(201).json(savedPlaylist)
+})
+
 export default playlistsRouter
