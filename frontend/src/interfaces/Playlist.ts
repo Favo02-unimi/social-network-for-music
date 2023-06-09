@@ -1,10 +1,12 @@
+import type Track from "./Track"
+
 interface Playlist {
   _id : string,
   title : string,
   description : string,
   tags : string[],
   isPublic : boolean,
-  tracks : string[],
+  tracks : Track[],
   creator : string,
   followers : [{
     userId : string,
