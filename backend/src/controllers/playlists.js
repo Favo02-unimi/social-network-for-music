@@ -47,19 +47,30 @@ playlistsRouter.get("/:id", authenticateUser, async (req, res) => {
     return res.status(404).json({ error: "Playlist not found" })
   }
 
-  // if not public check user is creator/collaborator
-  if (!playlist.isPublic) {
-    const userInFollowers = playlist.followers.find(f => f.userId.toString() === req.user.id)
+  // find current user in playlists follower (must be following if creator/collaborator)
+  const userInFollowers = playlist.followers.find(f => f.userId.toString() === req.user.id)
 
-    if (!userInFollowers) {
-      return res.status(401).json({ error: "Unauthorized" })
-    }
-    if (!(userInFollowers.isCreator || userInFollowers.isCollaborator)) {
+  // check user is creator/collaborator
+  let isCreator = false
+  let isCollaborator = false
+  if (userInFollowers) {
+    isCreator = userInFollowers.isCreator
+    isCollaborator = userInFollowers.isCollaborator
+  }
+
+  // if not public check user is creator/collaborator (authorization)
+  if (!playlist.isPublic) {
+    if (!(isCreator || isCollaborator)) {
       return res.status(401).json({ error: "Unauthorized" })
     }
   }
 
-  res.json(playlist)
+  // "normalize" return (adding isCreator, isCollaborator)
+  res.json({
+    ...playlist._doc,
+    isCreator,
+    isCollaborator
+  })
 })
 
 /**
