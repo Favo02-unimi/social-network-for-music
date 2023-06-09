@@ -1,5 +1,7 @@
 import axios from "axios"
 
+import type Track from "../interfaces/Track"
+
 const baseUrl = "/api/playlists"
 
 const getPublic = async () => {
@@ -48,11 +50,25 @@ const create = async (
   return res.data
 }
 
+const addTrack = async(id : string, track : Track) => {
+
+  const trackBody = {
+    track: track
+  }
+
+  const headers = { headers: { "authorization": localStorage.getItem("token") } }
+
+  const res = await axios.post(`${baseUrl}/${id}/add`, trackBody, headers)
+
+  return res.data
+}
+
 const playlistsService = {
   getPublic,
   getSingle,
   getAll,
-  create
+  create,
+  addTrack
 }
 
 export default playlistsService
