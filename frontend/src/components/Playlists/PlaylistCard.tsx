@@ -2,15 +2,16 @@ import type { FC } from "react"
 import { FaLock } from "react-icons/fa"
 import { MdPublic } from "react-icons/md"
 
-import playlistImg from "../../assets/images/playlist-placeholder.webp"
 import type Playlist from "../../interfaces/Playlist"
+
+import PlaylistImage from "./PlaylistImage"
 
 const PlaylistCard : FC<{ p : Playlist }> = ({ p }) => (
   <div
     className="m-4 w-[400px] h-40 flex items-center border border-white/20 rounded-md text-center hover:bg-white/20 cursor-pointer transition-all duration-700">
 
     <div className="w-40 shrink-0">
-      <img src={playlistImg} className="w-40 h-40 rounded-l-md opacity-80" />
+      <PlaylistImage tracks={p.tracks} />
     </div>
 
     <div className="flex flex-col justify-center w-full h-full relative overflow-hidden p-1">
