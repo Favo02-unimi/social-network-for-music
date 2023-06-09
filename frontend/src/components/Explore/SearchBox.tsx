@@ -1,6 +1,6 @@
 import type { FC } from "react"
 import { useState } from "react"
-import cogoToast from "cogo-toast"
+import { toast } from "react-toastify"
 
 import type Track from "../../interfaces/Track"
 import spotifyService from "../../services/spotify"
@@ -32,9 +32,9 @@ const SearchBox : FC<{
     }
     catch(e) {
       if (e?.response?.data?.error) {
-        cogoToast.error(e.response.data.error)
+        toast.error(e.response.data.error)
       } else {
-        cogoToast.error("Generic error, please try again")
+        toast.error("Generic error, please try again")
       }
     }
     finally {

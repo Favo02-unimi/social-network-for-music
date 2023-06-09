@@ -2,7 +2,7 @@ import { type FC, useEffect,useState } from "react"
 import { MdPlaylistAdd } from "react-icons/md"
 import type { SingleValue } from "react-select"
 import Select from "react-select"
-import cogoToast from "cogo-toast"
+import { toast } from "react-toastify"
 
 import type Playlist from "../../interfaces/Playlist"
 import type Track from "../../interfaces/Track"
@@ -34,9 +34,9 @@ const AddToPlaylist : FC<{track : Track}> = ({ track }) => {
       }
       catch(e) {
         if (e?.response?.data?.error) {
-          cogoToast.error(e.response.data.error)
+          toast.error(e.response.data.error)
         } else {
-          cogoToast.error("Generic error, please try again")
+          toast.error("Generic error, please try again")
         }
       }
       finally {
@@ -54,22 +54,22 @@ const AddToPlaylist : FC<{track : Track}> = ({ track }) => {
 
     if (!selectedPlaylist) {
       setIsLoading(false)
-      cogoToast.error("Select a valid playlist")
+      toast.error("Select a valid playlist")
       return
     }
 
     try {
       const addedPlaylist = await playlistsService.addTrack(selectedPlaylist.value, track)
 
-      cogoToast.success(`Added to playlist ${addedPlaylist.title} successfully.`)
+      toast.success(`Added to playlist ${addedPlaylist.title} successfully.`)
 
       setSelectedPlaylist(null)
     }
     catch(e) {
       if (e?.response?.data?.error) {
-        cogoToast.error(e.response.data.error)
+        toast.error(e.response.data.error)
       } else {
-        cogoToast.error("Generic error, please try again")
+        toast.error("Generic error, please try again")
       }
     }
     finally {

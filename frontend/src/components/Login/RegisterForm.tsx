@@ -3,7 +3,7 @@ import { useState } from "react"
 import { FaLock, FaUser } from "react-icons/fa"
 import { IoMail } from "react-icons/io5"
 import { Link, useNavigate } from "react-router-dom"
-import cogoToast from "cogo-toast"
+import { toast } from "react-toastify"
 
 import usersService from "../../services/users"
 import REGEX from "../../utils/regex"
@@ -26,22 +26,22 @@ const LoginForm : FC = () => {
     setIsLoading(true)
 
     if (!REGEX.username.test(username)) {
-      cogoToast.error("Invalid username")
+      toast.error("Invalid username")
       setIsLoading(false)
       return
     }
     if (!REGEX.email.test(email)) {
-      cogoToast.error("Invalid email")
+      toast.error("Invalid email")
       setIsLoading(false)
       return
     }
     if (!REGEX.password.test(password1)) {
-      cogoToast.error("Invalid password")
+      toast.error("Invalid password")
       setIsLoading(false)
       return
     }
     if (!(password1 === password2)) {
-      cogoToast.error("Passwords are not the same")
+      toast.error("Passwords are not the same")
       setIsLoading(false)
       return
     }
@@ -49,15 +49,15 @@ const LoginForm : FC = () => {
     try {
       await usersService.create(username, email, password1)
 
-      cogoToast.success("Registration successfull. Please log in")
+      toast.success("Registration successfull. Please log in")
 
       navigate("/login", { replace: true })
     }
     catch(e) {
       if (e?.response?.data?.error) {
-        cogoToast.error(e.response.data.error)
+        toast.error(e.response.data.error)
       } else {
-        cogoToast.error("Generic error, please try again")
+        toast.error("Generic error, please try again")
       }
     }
     finally {

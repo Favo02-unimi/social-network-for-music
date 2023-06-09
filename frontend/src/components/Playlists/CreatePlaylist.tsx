@@ -9,7 +9,7 @@ import { MdPublic } from "react-icons/md"
 import { Link, useNavigate } from "react-router-dom"
 import Switch from "react-switch"
 import { TagsInput } from "react-tag-input-component"
-import cogoToast from "cogo-toast"
+import { toast } from "react-toastify"
 
 import playlistsService from "../../services/playlists"
 import REGEX from "../../utils/regex"
@@ -34,19 +34,19 @@ const CreatePlaylist : FC = () => {
     setIsLoading(true)
 
     if (!REGEX.title.test(title)) {
-      cogoToast.error("Invalid title")
+      toast.error("Invalid title")
       setIsLoading(false)
       return
     }
     if (!REGEX.description.test(description)) {
-      cogoToast.error("Invalid description")
+      toast.error("Invalid description")
       setIsLoading(false)
       return
     }
     if (tags) {
       tags.forEach((t, i) => {
         if (!REGEX.tag.test(t)) {
-          cogoToast.error(`Invalid ${i+1}° tag`)
+          toast.error(`Invalid ${i+1}° tag`)
           setIsLoading(false)
           return
         }
@@ -56,15 +56,15 @@ const CreatePlaylist : FC = () => {
     try {
       const createdPlaylist = await playlistsService.create(title, description, isPublic, tags)
 
-      cogoToast.success("Playlist created successfully.")
+      toast.success("Playlist created successfully.")
 
       navigate(`/playlists/${createdPlaylist._id}`)
     }
     catch(e) {
       if (e?.response?.data?.error) {
-        cogoToast.error(e.response.data.error)
+        toast.error(e.response.data.error)
       } else {
-        cogoToast.error("Generic error, please try again")
+        toast.error("Generic error, please try again")
       }
     }
     finally {

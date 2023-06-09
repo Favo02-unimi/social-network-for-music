@@ -1,7 +1,7 @@
 import type { FC } from "react"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import cogoToast from "cogo-toast"
+import { toast } from "react-toastify"
 
 import type Playlist from "../../interfaces/Playlist"
 import playlistsService from "../../services/playlists"
@@ -27,9 +27,9 @@ const UserPlaylists : FC = () => {
       }
       catch(e) {
         if (e?.response?.data?.error) {
-          cogoToast.error(e.response.data.error)
+          toast.error(e.response.data.error)
         } else {
-          cogoToast.error("Generic error, please try again")
+          toast.error("Generic error, please try again")
         }
       }
       finally {
