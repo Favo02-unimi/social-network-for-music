@@ -36,7 +36,7 @@ const create = async (
   tags ?: string[]
 ) => {
 
-  const user = {
+  const playlist = {
     title,
     description,
     isPublic,
@@ -45,7 +45,29 @@ const create = async (
 
   const headers = { headers: { "authorization": localStorage.getItem("token") } }
 
-  const res = await axios.post(`${baseUrl}/create`, user, headers)
+  const res = await axios.post(`${baseUrl}/create`, playlist, headers)
+
+  return res.data
+}
+
+const edit = async (
+  id : string,
+  title : string,
+  description : string,
+  isPublic : boolean,
+  tags ?: string[]
+) => {
+
+  const playlist = {
+    title,
+    description,
+    isPublic,
+    tags
+  }
+
+  const headers = { headers: { "authorization": localStorage.getItem("token") } }
+
+  const res = await axios.patch(`${baseUrl}/edit/${id}`, playlist, headers)
 
   return res.data
 }
@@ -73,6 +95,7 @@ const playlistsService = {
   getSingle,
   getAll,
   create,
+  edit,
   addTrack,
   removeTrack
 }
