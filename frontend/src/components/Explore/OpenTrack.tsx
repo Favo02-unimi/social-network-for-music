@@ -54,7 +54,10 @@ const OpenTrack : FC<{
       <h4 className="mt-4 uppercase font-bold text-white/30 text-sm inline mr-1">Preview not available</h4>
     }
 
-    <AddToPlaylist track={track} />
+    <div className="mt-4 w-full">
+      <h4 className="uppercase font-bold text-white/80 text-sm inline mr-1">Add to playlist:</h4>
+      <AddToPlaylist track={track} />
+    </div>
 
   </div>
 )

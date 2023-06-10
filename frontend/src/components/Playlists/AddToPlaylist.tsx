@@ -13,7 +13,11 @@ interface SelectPlaylistItem {
   label : string
 }
 
-const AddToPlaylist : FC<{track : Track}> = ({ track }) => {
+const AddToPlaylist : FC<{
+  track : Track,
+  customClasses ?: string,
+  customClose ?: () => void
+}> = ({ track, customClasses, customClose }) => {
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [playlists, setPlaylists] = useState<SelectPlaylistItem[]>()
@@ -64,6 +68,8 @@ const AddToPlaylist : FC<{track : Track}> = ({ track }) => {
       toast.success(`Added to playlist ${addedPlaylist.title} successfully.`)
 
       setSelectedPlaylist(null)
+
+      if (customClose) customClose()
     }
     catch(e) {
       if (e?.response?.data?.error) {
@@ -78,9 +84,7 @@ const AddToPlaylist : FC<{track : Track}> = ({ track }) => {
   }
 
   return (
-    <div className="relative mt-4 w-full">
-
-      <h4 className="uppercase font-bold text-white/80 text-sm inline mr-1">Add to playlist:</h4>
+    <div className={`w-full ${customClasses}`}>
 
       <div className="relative w-10/12 mx-auto mt-1">
         <Select
