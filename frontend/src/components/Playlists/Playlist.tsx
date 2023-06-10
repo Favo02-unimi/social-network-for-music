@@ -1,8 +1,10 @@
 import type { FC } from "react"
 import { useEffect, useState } from "react"
+import { confirmAlert } from "react-confirm-alert"
 import { FaLock } from "react-icons/fa"
-import { MdPublic } from "react-icons/md"
-import { useParams } from "react-router-dom"
+import { ImBin2 } from "react-icons/im"
+import { MdModeEdit, MdPublic } from "react-icons/md"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 
 import type PlaylistInterface from "../../interfaces/Playlist"
@@ -15,6 +17,8 @@ import TrackRow from "./TrackRow"
 const Playlist : FC = () => {
 
   const { id } = useParams()
+
+  const navigate = useNavigate()
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [playlist, setPlaylist] = useState<PlaylistInterface>()
@@ -53,6 +57,46 @@ const Playlist : FC = () => {
     )
   }
 
+  const handleDeletePlaylist = () => {
+    confirmAlert({
+      title: "Confirm deletion",
+      message: `Are you sure to delete "${playlist.title}"?`,
+      buttons: [
+        {
+          label: "Cancel"
+        },
+        {
+          label: "Delete",
+          className: "remove",
+          onClick: deletePlaylist
+        }
+      ]
+    })
+  }
+
+  const deletePlaylist = async () => {
+
+    setIsLoading(true)
+
+    try {
+      await playlistsService.deletee(playlist._id)
+
+      toast.success(`Deleted playlist ${playlist.title}.`)
+
+      navigate("/playlists")
+    }
+    catch(e) {
+      if (e?.response?.data?.error) {
+        toast.error(e.response.data.error)
+      } else {
+        toast.error("Generic error, please try again")
+      }
+    }
+    finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className="relative w-full h-full border border-white/20 rounded-md p-6 flex justify-center items-center">
       {isLoading && <Loading small />}
@@ -83,23 +127,37 @@ const Playlist : FC = () => {
           {playlist.tags.map(t => <h3 className="bg-gray-500/40 inline m-1 rounded px-2 py-0.5" key={t}>{t}</h3>)}
         </div>
 
-        <div className="mt-4">
-          {(playlist.isCreator || playlist.isCollaborator || playlist.isFollower) &&
-            <h3 className="mb-2 text-spotify-green font-bold uppercase text-lg px-2 opacity-50 border border-spotify-green rounded-md">
-              {playlist.isCollaborator
-                ? "collaborator"
-                : playlist.isCreator
-                  ? "creator"
-                  : "follower"
-              }
-            </h3>
+        {(playlist.isCreator || playlist.isCollaborator || playlist.isFollower) &&
+          <h3 className="mt-4 text-spotify-green font-bold uppercase text-lg px-4 opacity-50 border border-spotify-green rounded-md text-center">
+            {playlist.isCollaborator
+              ? "collaborator"
+              : playlist.isCreator
+                ? "creator"
+                : "follower"
+            }
+          </h3>
+        }
+
+        {/* TODO: collaborators */}
+
+        <div>
+          {(playlist.isCreator || playlist.isCollaborator) &&
+            <Link
+              to={`/playlists/${playlist._id}/edit`}
+              className="text-white/70 w-full block border rounded-md px-4 py-1 mt-4 mb-2 text-center hover:bg-white/20 hover:text-white transition-all duration-700"
+            >
+              <MdModeEdit className="inline -mt-1 mr-1" />Edit playlist
+            </Link>
           }
 
-          {/* TODO: add collaborator to playlist */}
-
-          {/* TODO: add edit playlist */}
-
-          {/* TODO: add delete playlist */}
+          {playlist.isCreator &&
+            <div
+              onClick={handleDeletePlaylist}
+              className="cursor-pointer text-red-700/70 w-full block border border-red-700/70 rounded-md px-4 py-1 text-center hover:bg-red-700/20 hover:text-red-700 transition-all duration-700"
+            >
+              <ImBin2 className="inline -mt-1 mr-1" />Delete playlist
+            </div>
+          }
         </div>
 
       </div>
