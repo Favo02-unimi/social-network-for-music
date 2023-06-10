@@ -52,9 +52,12 @@ const create = async (
 
 const addTrack = async(id : string, track : Track) => {
 
-  const trackBody = {
-    track: track
-  }
+  const headers = { headers: { "authorization": localStorage.getItem("token") } }
+
+  const res = await axios.post(`${baseUrl}/${id}/add`, { track }, headers)
+
+  return res.data
+}
 
   const headers = { headers: { "authorization": localStorage.getItem("token") } }
 
