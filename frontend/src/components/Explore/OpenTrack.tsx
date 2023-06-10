@@ -44,7 +44,15 @@ const OpenTrack : FC<{
       </h3>
     </Link>
 
-      <PlayPreview url={track.preview_url} />
+    {track.preview_url
+      ?
+      <div className="mt-4">
+        <h4 className="uppercase font-bold text-white/80 text-sm inline mr-1">Listen to the preview:</h4>
+        <PlayPreview url={track.preview_url} />
+      </div>
+      :
+      <h4 className="mt-4 uppercase font-bold text-white/30 text-sm inline mr-1">Preview not available</h4>
+    }
 
     <AddToPlaylist track={track} />
 
