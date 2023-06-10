@@ -1,5 +1,6 @@
 import type { FC } from "react"
 import { useState } from "react"
+import { confirmAlert } from "react-confirm-alert"
 import { BiAlbum } from "react-icons/bi"
 import { FiClock } from "react-icons/fi"
 import { ImBin2 } from "react-icons/im"
@@ -24,7 +25,24 @@ const TrackRow : FC<{
   const [showAddToPlaylist, setShowAddToPlaylist] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const handleRemoveFromPlaylist = async () => {
+  const handleRemoveFromPlaylist = () => {
+    confirmAlert({
+      title: "Confirm deletion",
+      message: `Are you sure to remove "${track.name}" from playlist ${playlist.title}?`,
+      buttons: [
+        {
+          label: "Cancel"
+        },
+        {
+          label: "Remove",
+          className: "remove",
+          onClick: removeFromPlaylist
+        }
+      ]
+    })
+  }
+
+  const removeFromPlaylist = async () => {
 
     setIsLoading(true)
 
