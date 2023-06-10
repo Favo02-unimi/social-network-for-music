@@ -73,6 +73,8 @@ const Playlist : FC = () => {
           BY {playlist.creator} - {playlist.followers.length} followers
         </h2>
 
+        <h4 className="text-center mt-2">{playlist.description}</h4>
+
         <div>
           <h3 className="mt-1 text-xl font-bold">{playlist.tracks.length} tracks</h3>
         </div>
