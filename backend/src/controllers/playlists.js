@@ -294,6 +294,10 @@ playlistsRouter.post("/:id/add", authenticateUser, async (req, res) => {
 
   // TODO: fields validation
 
+  if (playlist.tracks.find(t => t.id === track.id)) {
+    return res.status(400).json({ error: `Track already in playlist ${playlist.title}` })
+  }
+
   playlist.tracks.push(track)
   const savedPlaylist = await playlist.save()
 
