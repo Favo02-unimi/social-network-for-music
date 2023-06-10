@@ -300,4 +300,44 @@ playlistsRouter.post("/:id/add", authenticateUser, async (req, res) => {
   res.status(201).json(savedPlaylist)
 })
 
+/**
+ * Remove track from @param id playlist
+ * @param {String} id id of playlist to remove track
+ * @param {String} body id of track to remove
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+playlistsRouter.delete("/:id/remove/:trackid", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = "Remove track from playlist (AUTH required)"
+  */
+
+  const playlist = await Playlist.findById(req.params.id)
+
+  if (!playlist) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
+  // check user is creator/collaborator
+  const userInFollowers = playlist.followers.find(f => f.userId.toString() === req.user.id)
+  if (!userInFollowers) {
+    return res.status(401).json({ error: "You need to be the creator or a collaborator to edit this playlist" })
+  }
+  if (!(userInFollowers.isCreator || userInFollowers.isCollaborator)) {
+    return res.status(401).json({ error: "You need to ne the creator or a collaborator to edit this playlist" })
+  }
+
+  const trackId = req.params.trackid
+
+  if (!playlist.tracks.find(t => t.id === trackId)) {
+    return res.status(404).json({ error: `Track not found in playlist ${playlist.title}` })
+  }
+
+  playlist.tracks = playlist.tracks.filter(t => t.id !== trackId)
+  const savedPlaylist = await playlist.save()
+
+  res.status(201).json(savedPlaylist)
+})
+
 export default playlistsRouter
