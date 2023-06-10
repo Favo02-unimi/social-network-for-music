@@ -1,17 +1,19 @@
 import type { FC } from "react"
 import { FaLock } from "react-icons/fa"
 import { MdPublic } from "react-icons/md"
+import { Link } from "react-router-dom"
 
 import type Playlist from "../../interfaces/Playlist"
 
 import PlaylistImage from "./PlaylistImage"
 
 const PlaylistCard : FC<{ p : Playlist }> = ({ p }) => (
-  <div
+  <Link
+    to={`/playlists/${p._id}`}
     className="m-4 w-[400px] h-40 flex items-center border border-white/20 rounded-md text-center hover:bg-white/20 cursor-pointer transition-all duration-700">
 
     <div className="w-40 shrink-0">
-      <PlaylistImage tracks={p.tracks} />
+      <PlaylistImage tracks={p.tracks} customClasses="w-40 h-40 rounded-l-md" />
     </div>
 
     <div className="flex flex-col justify-center w-full h-full relative overflow-hidden p-1">
@@ -41,7 +43,7 @@ const PlaylistCard : FC<{ p : Playlist }> = ({ p }) => (
       </div>
     </div>
 
-  </div>
+  </Link>
 )
 
 export default PlaylistCard

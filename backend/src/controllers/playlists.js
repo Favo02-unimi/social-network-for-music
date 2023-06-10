@@ -23,7 +23,8 @@ playlistsRouter.get("/", authenticateUser, async (req, res) => {
   const playlists = user.playlists.map(p => ({
     ...p.id._doc,
     isCreator: p.isCreator,
-    isCollaborator: p.isCollaborator
+    isCollaborator: p.isCollaborator,
+    isFollower: true
   }))
 
   res.json(playlists)
@@ -47,19 +48,31 @@ playlistsRouter.get("/:id", authenticateUser, async (req, res) => {
     return res.status(404).json({ error: "Playlist not found" })
   }
 
-  // if not public check user is creator/collaborator
-  if (!playlist.isPublic) {
-    const userInFollowers = playlist.followers.find(f => f.userId.toString() === req.user.id)
+  // find current user in playlists follower (must be following if creator/collaborator)
+  const userInFollowers = playlist.followers.find(f => f.userId.toString() === req.user.id)
 
-    if (!userInFollowers) {
-      return res.status(401).json({ error: "Unauthorized" })
-    }
-    if (!(userInFollowers.isCreator || userInFollowers.isCollaborator)) {
+  // check user is creator/collaborator
+  let isCreator = false
+  let isCollaborator = false
+  if (userInFollowers) {
+    isCreator = userInFollowers.isCreator
+    isCollaborator = userInFollowers.isCollaborator
+  }
+
+  // if not public check user is creator/collaborator (authorization)
+  if (!playlist.isPublic) {
+    if (!(isCreator || isCollaborator)) {
       return res.status(401).json({ error: "Unauthorized" })
     }
   }
 
-  res.json(playlist)
+  // "normalize" return (adding isCreator, isCollaborator)
+  res.json({
+    ...playlist._doc,
+    isCreator,
+    isCollaborator,
+    isFollower: userInFollowers
+  })
 })
 
 /**
@@ -161,7 +174,7 @@ playlistsRouter.patch("/edit/:id", authenticateUser, async (req, res) => {
   }
 
   // check user is creator/collaborator
-  const userInFollowers = playlist.followers.find(f => f.id === req.user.id)
+  const userInFollowers = playlist.followers.find(f => f.userId.toString() === req.user.id)
   if (!userInFollowers) {
     return res.status(401).json({ error: "You need to be the creator or a collaborator to edit this playlist" })
   }
@@ -227,14 +240,16 @@ playlistsRouter.delete("/delete/:id", authenticateUser, async (req, res) => {
     #swagger.summary = "Delete id playlist (AUTH required)"
   */
 
-  const playlist = await Playlist.findById(req.params.id)
+  const playlistId = req.params.id
+
+  const playlist = await Playlist.findById(playlistId)
 
   if (!playlist) {
     return res.status(404).json({ error: "Playlist not found" })
   }
 
-  // check user is creator/collaborator
-  const userInFollowers = playlist.followers.find(f => f.id === req.user.id)
+  // check user is creator
+  const userInFollowers = playlist.followers.find(f => f.userId.toString() === req.user.id)
   if (!userInFollowers) {
     return res.status(401).json({ error: "You need to be the creator to delete this playlist" })
   }
@@ -242,8 +257,15 @@ playlistsRouter.delete("/delete/:id", authenticateUser, async (req, res) => {
     return res.status(401).json({ error: "You need to be the creator to delete this playlist" })
   }
 
-  // TODO: update all followers
+  // update all followers
+  const followers = await User.find({ playlists: { $elemMatch: { id: playlistId } } })
 
+  followers.forEach(async f => {
+    f.playlists = f.playlists.filter(p => p.id.toString() !== playlistId)
+    await f.save()
+  })
+
+  // delete playlist
   await Playlist.findByIdAndDelete(req.params.id)
 
   res.status(204).end()
@@ -268,11 +290,64 @@ playlistsRouter.post("/:id/add", authenticateUser, async (req, res) => {
     return res.status(404).json({ error: "Playlist not found" })
   }
 
+  // check user is creator/collaborator
+  const userInFollowers = playlist.followers.find(f => f.userId.toString() === req.user.id)
+  if (!userInFollowers) {
+    return res.status(401).json({ error: "You need to be the creator or a collaborator to edit this playlist" })
+  }
+  if (!(userInFollowers.isCreator || userInFollowers.isCollaborator)) {
+    return res.status(401).json({ error: "You need to ne the creator or a collaborator to edit this playlist" })
+  }
+
   const { track } = req.body
 
   // TODO: fields validation
 
+  if (playlist.tracks.find(t => t.id === track.id)) {
+    return res.status(400).json({ error: `Track already in playlist ${playlist.title}` })
+  }
+
   playlist.tracks.push(track)
+  const savedPlaylist = await playlist.save()
+
+  res.status(201).json(savedPlaylist)
+})
+
+/**
+ * Remove track from @param id playlist
+ * @param {String} id id of playlist to remove track
+ * @param {String} body id of track to remove
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+playlistsRouter.delete("/:id/remove/:trackid", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = "Remove track from playlist (AUTH required)"
+  */
+
+  const playlist = await Playlist.findById(req.params.id)
+
+  if (!playlist) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
+  // check user is creator/collaborator
+  const userInFollowers = playlist.followers.find(f => f.userId.toString() === req.user.id)
+  if (!userInFollowers) {
+    return res.status(401).json({ error: "You need to be the creator or a collaborator to edit this playlist" })
+  }
+  if (!(userInFollowers.isCreator || userInFollowers.isCollaborator)) {
+    return res.status(401).json({ error: "You need to ne the creator or a collaborator to edit this playlist" })
+  }
+
+  const trackId = req.params.trackid
+
+  if (!playlist.tracks.find(t => t.id === trackId)) {
+    return res.status(404).json({ error: `Track not found in playlist ${playlist.title}` })
+  }
+
+  playlist.tracks = playlist.tracks.filter(t => t.id !== trackId)
   const savedPlaylist = await playlist.save()
 
   res.status(201).json(savedPlaylist)

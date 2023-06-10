@@ -3,6 +3,8 @@ import { createBrowserRouter, Navigate, Outlet, RouterProvider } from "react-rou
 import { Slide, ToastContainer } from "react-toastify"
 
 import CreatePlaylist from "./components/Playlists/CreatePlaylist"
+import EditPlaylist from "./components/Playlists/EditPlaylist"
+import Playlist from "./components/Playlists/Playlist"
 import ProtectedRoute from "./components/ProtectedRoute"
 import Sidebar from "./components/Sidebar"
 import SideContent from "./components/SideContent"
@@ -14,6 +16,7 @@ import Register from "./pages/Register"
 
 import "../src/assets/styles/index.css"
 import "react-toastify/dist/ReactToastify.css"
+import "../src/assets/styles/confirmationComponent.css"
 
 const App : FC = () => {
 
@@ -41,7 +44,9 @@ const App : FC = () => {
         { path: "*", element: <Navigate to="/home" replace /> },
         { path: "explore", element: <Explore /> },
         { path: "playlists", element: <Playlists /> },
-        { path: "playlists/create", element: <CreatePlaylist /> }
+        { path: "playlists/:id", element: <Playlist /> },
+        { path: "playlists/create", element: <CreatePlaylist /> },
+        { path: "playlists/:id/edit", element: <EditPlaylist /> }
       ]
     }
   ])

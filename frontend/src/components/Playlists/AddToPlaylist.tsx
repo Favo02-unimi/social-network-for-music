@@ -13,7 +13,11 @@ interface SelectPlaylistItem {
   label : string
 }
 
-const AddToPlaylist : FC<{track : Track}> = ({ track }) => {
+const AddToPlaylist : FC<{
+  track : Track,
+  customClasses ?: string,
+  customClose ?: () => void
+}> = ({ track, customClasses, customClose }) => {
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [playlists, setPlaylists] = useState<SelectPlaylistItem[]>()
@@ -29,7 +33,11 @@ const AddToPlaylist : FC<{track : Track}> = ({ track }) => {
         const res = await playlistsService.getAll()
         setPlaylists(res
           .filter((p : Playlist) => p.isCreator || p.isCollaborator)
-          .map((p : Playlist) => ({ value: p._id, label: p.title }))
+          .map((p : Playlist) => ({
+            value: p._id,
+            label: p.title,
+            isDisabled: p.tracks.find(t => t.id === track.id)
+          }))
         )
       }
       catch(e) {
@@ -46,7 +54,7 @@ const AddToPlaylist : FC<{track : Track}> = ({ track }) => {
 
     fetchPlaylists()
 
-  }, [])
+  }, [track])
 
   const handleAddToPlaylist = async () => {
 
@@ -64,6 +72,8 @@ const AddToPlaylist : FC<{track : Track}> = ({ track }) => {
       toast.success(`Added to playlist ${addedPlaylist.title} successfully.`)
 
       setSelectedPlaylist(null)
+
+      if (customClose) customClose()
     }
     catch(e) {
       if (e?.response?.data?.error) {
@@ -78,9 +88,7 @@ const AddToPlaylist : FC<{track : Track}> = ({ track }) => {
   }
 
   return (
-    <div className="relative mt-4 w-full">
-
-      <h4 className="uppercase font-bold text-white/80 text-sm inline mr-1">Add to playlist:</h4>
+    <div className={`w-full ${customClasses}`}>
 
       <div className="relative w-10/12 mx-auto mt-1">
         <Select
@@ -97,7 +105,9 @@ const AddToPlaylist : FC<{track : Track}> = ({ track }) => {
             menu: () => "border border-b-0 border-spotify-greendark rounded-t-md bg-spotify-black",
             control: () => "border border-spotify-greendark rounded-md pr-10 pl-4 text-white",
             placeholder: () => "text-white/30",
-            option: () => "py-2 border-b border-spotify-greendark/20 hover:bg-spotify-greendark/20",
+            option: ({ isDisabled }) => isDisabled
+              ? "py-2 border-b border-spotify-greendark/20 text-white/30"
+              : "py-2 border-b border-spotify-greendark/20 hover:bg-spotify-greendark/20",
             noOptionsMessage: () => "py-2 text-white/30",
             dropdownIndicator: () => "text-white/30",
             loadingIndicator: () => "text-white"
