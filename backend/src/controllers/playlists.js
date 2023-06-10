@@ -240,7 +240,9 @@ playlistsRouter.delete("/delete/:id", authenticateUser, async (req, res) => {
     #swagger.summary = "Delete id playlist (AUTH required)"
   */
 
-  const playlist = await Playlist.findById(req.params.id)
+  const playlistId = req.params.id
+
+  const playlist = await Playlist.findById(playlistId)
 
   if (!playlist) {
     return res.status(404).json({ error: "Playlist not found" })
@@ -255,8 +257,15 @@ playlistsRouter.delete("/delete/:id", authenticateUser, async (req, res) => {
     return res.status(401).json({ error: "You need to be the creator to delete this playlist" })
   }
 
-  // TODO: update all followers
+  // update all followers
+  const followers = await User.find({ playlists: { $elemMatch: { id: playlistId } } })
 
+  followers.forEach(async f => {
+    f.playlists = f.playlists.filter(p => p.id.toString() !== playlistId)
+    await f.save()
+  })
+
+  // delete playlist
   await Playlist.findByIdAndDelete(req.params.id)
 
   res.status(204).end()
