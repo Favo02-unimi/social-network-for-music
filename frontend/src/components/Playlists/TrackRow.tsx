@@ -107,7 +107,7 @@ const TrackRow : FC<{
             <AddToPlaylist
               track={track}
               customClose={() => setShowAddToPlaylist(false)}
-              customClasses="absolute w-96 top-1/2 -translate-y-1/2 right-full backdrop-blur text-center"
+              customClasses="absolute !w-96 top-1/2 -translate-y-1/2 right-full backdrop-blur text-center"
             />
           }
           <MdPlaylistAdd
