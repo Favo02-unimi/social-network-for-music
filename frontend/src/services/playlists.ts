@@ -72,6 +72,15 @@ const edit = async (
   return res.data
 }
 
+const deletee = async(id : string) => {
+
+  const headers = { headers: { "authorization": localStorage.getItem("token") } }
+
+  const res = await axios.delete(`${baseUrl}/delete/${id}`, headers)
+
+  return res.data
+}
+
 const addTrack = async(id : string, track : Track) => {
 
   const headers = { headers: { "authorization": localStorage.getItem("token") } }
@@ -96,6 +105,7 @@ const playlistsService = {
   getAll,
   create,
   edit,
+  deletee,
   addTrack,
   removeTrack
 }
