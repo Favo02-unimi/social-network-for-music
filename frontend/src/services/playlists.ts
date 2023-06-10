@@ -59,9 +59,11 @@ const addTrack = async(id : string, track : Track) => {
   return res.data
 }
 
+const removeTrack = async(id : string, trackId : string) => {
+
   const headers = { headers: { "authorization": localStorage.getItem("token") } }
 
-  const res = await axios.post(`${baseUrl}/${id}/add`, trackBody, headers)
+  const res = await axios.delete(`${baseUrl}/${id}/remove/${trackId}`, headers)
 
   return res.data
 }
@@ -71,7 +73,8 @@ const playlistsService = {
   getSingle,
   getAll,
   create,
-  addTrack
+  addTrack,
+  removeTrack
 }
 
 export default playlistsService
