@@ -15,6 +15,7 @@ import Register from "./pages/Register"
 
 import "../src/assets/styles/index.css"
 import "react-toastify/dist/ReactToastify.css"
+import "../src/assets/styles/confirmationComponent.css"
 
 const App : FC = () => {
 
