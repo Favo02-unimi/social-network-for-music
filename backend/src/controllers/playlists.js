@@ -7,6 +7,21 @@ import User from "../models/User.js"
 const playlistsRouter = express.Router()
 
 /**
+ * Get all public playlists metadata
+ * @returns {Response}
+ */
+playlistsRouter.get("/public", async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = "Get all public playlists metadata"
+  */
+
+  const playlists = await Playlist.find({ isPublic: true })
+
+  res.json(playlists)
+})
+
+/**
  * Get all playlists followed, created or collaborated by current user
  * @requires authorization header (JWT token)
  * @returns {Response}
@@ -73,29 +88,6 @@ playlistsRouter.get("/:id", authenticateUser, async (req, res) => {
     isCollaborator,
     isFollower: userInFollowers
   })
-})
-
-/**
- * Get all public playlists metadata
- * @returns {Response}
- */
-playlistsRouter.get("/public", async (req, res) => {
-  /*
-    #swagger.tags = ["Playlists"]
-    #swagger.summary = "Get all public playlists metadata"
-  */
-
-  const playlists = await Playlist
-    .find({ isPublic: true })
-    .map(p => ({
-      title: p.title,
-      description: p.description,
-      tags: p.tags,
-      tracksNumber: p.tracks.length,
-      followersNumber: p.followers.length
-    }))
-
-  res.json(playlists)
 })
 
 /**
