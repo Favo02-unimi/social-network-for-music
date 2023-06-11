@@ -111,15 +111,19 @@ const TrackRow : FC<{
             />
           }
           <MdPlaylistAdd
+            title="Add to other playlist"
             onClick={() => setShowAddToPlaylist(!showAddToPlaylist)}
             className="text-2xl text-white/70 hover:text-white cursor-pointer"
           />
         </div>
 
-        <ImBin2
-          onClick={handleRemoveFromPlaylist}
-          className="text-lg text-red-700/70 hover:text-red-700 cursor-pointer"
-        />
+        {(playlist.isCreator || playlist.isCollaborator) &&
+          <ImBin2
+            title="Remove from playlist"
+            onClick={handleRemoveFromPlaylist}
+            className="text-lg text-red-700/70 hover:text-red-700 cursor-pointer"
+          />
+        }
       </div>
     </div>
   )
