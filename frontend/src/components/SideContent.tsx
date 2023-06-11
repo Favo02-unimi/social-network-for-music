@@ -60,7 +60,12 @@ const SideContent : FC = () => {
               to="https://creativecommons.org/licenses/by/4.0/"
               target="_blank"
               className="underline underline-offset-2"
-            >(CC-BY 4.0 License)</Link>
+            >(CC-BY 4.0)</Link>
+            <Link
+              to="https://github.com/Favo02/SocialNetworkForMusic/issues"
+              target="_blank"
+              className="underline underline-offset-2 ml-1"
+            >Report a bug</Link>
           </h6>
         </div>
       </div>
