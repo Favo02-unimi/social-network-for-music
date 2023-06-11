@@ -18,9 +18,10 @@ const Sidebar : FC<{sideContent : ReactElement, children ?: ReactElement}> = ({ 
 
   const resize = useCallback((mouseMoveEvent : MouseEvent) => {
     if (isResizing && sidebarRef.current) {
-      setSidebarWidth(mouseMoveEvent.clientX - sidebarRef.current.getBoundingClientRect().left)
+      const width = mouseMoveEvent.clientX - sidebarRef.current.getBoundingClientRect().left
+      setSidebarWidth((width >= 255 && width <= 600) ? width : sidebarWidth)
     }
-  }, [isResizing])
+  }, [isResizing, sidebarWidth])
 
   useEffect(() => {
     window.addEventListener("mousemove", resize)
@@ -32,7 +33,7 @@ const Sidebar : FC<{sideContent : ReactElement, children ?: ReactElement}> = ({ 
   }, [resize, stopResizing])
 
   return (
-    <div className="h-screen flex flex-row">
+    <div className="h-screen w-screen flex flex-row">
       <div
         ref={sidebarRef}
         className="grow-0 shrink-0 min-w-[255px] max-w-[600px] flex flex-row shadow-md"
@@ -46,7 +47,10 @@ const Sidebar : FC<{sideContent : ReactElement, children ?: ReactElement}> = ({ 
           <MdDragHandle className="rotate-90 absolute top-1/2 -translate-y-1/2 -left-[10px] text-2xl text-gray-300 opacity-40" />
         </div>
       </div>
-      <div className="grow shrink h-screen p-4">
+      <div
+        className="grow shrink h-screen p-4"
+        style={{ width: `calc(100vw - ${sidebarWidth}px)` }}
+      >
         {children}
       </div>
     </div>
