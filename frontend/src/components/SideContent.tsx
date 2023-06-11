@@ -52,7 +52,7 @@ const SideContent : FC = () => {
           </h5>
           <h6 className="text-xs">
             <Link
-              to="https://github.com/Favo02/SocialNetworkForMusic"
+              to="https://github.com/Favo02/social-network-for-music"
               target="_blank"
               className="underline underline-offset-2 mr-1"
             >Source code</Link>
@@ -62,7 +62,7 @@ const SideContent : FC = () => {
               className="underline underline-offset-2"
             >(CC-BY 4.0)</Link>
             <Link
-              to="https://github.com/Favo02/SocialNetworkForMusic/issues"
+              to="https://github.com/Favo02/social-network-for-music/issues"
               target="_blank"
               className="underline underline-offset-2 ml-1"
             >Report a bug</Link>
