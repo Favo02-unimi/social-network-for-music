@@ -4,7 +4,7 @@ import { confirmAlert } from "react-confirm-alert"
 import { BiAlbum } from "react-icons/bi"
 import { FiClock } from "react-icons/fi"
 import { ImBin2 } from "react-icons/im"
-import { MdPlaylistAdd } from "react-icons/md"
+import { MdPlayDisabled, MdPlaylistAdd } from "react-icons/md"
 import { toast } from "react-toastify"
 
 import type Playlist from "../../interfaces/Playlist"
@@ -75,7 +75,7 @@ const TrackRow : FC<{
 
       {track.preview_url
         ? <PlayPreview url={track.preview_url} customClasses="mr-3 w-10 text-center hover:border-spotify-greendark border-transparent" />
-        : <div className="w-10 mr-3" />
+        : <MdPlayDisabled title="Preview unavailable" className="inline w-10 text-2xl mr-3 text-white/20" />
       }
 
       <img src={track.album.images[0].url} className="w-16 h-16 opacity-80" />

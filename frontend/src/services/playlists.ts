@@ -99,6 +99,24 @@ const removeTrack = async(id : string, trackId : string) => {
   return res.data
 }
 
+const follow = async (id : string) => {
+
+  const headers = { headers: { "authorization": localStorage.getItem("token") } }
+
+  const res = await axios.post(`${baseUrl}/${id}/follow`, {}, headers)
+
+  return res.data
+}
+
+const unfollow = async (id : string) => {
+
+  const headers = { headers: { "authorization": localStorage.getItem("token") } }
+
+  const res = await axios.post(`${baseUrl}/${id}/unfollow`, {}, headers)
+
+  return res.data
+}
+
 const playlistsService = {
   getPublic,
   getSingle,
@@ -107,7 +125,9 @@ const playlistsService = {
   edit,
   deletee,
   addTrack,
-  removeTrack
+  removeTrack,
+  follow,
+  unfollow
 }
 
 export default playlistsService

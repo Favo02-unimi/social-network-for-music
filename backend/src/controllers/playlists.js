@@ -302,7 +302,7 @@ playlistsRouter.post("/:id/add", authenticateUser, async (req, res) => {
   playlist.tracks.push(track)
   const savedPlaylist = await playlist.save()
 
-  res.status(201).json(savedPlaylist)
+  res.status(200).json(savedPlaylist)
 })
 
 /**
@@ -342,7 +342,82 @@ playlistsRouter.delete("/:id/remove/:trackid", authenticateUser, async (req, res
   playlist.tracks = playlist.tracks.filter(t => t.id !== trackId)
   const savedPlaylist = await playlist.save()
 
-  res.status(201).json(savedPlaylist)
+  res.status(204).json(savedPlaylist)
 })
+
+/**
+ * Current user follow @param id playlist
+ * @param {String} id id of playlist to follow
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+playlistsRouter.post("/:id/follow", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = Current user follow playlist (AUTH required)"
+  */
+
+  const playlist = await Playlist.findById(req.params.id)
+
+  if (!playlist) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
+  const userId = req.user.id
+
+  const userInFollowers = playlist.followers.find(f => f.userId.toString() === userId)
+  if (userInFollowers) {
+    return res.status(400).json({ error: "Playlist already followed" })
+  }
+
+  playlist.followers.push({ userId })
+  const savedPlaylist = await playlist.save()
+
+  const user = await User.findById(userId)
+  user.playlists.push({ id: savedPlaylist._id })
+  await user.save()
+
+  res.status(200).json(savedPlaylist)
+})
+
+/**
+ * Current user unfollow @param id playlist
+ * @param {String} id id of playlist to unfollow
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+playlistsRouter.post("/:id/unfollow", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = Current user unfollow playlist (AUTH required)"
+  */
+
+  const playlist = await Playlist.findById(req.params.id)
+
+  if (!playlist) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
+  const userId = req.user.id
+
+  const userInFollowers = playlist.followers.find(f => f.userId.toString() === userId)
+  if (!userInFollowers) {
+    return res.status(400).json({ error: "Playlist not followed" })
+  }
+
+  if (userInFollowers.isCreator) {
+    return res.status(400).json({ error: "You are the creator of the playlist, you can't unfollow" })
+  }
+
+  playlist.followers = playlist.followers.filter(u => u.userId.toString() !== userId)
+  const savedPlaylist = await playlist.save()
+
+  const user = await User.findById(userId)
+  user.playlists = user.playlists.filter(p => p.id.toString() !== savedPlaylist._id.toString())
+  await user.save()
+
+  res.status(200).json(savedPlaylist)
+})
+
 
 export default playlistsRouter
