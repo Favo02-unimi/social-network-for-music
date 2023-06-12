@@ -302,7 +302,7 @@ playlistsRouter.post("/:id/add", authenticateUser, async (req, res) => {
   playlist.tracks.push(track)
   const savedPlaylist = await playlist.save()
 
-  res.status(201).json(savedPlaylist)
+  res.status(200).json(savedPlaylist)
 })
 
 /**
@@ -342,7 +342,8 @@ playlistsRouter.delete("/:id/remove/:trackid", authenticateUser, async (req, res
   playlist.tracks = playlist.tracks.filter(t => t.id !== trackId)
   const savedPlaylist = await playlist.save()
 
-  res.status(201).json(savedPlaylist)
+  res.status(204).json(savedPlaylist)
+})
 })
 
 export default playlistsRouter
