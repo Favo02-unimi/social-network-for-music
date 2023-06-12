@@ -10,6 +10,9 @@ Deployed _(automatically)_ at [socialnetworkformusic.favo02.dev](https://socialn
 
 ### Branching Strategy
 
+<details>
+<summary>Branching strategy</summary>
+
 > This project follows the [GitHubFlow](https://docs.github.com/en/get-started/quickstart/github-flow) branching strategy.
 
 > Following is a summary of a typical GitHubFlow workflow.
@@ -30,6 +33,14 @@ When committing your changes, make sure to follow the guidelines described in th
 
 When you create a pull request, **include a summary of the changes** and what problem they solve.
 
+> Pull requests are the final part of this workflow and they allow contributors to **review and share opinions on code** with each other. Furthermore such mechanism opens the doors to **automated workflow runs** (continuous integration).
+
+##### When to pull request
+
+- A pull request should only be opened when the work is *done* and ready for production.
+
+- If a pull request doesn't pass every automated test, **it shouldn't be merged**, fix the problems and then push your fixes again until it passes.
+
 ##### Merge your pull request
 
 Once your pull request is approved, merge your pull request. This will automatically merge your branch so that your changes appear on the default branch.
@@ -37,8 +48,13 @@ Once your pull request is approved, merge your pull request. This will automatic
 ##### Delete your branch
 
 After you merge your pull request, **delete your branch**.
+  
+</details>
 
 ### Commit Convention
+
+<details>
+<summary>Commit convention</summary>
 
 > This project follow the [AngularJS commit-message convention](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#-commit-message-format), this increases consistency and readability of commits but more importantly it eases the creation of version numbers.
 
@@ -110,8 +126,13 @@ The scope is the part of the codebase where the changes happened and it can be o
 All breaking changes have to be mentioned in footer with the description of the change, justification and migration notes (e.g. `BREAKING CHANGE: desc...`).
 
 - If a commit targets a specific issue, the issue_id must be specified in the footer e.g. `Closes #123`, in case of multiple issues `Closes #123, #124, #125`.
+  
+</details>
 
-### Issues
+### Issues: bugs report, feature ideas
+  
+<details>
+<summary>Issues: bugs report, feature ideas</summary>
 
 > Issues can be opened for everything that has to do with the program, from asking questions to requesting new fetures or bug-fixes.
 
@@ -123,21 +144,29 @@ Issues should describe and include each of the following components:
     - `priority: 2`
     - `priority: 3`
     - `priority: 4` &larr; **Lowest**
-- A `scope` label
-    - One of the scopes described in the [commit scope section](#scope).
 - A `type` label
-    - One of the types described in the [commit type section](#type).
+    - `feature`: new feature to be implemented
+    - `bug`: bug to be fixed
+    - `idea`: an idea for a future update (not strictly required as a feature)
 
-### Pull Requests
+</details>
 
-> Pull requests are the final part of this workflow and they allow contributors to **review and share opinions on code** with each other. Furthermore such mechanism opens the doors to **automated workflow runs** (continuous integration).
+### Versioning and deploying
+  
+<details>
+<summary>Versioning and deploying</summary>
 
-#### When to pull request
+#### Versioning
 
-- A pull request should only be opened when the work is *done* and ready for production.
+Versioning is done automatically by [GitVersion](https://gitversion.net) each time a PR is successfully merged into the `main branch`.
 
-- If a pull request doesn't pass every automated test, **it shouldn't be merged**, fix the problems and then push your fixes again until it passes.
+Based on the commit types, the action will increment minor (`0.minor.0`) or patch (`0.0.patch`) version number.\
+Major (`major.0.0`) versions are generated manually
+  
+#### Deploying
 
-### Versioning
+Every time a new version is bumped, the `serve` workflow will be triggered, generating a new Docker image for the application and serving it at [snm.favo02.dev](https://snm.favo02.dev).
 
-> Versioning is done automatically by [GitVersion](https://gitversion.net) each time a PR is successfully merged into the `main branch`.
+</details>
+  
+
