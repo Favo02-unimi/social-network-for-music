@@ -344,6 +344,40 @@ playlistsRouter.delete("/:id/remove/:trackid", authenticateUser, async (req, res
 
   res.status(204).json(savedPlaylist)
 })
+
+/**
+ * Current user follow @param id playlist
+ * @param {String} id id of playlist to follow
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+playlistsRouter.post("/:id/follow", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = Current user follow playlist (AUTH required)"
+  */
+
+  const playlist = await Playlist.findById(req.params.id)
+
+  if (!playlist) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
+  const userId = req.user.id
+
+  const userInFollowers = playlist.followers.find(f => f.userId.toString() === userId)
+  if (userInFollowers) {
+    return res.status(400).json({ error: "Playlist already followed" })
+  }
+
+  playlist.followers.push({ userId })
+  const savedPlaylist = await playlist.save()
+
+  const user = await User.findById(userId)
+  user.playlists.push({ id: savedPlaylist._id })
+  await user.save()
+
+  res.status(200).json(savedPlaylist)
 })
 
 export default playlistsRouter
