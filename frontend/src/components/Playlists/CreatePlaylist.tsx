@@ -58,7 +58,7 @@ const CreatePlaylist : FC = () => {
 
       toast.success("Playlist created successfully.")
 
-      navigate(`/playlists/${createdPlaylist._id}`)
+      navigate(`/playlists/${createdPlaylist._id}`, { replace: true })
     }
     catch(e) {
       if (e?.response?.data?.error) {

@@ -11,7 +11,7 @@ const ProtectedRoute : FC<{children : React.ReactNode}> = ({ children }) => {
   if (!auth && !isLoading) {
     localStorage.removeItem("user")
     localStorage.removeItem("token")
-    return <Navigate to="/login" />
+    return <Navigate to="/login" replace />
   }
 
   return (

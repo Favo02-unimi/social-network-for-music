@@ -41,7 +41,7 @@ const LoginForm : FC = () => {
       localStorage.setItem("user", loggedUser.username)
       localStorage.setItem("token", loggedUser.token)
 
-      navigate("/afterlogin", { replace: true })
+      navigate("/home", { replace: true })
     }
     catch(e) {
       toast.error("Invalid username or password")

@@ -91,7 +91,7 @@ const EditPlaylist : FC = () => {
 
       toast.success("Playlist edited successfully.")
 
-      navigate(`/playlists/${editedPlaylist._id}`)
+      navigate(`/playlists/${editedPlaylist._id}`, { replace: true })
     }
     catch(e) {
       if (e?.response?.data?.error) {
