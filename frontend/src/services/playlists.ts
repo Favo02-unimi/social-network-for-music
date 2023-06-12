@@ -4,6 +4,10 @@ import type Track from "../interfaces/Track"
 
 const baseUrl = "/api/playlists"
 
+/**
+ * Get public playlists
+ * @returns {200} public playlists
+ */
 const getPublic = async () => {
 
   const res = await axios.get(`${baseUrl}/public`)
@@ -11,6 +15,16 @@ const getPublic = async () => {
   return res.data
 }
 
+
+/**
+ * Get single @param id playlist
+ * @param {string} id of playlist to get
+ * @requires authorization header (JWT token)
+ * @throws {401} missing/invalid token
+ * @throws {404} playlist not found
+ * @throws {401} private playlist and user not creator/collaborator
+ * @returns {200} playlist
+ */
 const getSingle = async (id : string) => {
 
   const headers = { headers: { "authorization": localStorage.getItem("token") } }
@@ -20,6 +34,12 @@ const getSingle = async (id : string) => {
   return res.data
 }
 
+/**
+ * Get all playlists followed by user
+ * @requires authorization header (JWT token)
+ * @throws {401} missing/invalid token
+ * @returns {200} playlist
+ */
 const getAll = async () => {
 
   const headers = { headers: { "authorization": localStorage.getItem("token") } }
@@ -29,6 +49,19 @@ const getAll = async () => {
   return res.data
 }
 
+/**
+ * Create new playlist
+ * @param {string} title of playlist to create
+ * @param {string} description of playlist to create
+ * @param {boolean} isPublic private/public setting of playlist
+ * @param {undefined | string[]} tags of playlist to create
+ * @requires authorization header (JWT token)
+ * @throws {401} missing/invalid token
+ * @throws {400} invalid title
+ * @throws {400} invalid description
+ * @throws {400} invalid tags
+ * @returns {201} created playlist
+ */
 const create = async (
   title : string,
   description : string,
@@ -50,6 +83,22 @@ const create = async (
   return res.data
 }
 
+/**
+ * Edit @param id playlist
+ * @param {string} id playlist to edit
+ * @param {string} title new title of playlist
+ * @param {string} description new description of playlist
+ * @param {boolean} isPublic new private/public public of playlist
+ * @param {undefined | string[]} tags new tags of playlist to create
+ * @requires authorization header (JWT token)
+ * @throws {401} missing/invalid token
+ * @throws {404} playlist not found
+ * @throws {401} user not creator/collaborator of playlist
+ * @throws {400} invalid title
+ * @throws {400} invalid description
+ * @throws {400} invalid tags
+ * @returns {200} updated playlist
+ */
 const edit = async (
   id : string,
   title : string,
@@ -72,6 +121,15 @@ const edit = async (
   return res.data
 }
 
+/**
+ * Delete @param id playlist
+ * @param {string} id playlist to delete
+ * @requires authorization header (JWT token)
+ * @throws {401} missing/invalid token
+ * @throws {404} playlist not found
+ * @throws {401} user not creator of playlist
+ * @returns {204}
+ */
 const deletee = async(id : string) => {
 
   const headers = { headers: { "authorization": localStorage.getItem("token") } }
@@ -81,6 +139,17 @@ const deletee = async(id : string) => {
   return res.data
 }
 
+/**
+ * Add @param track to @param id playlist
+ * @param {string} id playlist to add track
+ * @param {Track} track to add to playlist
+ * @requires authorization header (JWT token)
+ * @throws {401} missing/invalid token
+ * @throws {404} playlist not found
+ * @throws {401} user not creator/collaborator of playlist
+ * @throws {400} track already in playlist
+ * @returns {200} updated playlist
+ */
 const addTrack = async(id : string, track : Track) => {
 
   const headers = { headers: { "authorization": localStorage.getItem("token") } }
@@ -90,6 +159,17 @@ const addTrack = async(id : string, track : Track) => {
   return res.data
 }
 
+/**
+ * Remove track @param trackId from @param id playlist
+ * @param {string} id playlist to remove track
+ * @param {string} trackId of track to remove
+ * @requires authorization header (JWT token)
+ * @throws {401} missing/invalid token
+ * @throws {404} playlist not found
+ * @throws {401} user not creator/collaborator of playlist
+ * @throws {404} track not found in playlist
+ * @returns {204} updated playlist
+ */
 const removeTrack = async(id : string, trackId : string) => {
 
   const headers = { headers: { "authorization": localStorage.getItem("token") } }
@@ -99,6 +179,15 @@ const removeTrack = async(id : string, trackId : string) => {
   return res.data
 }
 
+/**
+ * Current user follow @param id playlist
+ * @param {string} id playlist to follow
+ * @requires authorization header (JWT token)
+ * @throws {401} missing/invalid token
+ * @throws {404} playlist not found
+ * @throws {400} playlist already followed
+ * @returns {200} updated playlist
+ */
 const follow = async (id : string) => {
 
   const headers = { headers: { "authorization": localStorage.getItem("token") } }
@@ -108,6 +197,16 @@ const follow = async (id : string) => {
   return res.data
 }
 
+/**
+ * Current user unfollow @param id playlist
+ * @param {string} id playlist to unfollow
+ * @requires authorization header (JWT token)
+ * @throws {401} missing/invalid token
+ * @throws {404} playlist not found
+ * @throws {400} playlist not followed
+ * @throws {400} user is creator of playlist
+ * @returns {200} updated playlist
+ */
 const unfollow = async (id : string) => {
 
   const headers = { headers: { "authorization": localStorage.getItem("token") } }
