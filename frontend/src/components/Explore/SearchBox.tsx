@@ -4,6 +4,7 @@ import { toast } from "react-toastify"
 
 import type Track from "../../interfaces/Track"
 import spotifyService from "../../services/spotify"
+import REGEX from "../../utils/regex"
 import Loading from "../Loading"
 
 import FakeTrackCard from "./FakeTrackCard"
@@ -15,16 +16,27 @@ const SearchBox : FC<{
 }> = ({ openTrack, setOpenTrack }) => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isInvalid, setIsInvalid] = useState<boolean>(false)
 
   const [tracks, setTracks] = useState<Track[]>()
 
   const handleSearch = async (query : string) => {
     if (query.length < 2) {
+      setIsInvalid(false)
       setTracks([])
       return
     }
 
     setIsLoading(true)
+
+    if (!REGEX.query.test(query)) {
+      setIsLoading(false)
+      setIsInvalid(true)
+      return
+    }
+    else {
+      setIsInvalid(false)
+    }
 
     try {
       const res = await spotifyService.all(query)
@@ -52,6 +64,7 @@ const SearchBox : FC<{
           placeholder="Search..."
           onChange={({ target }) => { handleSearch(target.value) }}
           className="mt-4 w-[500px] text-white bg-white/20 border-2 border-transparent py-2 px-3 rounded-md leading-tight outline-none placeholder:text-gray-400 focus-within:border-spotify-green transition-all duration-700" />
+        {isInvalid && <h3 className="max-w-[700px] text-center text-red-700">Invalid search query. Please use the following format: {REGEX.queryDesc}.</h3>}
       </div>
 
       {!tracks || tracks.length === 0
