@@ -1,7 +1,7 @@
 import type { FC } from "react"
 import { useEffect, useState } from "react"
 import { confirmAlert } from "react-confirm-alert"
-import { FaHeart, FaLock } from "react-icons/fa"
+import { FaHeart, FaHeartBroken, FaLock } from "react-icons/fa"
 import { ImBin2 } from "react-icons/im"
 import { MdModeEdit, MdPublic } from "react-icons/md"
 import { Link, useNavigate, useParams } from "react-router-dom"
@@ -102,11 +102,37 @@ const Playlist : FC = () => {
     setIsLoading(true)
 
     try {
-      await playlistsService.follow(playlist._id)
+      const updatedPlaylist = await playlistsService.follow(playlist._id)
 
       toast.success(`Playlist ${playlist.title} followed.`)
 
-      // TODO: edit playlist to show that user followed
+      setPlaylist({
+        ...updatedPlaylist,
+        isFollower: true
+      })
+    }
+    catch(e) {
+      if (e?.response?.data?.error) {
+        toast.error(e.response.data.error)
+      } else {
+        toast.error("Generic error, please try again")
+      }
+    }
+    finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleUnfollowPlaylist = async () => {
+
+    setIsLoading(true)
+
+    try {
+      const updatedPlaylist = await playlistsService.unfollow(playlist._id)
+
+      toast.success(`Playlist ${playlist.title} unfollowed.`)
+
+      setPlaylist(updatedPlaylist)
     }
     catch(e) {
       if (e?.response?.data?.error) {
@@ -170,6 +196,15 @@ const Playlist : FC = () => {
               className="cursor-pointer text-spotify-green/70 w-full block border border-spotify-green/70 rounded-md px-4 py-1 mt-4 mb-2 text-center hover:bg-spotify-green/20 hover:spotify-green transition-all duration-700"
             >
               <FaHeart className="inline -mt-1 mr-1" />Follow playlist
+            </div>
+          }
+
+          {(playlist.isFollower && !playlist.isCreator) &&
+            <div
+              onClick={handleUnfollowPlaylist}
+              className="cursor-pointer text-spotify-green/70 w-full block border border-spotify-green/70 rounded-md px-4 py-1 mt-4 mb-2 text-center hover:bg-spotify-green/20 hover:spotify-green transition-all duration-700"
+            >
+              <FaHeartBroken className="inline -mt-1 mr-1" />Unfollow playlist
             </div>
           }
 
