@@ -18,7 +18,8 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.6.1",
     "nodemon": "^2.0.20",
-    "swagger-ui-express": "^4.6.3"
+    "swagger-ui-express": "^4.6.3",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@babel/core": "^7.22.1",
