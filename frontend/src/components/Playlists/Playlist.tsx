@@ -229,7 +229,7 @@ const Playlist : FC = () => {
 
       </div>
 
-      <div className="w-2/3 h-full pl-4 flex flex-col justify-center">
+      <div className="w-2/3 h-full pl-4 flex flex-col justify-center overflow-y-auto">
         {playlist.tracks.map(t =>
           <TrackRow
             key={t.id}
