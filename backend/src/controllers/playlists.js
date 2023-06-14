@@ -1,4 +1,5 @@
 import express from "express"
+import mongoose from "mongoose"
 import authenticateUser from "../middlewares/authenticateUser.js"
 import Playlist from "../models/Playlist.js"
 import User from "../models/User.js"
@@ -57,6 +58,11 @@ playlistsRouter.get("/:id", authenticateUser, async (req, res) => {
     #swagger.tags = ["Playlists"]
     #swagger.summary = "Get details of {id} playlist (AUTH required)"
   */
+
+  // validate id
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
 
   const playlist = await Playlist.findById(req.params.id)
 
@@ -151,6 +157,11 @@ playlistsRouter.patch("/edit/:id", authenticateUser, async (req, res) => {
     #swagger.summary = "Edit id playlist (AUTH required)"
   */
 
+  // validate id
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
   const playlist = await Playlist.findById(req.params.id)
 
   if (!playlist) {
@@ -213,6 +224,11 @@ playlistsRouter.delete("/delete/:id", authenticateUser, async (req, res) => {
     #swagger.summary = "Delete id playlist (AUTH required)"
   */
 
+  // validate id
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
   const playlistId = req.params.id
 
   const playlist = await Playlist.findById(playlistId)
@@ -256,6 +272,11 @@ playlistsRouter.post("/:id/add", authenticateUser, async (req, res) => {
     #swagger.tags = ["Playlists"]
     #swagger.summary = "Add track to playlist (AUTH required)"
   */
+
+  // validate id
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
 
   const playlist = await Playlist.findById(req.params.id)
 
@@ -305,6 +326,11 @@ playlistsRouter.delete("/:id/remove/:trackid", authenticateUser, async (req, res
     #swagger.summary = "Remove track from playlist (AUTH required)"
   */
 
+  // validate id
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
   const playlist = await Playlist.findById(req.params.id)
 
   if (!playlist) {
@@ -344,6 +370,11 @@ playlistsRouter.post("/:id/follow", authenticateUser, async (req, res) => {
     #swagger.summary = Current user follow playlist (AUTH required)"
   */
 
+  // validate id
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
   const playlist = await Playlist.findById(req.params.id)
 
   if (!playlist) {
@@ -378,6 +409,11 @@ playlistsRouter.post("/:id/unfollow", authenticateUser, async (req, res) => {
     #swagger.tags = ["Playlists"]
     #swagger.summary = Current user unfollow playlist (AUTH required)"
   */
+
+  // validate id
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
 
   const playlist = await Playlist.findById(req.params.id)
 
