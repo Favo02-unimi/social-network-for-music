@@ -4,8 +4,8 @@ import validate from "./validate.js"
 import regex from "../utils/regex.js"
 
 const LoginUserSchema = z.object({
-  username: z.string().regex(regex.username),
-  password: z.string().regex(regex.password)
+  username: z.string().regex(regex.username, { message: regex.usernameDesc }),
+  password: z.string().regex(regex.password, { message: regex.passwordDesc })
 })
 const validateLoginUser = (input) => validate(LoginUserSchema, input)
 
