@@ -1,11 +1,9 @@
 import express from "express"
-import REGEX from "../utils/regex.js"
 import authenticateUser from "../middlewares/authenticateUser.js"
-
 import fetchSpotify from "../spotify_utils/fetchSpotify.js"
 import generateSpotifyToken from "../spotify_utils/generateSpotifyToken.js"
 import checkSpotifyError from "../spotify_utils/checkSpotifyError.js"
-
+import validateQuery from "../validations/Query.js"
 
 const spotifyRouter = express.Router()
 
@@ -24,8 +22,11 @@ spotifyRouter.get("/albums/:query", authenticateUser, async (req, res) => {
   const token = req.app.locals?.spotifyToken
 
   const query = req.params.query
-  if (!query || !REGEX.query.test(query)) {
-    return res.status(400).json({ error: `Enter a valid search query: ${REGEX.queryDesc}` })
+
+  // validate
+  const { valid, message } = validateQuery(query)
+  if (!valid) {
+    return res.status(400).json({ error: `Invalid search query${message}` })
   }
 
   let spotifyResponse = await fetchSpotify.albums(token, query)
@@ -61,8 +62,11 @@ spotifyRouter.get("/artists/:query", authenticateUser, async (req, res) => {
   const token = req.app.locals?.spotifyToken
 
   const query = req.params.query
-  if (!query || !REGEX.query.test(query)) {
-    return res.status(400).json({ error: `Enter a valid search query: ${REGEX.queryDesc}` })
+
+  // validate
+  const { valid, message } = validateQuery(query)
+  if (!valid) {
+    return res.status(400).json({ error: `Invalid search query${message}` })
   }
 
   let spotifyResponse = await fetchSpotify.artists(token, query)
@@ -98,8 +102,11 @@ spotifyRouter.get("/tracks/:query", authenticateUser, async (req, res) => {
   const token = req.app.locals?.spotifyToken
 
   const query = req.params.query
-  if (!query || !REGEX.query.test(query)) {
-    return res.status(400).json({ error: `Enter a valid search query: ${REGEX.queryDesc}` })
+
+  // validate
+  const { valid, message } = validateQuery(query)
+  if (!valid) {
+    return res.status(400).json({ error: `Invalid search query${message}` })
   }
 
   let spotifyResponse = await fetchSpotify.tracks(token, query)
@@ -135,8 +142,11 @@ spotifyRouter.get("/all/:query", authenticateUser, async (req, res) => {
   const token = req.app.locals?.spotifyToken
 
   const query = req.params.query
-  if (!query || !REGEX.query.test(query)) {
-    return res.status(400).json({ error: `Enter a valid search query: ${REGEX.queryDesc}` })
+
+  // validate
+  const { valid, message } = validateQuery(query)
+  if (!valid) {
+    return res.status(400).json({ error: `Invalid search query${message}` })
   }
 
   let spotifyResponse = await fetchSpotify.all(token, query)
