@@ -18,7 +18,8 @@ const validate = (schema, input) => {
   }
 
   try {
-    schema.parse(input)
+    const parsed = schema.parse(input)
+    return { valid: true, parsed }
   }
   catch(e) {
     const message = e instanceof z.ZodError
@@ -27,8 +28,6 @@ const validate = (schema, input) => {
 
     return { valid: false, message }
   }
-
-  return { valid: true }
 }
 
 export default validate
