@@ -1,8 +1,9 @@
 import express from "express"
-import REGEX from "../utils/regex.js"
 import authenticateUser from "../middlewares/authenticateUser.js"
 import Playlist from "../models/Playlist.js"
 import User from "../models/User.js"
+import { validateTrack } from "../validations/Track.js"
+import { validateCreatePlaylist, validateEditPlaylist } from "../validations/Playlist.js"
 
 const playlistsRouter = express.Router()
 
@@ -109,26 +110,17 @@ playlistsRouter.post("/create", authenticateUser, async (req, res) => {
     isPublic
   } = req.body
 
-  // fields validation
-  if (!title || !REGEX.title.test(title)) {
-    return res.status(400).json({ error: `Enter a valid title: ${REGEX.titleDesc}` })
-  }
-  if (!description || !REGEX.description.test(description)) {
-    return res.status(400).json({ error: `Enter a valid description: ${REGEX.descriptionDesc}` })
-  }
-  if (tags && Array.isArray(tags)) { // tags can be empty
-    tags.forEach(t => {
-      if (!t || !REGEX.tag.test(t)) {
-        return res.status(400).json({ error: `Enter a valid tag: ${REGEX.tagDesc}` })
-      }
-    })
+  // validate
+  const { valid, message } = validateCreatePlaylist({ title, description, tags, isPublic })
+  if (!valid) {
+    return res.status(400).json({ error: `Invalid playlist${message}` })
   }
 
   const playlist = {
-    title: title,
-    description: description,
-    tags: tags,
-    isPublic: isPublic ?? false,
+    title,
+    description,
+    tags,
+    isPublic,
     creator: req.user.username,
     followers: [{
       userId: req.user.id,
@@ -174,46 +166,35 @@ playlistsRouter.patch("/edit/:id", authenticateUser, async (req, res) => {
     return res.status(401).json({ error: "You need to ne the creator or a collaborator to edit this playlist" })
   }
 
-  // title
-  if (req.body?.title) {
-    const title = req.body.title
+  const {
+    title,
+    description,
+    tags,
+    isPublic
+  } = req.body
 
-    if (!REGEX.title.test(title)) {
-      return res.status(400).json({ error: `Enter a valid title: ${REGEX.titleDesc}` })
-    }
+  // validate
+  const { valid, message } = validateEditPlaylist({ title, description, tags, isPublic })
+  if (!valid) {
+    return res.status(400).json({ error: `Invalid playlist${message}` })
+  }
 
+  // update fields only if not undefined
+
+  if (title) {
     playlist.title = title
   }
 
-  // description
-  if (req.body?.description) {
-    const description = req.body.description
-
-    if (!REGEX.description.test(description)) {
-      return res.status(400).json({ error: `Enter a valid description: ${REGEX.description}` })
-    }
-
+  if (description) {
     playlist.description = description
   }
 
-  // tags
-  if (req.body?.tags) {
-    const tags = req.body.tags
-
-    if (Array.isArray(tags)) {
-      tags.forEach(t => {
-        if (!t || !REGEX.tag.test(t)) {
-          return res.status(400).json({ error: `Enter a valid tag: ${REGEX.tagDesc}` })
-        }
-      })
-    }
-
+  if (tags) {
     playlist.tags = tags
   }
 
-  // isPublic
   if("isPublic" in req.body) {
-    playlist.isPublic = req.body.isPublic
+    playlist.isPublic = isPublic
   }
 
   const updatedPlaylist = await playlist.save()
@@ -293,13 +274,19 @@ playlistsRouter.post("/:id/add", authenticateUser, async (req, res) => {
 
   const { track } = req.body
 
-  // TODO: fields validation
+  // validate
+  const { valid, message, parsed } = validateTrack(track)
+  if (!valid) {
+    return res.status(400).json({ error: `Invalid track${message}` })
+  }
 
-  if (playlist.tracks.find(t => t.id === track.id)) {
+  // use parsed as track to insert in db: extra fields removed
+
+  if (playlist.tracks.find(t => t.id === parsed.id)) {
     return res.status(400).json({ error: `Track already in playlist ${playlist.title}` })
   }
 
-  playlist.tracks.push(track)
+  playlist.tracks.push(parsed)
   const savedPlaylist = await playlist.save()
 
   res.status(200).json(savedPlaylist)
