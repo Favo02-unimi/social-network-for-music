@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt"
 import express from "express"
 import authenticateUser from "../middlewares/authenticateUser.js"
-import REGEX from "../utils/regex.js"
 import User from "../models/User.js"
+import { validateCreateUser, validateDeleteUser, validateEditUser } from "../validations/User.js"
 
 const usersRouter = express.Router()
 
@@ -35,20 +35,13 @@ usersRouter.post("/create", async (req, res) => {
   const {
     username,
     password,
-    email,
-    favouriteArtists,
-    favouriteGenres
+    email
   } = req.body
 
-  // fields validation
-  if (!username || !REGEX.username.test(username)) {
-    return res.status(400).json({ error: `Enter a valid username: ${REGEX.usernameDesc}` })
-  }
-  if (!password || !REGEX.password.test(password)) {
-    return res.status(400).json({ error: `Enter a valid password: ${REGEX.passwordDesc}` })
-  }
-  if (!email || !REGEX.email.test(email)) {
-    return res.status(400).json({ error: `Enter a valid email: ${REGEX.emailDesc}` })
+  // validate
+  const { valid, message } = validateCreateUser({ username, password, email })
+  if (!valid) {
+    return res.status(400).json({ error: `Invalid user${message}` })
   }
 
   // unique username and email check
@@ -61,19 +54,13 @@ usersRouter.post("/create", async (req, res) => {
     return res.status(400).json({ error: "Email already used" })
   }
 
-  // no need to validate favouriteArtists and favouriteGenres:
-  //   can be null and undefined (default will be assigned)
-  //   can be any type (automatically converted to string array)
-
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds)
 
   const newUser = new User({
     username,
     passwordHash,
-    email,
-    favouriteArtists,
-    favouriteGenres
+    email
   })
 
   const savedUser = await newUser.save()
@@ -95,23 +82,28 @@ usersRouter.patch("/edit", authenticateUser, async (req, res) => {
 
   const user = await User.findById(req.user.id)
 
-  // old password check
-  if (!req.body?.oldPassword) {
-    return res.status(400).json({ error: "Missing old password" })
+  const {
+    oldPassword,
+    username,
+    newPassword,
+    email
+  } = req.body
+
+  // validate
+  const { valid, message } = validateEditUser({ oldPassword, username, newPassword, email })
+  if (!valid) {
+    return res.status(400).json({ error: `Invalid user${message}` })
   }
-  const passwordCorrect = await bcrypt.compare(req.body.oldPassword, user.passwordHash)
+
+  // old password check
+  const passwordCorrect = await bcrypt.compare(oldPassword, user.passwordHash)
   if (!passwordCorrect) {
     return res.status(401).json({ error: "Invalid old password" })
   }
 
-  // username
-  if (req.body?.username) {
-    const username = req.body.username
+  // update fields only if not undefined
 
-    if (!REGEX.username.test(username)) {
-      return res.status(400).json({ error: `Enter a valid username: ${REGEX.usernameDesc}` })
-    }
-
+  if (username) {
     const existingUsername = await User.findOne({ username: new RegExp(`^${username}$`, "i") })
     if (existingUsername) {
       return res.status(400).json({ error: "Username already taken" })
@@ -120,44 +112,20 @@ usersRouter.patch("/edit", authenticateUser, async (req, res) => {
     user.username = username
   }
 
-  // password
-  if (req.body?.newPassword) {
-    const newPassword = req.body.newPassword
-
-    if (!REGEX.password.test(newPassword)) {
-      return res.status(400).json({ error: `Enter a valid new password: ${REGEX.passwordDesc}` })
-    }
-
+  if (newPassword) {
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(newPassword, saltRounds)
 
     user.passwordHash = passwordHash
   }
 
-  // email
-  if (req.body?.email) {
-    const email = req.body.email
-
-    if (!REGEX.email.test(email)) {
-      return res.status(400).json({ error: `Enter a valid email: ${REGEX.emailDesc}` })
-    }
-
+  if (email) {
     const existingEmail = await User.findOne({ email: new RegExp(`^${email}$`, "i") })
     if (existingEmail) {
       return res.status(400).json({ error: "Email already used" })
     }
 
     user.email = email
-  }
-
-  // favourites artists
-  if (req.body?.favouriteArtists) {
-    user.favouriteArtists = req.body.favouriteArtists
-  }
-
-  // favourites genres
-  if (req.body?.favouriteGenres) {
-    user.favouriteGenres = req.body.favouriteGenres
   }
 
   const updatedUser = await user.save()
@@ -176,12 +144,16 @@ usersRouter.delete("/delete", authenticateUser, async (req, res) => {
     #swagger.summary = "Delete current logged user (AUTH required)"
   */
 
+  const { oldPassword } = req.body
+
   const user = await User.findById(req.user.id)
 
-  // old password check
-  if (!req.body?.oldPassword) {
-    return res.status(400).json({ error: "Missing old password" })
+  // validate
+  const { valid, message } = validateDeleteUser({ oldPassword })
+  if (!valid) {
+    return res.status(400).json({ error: `Invalid user${message}` })
   }
+
   const passwordCorrect = await bcrypt.compare(req.body.oldPassword, user.passwordHash)
   if (!passwordCorrect) {
     return res.status(401).json({ error: "Invalid old password" })
