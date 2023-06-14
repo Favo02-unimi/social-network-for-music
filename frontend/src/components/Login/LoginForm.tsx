@@ -44,7 +44,11 @@ const LoginForm : FC = () => {
       navigate("/home", { replace: true })
     }
     catch(e) {
-      toast.error("Invalid username or password")
+      if (e?.response?.data?.error) {
+        toast.error(e.response.data.error)
+      } else {
+        toast.error("Generic error, please try again")
+      }
     }
     finally {
       setIsLoading(false)

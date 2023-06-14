@@ -3,6 +3,7 @@ import bcrypt from "bcrypt"
 import express from "express"
 import User from "../models/User.js"
 import authenticateUser from "../middlewares/authenticateUser.js"
+import { validateLoginUser } from "../validations/User.js"
 
 const loginRouter = express.Router()
 
@@ -17,16 +18,12 @@ loginRouter.post("/", async (req, res) => {
     #swagger.summary = "Login an existing user (generate JWT token)"
   */
 
-  const {
-    username,
-    password
-  } = req.body
+  const { username, password } = req.body
 
-  if (!username) {
-    return res.status(401).json({ error: "missing username" })
-  }
-  if (!password) {
-    return res.status(401).json({ error: "missing password" })
+  // validate
+  const { valid, message } = validateLoginUser({ username, password })
+  if (!valid) {
+    return res.status(400).json({ error: `Invalid user${message}` })
   }
 
   // username check
