@@ -154,7 +154,7 @@ usersRouter.delete("/delete", authenticateUser, async (req, res) => {
     return res.status(400).json({ error: `Invalid user${message}` })
   }
 
-  const passwordCorrect = await bcrypt.compare(req.body.oldPassword, user.passwordHash)
+  const passwordCorrect = await bcrypt.compare(oldPassword, user.passwordHash)
   if (!passwordCorrect) {
     return res.status(401).json({ error: "Invalid old password" })
   }
