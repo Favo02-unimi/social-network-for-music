@@ -7,7 +7,7 @@ const validate = (schema, input) => {
   }
   catch(e) {
     const message = e instanceof z.ZodError
-      ? `: ${e.errors.map(e => ` ${e.path.pop().toUpperCase()}: ${e.message.toLocaleLowerCase()}`)}`
+      ? `: ${formatZodError(e)}`
       : ""
 
     return { valid: false, message }
@@ -15,5 +15,20 @@ const validate = (schema, input) => {
 
   return { valid: true }
 }
+
+const formatZodError = (zodError) => (
+
+  // print each error with formatting --> "PATH: error"
+  zodError.errors.map(err => {
+
+    // if has path --> "PATH: error"
+    if (err.path.length > 0) {
+      return ` ${err.path.pop().toUpperCase()}: ${err.message.toLocaleLowerCase()}`
+    }
+
+    // no path --> "error"
+    return err.message.toLocaleLowerCase()
+  })
+)
 
 export default validate
