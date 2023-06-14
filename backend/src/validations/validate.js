@@ -1,13 +1,28 @@
 import { z } from "zod"
+import { generateErrorMessage } from "zod-error"
 
 const validate = (schema, input) => {
+
+  const formatterOptions = {
+    delimiter: { component: " - " },
+    code: { enabled: false },
+    maxErrors: 1,
+    message: { label: null },
+    path: {
+      enabled: true,
+      label: null,
+      type: "breadcrumbs",
+      arraySquareBrackets: false,
+      delimeter: ", "
+    }
+  }
 
   try {
     schema.parse(input)
   }
   catch(e) {
     const message = e instanceof z.ZodError
-      ? `: ${formatZodError(e)}`
+      ? `: ${generateErrorMessage(e.errors, formatterOptions)}`
       : ""
 
     return { valid: false, message }
@@ -15,20 +30,5 @@ const validate = (schema, input) => {
 
   return { valid: true }
 }
-
-const formatZodError = (zodError) => (
-
-  // print each error with formatting --> "PATH: error"
-  zodError.errors.map(err => {
-
-    // if has path --> "PATH: error"
-    if (err.path.length > 0) {
-      return ` ${err.path.pop().toUpperCase()}: ${err.message.toLocaleLowerCase()}`
-    }
-
-    // no path --> "error"
-    return err.message.toLocaleLowerCase()
-  })
-)
 
 export default validate
