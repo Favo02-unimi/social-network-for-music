@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import mongoose from "mongoose"
 import REGEX from "../utils/regex.js"
 
@@ -25,11 +26,86 @@ const playlistSchema = new mongoose.Schema(
       type: Boolean,
       required: true
     },
-    tracks: { // TODO: validate tracks Object
-      type: [Object],
+    tracks: [{
+      type: {
+        id: {
+          type: String,
+          required: true
+        },
+        album: {
+          album_type: {
+            type: String,
+            required: true
+          },
+          name: {
+            type: String,
+            required: true
+          },
+          release_date: {
+            type: String,
+            required: true
+          },
+          images: [{
+            height: {
+              type: Number,
+              required: true
+            },
+            width: {
+              type: Number,
+              required: true
+            },
+            url: {
+              type: String,
+              required: true
+            }
+          }]
+        },
+        artists: [{
+          id: {
+            type: String,
+            required: true
+          },
+          name: {
+            type: String,
+            required: true
+          },
+          external_urls: {
+            spotify: {
+              type: String,
+              required: true
+            }
+          }
+        }],
+        duration_ms: {
+          type: Number,
+          required: true
+        },
+        explicit: {
+          type: Boolean,
+          required: true
+        },
+        external_urls: {
+          spotify: {
+            type: String,
+            required: true
+          }
+        },
+        name: {
+          type: String,
+          required: true
+        },
+        popularity: {
+          type: Number,
+          required: true
+        },
+        preview_url: {
+          type: String,
+          required: false
+        }
+      },
       required: false,
       default: []
-    },
+    }],
     creator: {
       type: String,
       required: true,
