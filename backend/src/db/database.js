@@ -10,7 +10,7 @@ class Database {
 
   async connect() {
     try {
-      const connection = await mongoose.connect(config.MONGODB_URI)
+      const connection = await mongoose.connect(config.MONGODB_URI, { dbName: "snm" })
 
       this.connection = connection
 
