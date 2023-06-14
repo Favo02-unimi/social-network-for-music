@@ -2,7 +2,9 @@
 
 "Programmazione web e mobile" final exam assignment.
 
-Deployed _(automatically)_ at [socialnetworkformusic.favo02.dev](https://socialnetworkformusic.favo02.dev) (or [snm.favo02.dev](https://snm.favo02.dev), a bit shorter)
+Deployed _(automatically)_ at [socialnetworkformusic.favo02.dev](https://socialnetworkformusic.favo02.dev) (or [snm.favo02.dev](https://snm.favo02.dev), a bit shorter).
+
+**Documentation** (in italian): [DOCUMENTATION.md](DOCUMENTATION.md)
 
 <br>
 
