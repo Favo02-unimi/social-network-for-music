@@ -19,7 +19,7 @@ const validateCreateUser = (input) => validate(CreateUserSchema, input)
 const EditUserSchema = z.object({
   oldPassword: z.string().regex(regex.password, { message: regex.passwordDesc }),
   username: z.string().regex(regex.username, { message: regex.usernameDesc }).optional(),
-  newPassword: z.string().regex(regex.password, { message: regex.passwordDesc }).optional(),
+  newPassword: z.union([z.string().regex(regex.password, { message: regex.passwordDesc }).optional(), z.string().length(0)]),
   email: z.string().regex(regex.email, { message: regex.emailDesc }).optional()
 })
 const validateEditUser = (input) => validate(EditUserSchema, input)
