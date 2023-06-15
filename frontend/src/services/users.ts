@@ -41,9 +41,29 @@ const create = async (username : string, email : string, password : string) => {
   return res.data
 }
 
+/**
+ * Delete current user
+ * @param {string} password current password
+ * @throws {401} missing/invalid token
+ * @throws {401} invalid password
+ * @returns {204}
+ */
+const deletee = async (password : string) => {
+
+  const res = await axios.delete(`${baseUrl}/delete`, {
+    headers: { "authorization": localStorage.getItem("token") },
+    data: {
+      oldPassword: password
+    }
+  })
+
+  return res.data
+}
+
 const usersService = {
   getMe,
-  create
+  create,
+  deletee
 }
 
 export default usersService
