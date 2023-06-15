@@ -2,6 +2,7 @@ import bcrypt from "bcrypt"
 import express from "express"
 import authenticateUser from "../middlewares/authenticateUser.js"
 import User from "../models/User.js"
+import Playlist from "../models/Playlist.js"
 import { validateCreateUser, validateDeleteUser, validateEditUser } from "../validations/User.js"
 
 const usersRouter = express.Router()
@@ -159,7 +160,31 @@ usersRouter.delete("/delete", authenticateUser, async (req, res) => {
     return res.status(401).json({ error: "Invalid old password" })
   }
 
-  // TODO: delete all user resources (playlists, ...)
+  // delete all user resources (delete creator playlists, unfollow playlists)
+  user.playlists.forEach(async playlist => {
+
+    // creator: delete playlist
+    if (playlist.isCreator) {
+
+      // update all followers
+      const followers = await User.find({ playlists: { $elemMatch: { id: playlist.id } } })
+      followers.forEach(async f => {
+        f.playlists = f.playlists.filter(p => p.id.toString() !== playlist.id.toString())
+        await f.save()
+      })
+
+      // delete playlist
+      await Playlist.findByIdAndDelete(playlist.id)
+    }
+
+    // collaborator/follower: unfollow
+    else {
+      const p = await Playlist.findById(playlist.id)
+      p.followers = p.followers.filter(f => f.userId.toString() !== user._id.toString())
+      await p.save()
+    }
+
+  })
 
   await User.findByIdAndDelete(req.user.id)
 
