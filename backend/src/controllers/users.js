@@ -106,7 +106,7 @@ usersRouter.patch("/edit", authenticateUser, async (req, res) => {
 
   if (username) {
     const existingUsername = await User.findOne({ username: new RegExp(`^${username}$`, "i") })
-    if (existingUsername) {
+    if (existingUsername && existingUsername._id.toString() !== req.user.id) {
       return res.status(400).json({ error: "Username already taken" })
     }
 
@@ -122,7 +122,7 @@ usersRouter.patch("/edit", authenticateUser, async (req, res) => {
 
   if (email) {
     const existingEmail = await User.findOne({ email: new RegExp(`^${email}$`, "i") })
-    if (existingEmail) {
+    if (existingEmail && existingEmail._id.toString() !== req.user.id) {
       return res.status(400).json({ error: "Email already used" })
     }
 
