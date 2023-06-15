@@ -3,6 +3,20 @@ import axios from "axios"
 const baseUrl = "/api/users"
 
 /**
+ * Get current logged user
+ * @throws {401} missing/invalid token
+ * @returns {200} current user
+ */
+const getMe = async () => {
+
+  const headers = { headers: { "authorization": localStorage.getItem("token") } }
+
+  const res = await axios.get(`${baseUrl}/me`, headers)
+
+  return res.data
+}
+
+/**
  * Create new user
  * @param {string} username of new user
  * @param {string} email of new user
@@ -28,6 +42,7 @@ const create = async (username : string, email : string, password : string) => {
 }
 
 const usersService = {
+  getMe,
   create
 }
 
