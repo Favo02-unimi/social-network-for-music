@@ -17,7 +17,7 @@ usersRouter.get("/me", authenticateUser, async (req, res) => {
     #swagger.summary = "Get current logged user (AUTH required)"
   */
 
-  const user = await User.find({ _id: req.user.id })
+  const user = await User.findById(req.user.id)
   res.json(user)
 })
 
