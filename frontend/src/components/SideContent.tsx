@@ -38,7 +38,7 @@ const SideContent : FC = () => {
       <div>
         <div className="mb-2">
           <NavLink
-            to="/profile"
+            to={username === "Login" ? "/login" : "/profile"}
             className="inline-block px-10 py-1 bg-spotify-greendark hover:bg-spotify-green rounded-2xl tracking-widest font-medium text-lg transition-all duration-500"
           ><FaUser className="inline text-sm -mt-1.5 mr-2" />{username}</NavLink>
         </div>
