@@ -12,6 +12,8 @@ const SideContent : FC = () => {
     { to: "/playlists", text: "My Playlists" }
   ]
 
+  const username = window.localStorage.getItem("user") ?? "Login"
+
   return (
     <div className="w-full h-full border border-white/20 rounded-md flex flex-col justify-between text-center py-6">
 
@@ -36,9 +38,9 @@ const SideContent : FC = () => {
       <div>
         <div className="mb-2">
           <NavLink
-            to="profile"
+            to="/profile"
             className="inline-block px-10 py-1 bg-spotify-greendark hover:bg-spotify-green rounded-2xl tracking-widest font-medium text-lg transition-all duration-500"
-          ><FaUser className="inline text-sm -mt-1.5 mr-2" />PROFILE</NavLink>
+          ><FaUser className="inline text-sm -mt-1.5 mr-2" />{username}</NavLink>
         </div>
 
         <div className="text-white/40 text-xs">

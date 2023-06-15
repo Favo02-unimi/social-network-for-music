@@ -12,6 +12,7 @@ import Explore from "./pages/Explore"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Playlists from "./pages/Playlists"
+import Profile from "./pages/Profile"
 import Register from "./pages/Register"
 
 import "../src/assets/styles/index.css"
@@ -46,7 +47,8 @@ const App : FC = () => {
         { path: "playlists", element: <Playlists /> },
         { path: "playlists/:id", element: <Playlist /> },
         { path: "playlists/create", element: <CreatePlaylist /> },
-        { path: "playlists/:id/edit", element: <EditPlaylist /> }
+        { path: "playlists/:id/edit", element: <EditPlaylist /> },
+        { path: "profile", element: <Profile /> }
       ]
     }
   ])
