@@ -5,6 +5,7 @@ import { Slide, ToastContainer } from "react-toastify"
 import CreatePlaylist from "./components/Playlists/CreatePlaylist"
 import EditPlaylist from "./components/Playlists/EditPlaylist"
 import Playlist from "./components/Playlists/Playlist"
+import EditProfile from "./components/Profile/EditProfile"
 import ProtectedRoute from "./components/ProtectedRoute"
 import Sidebar from "./components/Sidebar"
 import SideContent from "./components/SideContent"
@@ -48,7 +49,8 @@ const App : FC = () => {
         { path: "playlists/:id", element: <Playlist /> },
         { path: "playlists/create", element: <CreatePlaylist /> },
         { path: "playlists/:id/edit", element: <EditPlaylist /> },
-        { path: "profile", element: <Profile /> }
+        { path: "profile", element: <Profile /> },
+        { path: "profile/edit", element: <EditProfile /> }
       ]
     }
   ])
