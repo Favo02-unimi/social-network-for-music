@@ -21,12 +21,12 @@ const getMe = async () => {
  * @param {string} username of new user
  * @param {string} email of new user
  * @param {string} password of new user
- * @throws {400} invalid username
- * @throws {400} invalid email
- * @throws {400} invalid password
+ * @throws {401} missing/invalid token
+ * @throws {401} invalid old password
+ * @throws {400} invalid username/email/newPassoword
  * @throws {400} username already taken
  * @throws {400} email already taken
- * @returns {201} created user
+ * @returns {200} updated user
  */
 const create = async (username : string, email : string, password : string) => {
 
@@ -37,6 +37,40 @@ const create = async (username : string, email : string, password : string) => {
   }
 
   const res = await axios.post(`${baseUrl}/create`, user)
+
+  return res.data
+}
+
+/**
+ * Edit current user
+ * @param {string} oldPassword current password of user
+ * @param {string} username new username
+ * @param {string} email new email
+ * @param {string} newPassword new passord
+ * @throws {400} invalid username
+ * @throws {400} invalid email
+ * @throws {400} invalid password
+ * @throws {400} username already taken
+ * @throws {400} email already taken
+ * @returns {201} created user
+ */
+const edit = async (
+  oldPassword : string,
+  username : string,
+  email : string,
+  newPassword : string
+) => {
+
+  const user = {
+    oldPassword,
+    username,
+    email,
+    newPassword
+  }
+
+  const headers = { headers: { "authorization": localStorage.getItem("token") } }
+
+  const res = await axios.patch(`${baseUrl}/edit/`, user, headers)
 
   return res.data
 }
@@ -63,6 +97,7 @@ const deletee = async (password : string) => {
 const usersService = {
   getMe,
   create,
+  edit,
   deletee
 }
 
