@@ -85,12 +85,29 @@ const genres = async () => {
   return res.data
 }
 
+/**
+ * Fetch user recommendations
+ * @requires authorization header (JWT token)
+ * @throws {401} missing/invalid token
+ * @throws {400} no favourites to generate recommendations
+ * @returns {200} recommendations
+ */
+const recommendations = async () => {
+
+  const headers = { headers: { "authorization": localStorage.getItem("token") } }
+
+  const res = await axios.get(`${baseUrl}/recommendations`, headers)
+
+  return res.data
+}
+
 const spotifyService = {
   albums,
   artists,
   tracks,
   all,
-  genres
+  genres,
+  recommendations
 }
 
 export default spotifyService
