@@ -25,6 +25,7 @@ Documentazione ancora **MOOOOLTO work in progress**.
     - routing
 - deploy
 - scelta del mio backend da proxy per api spotify
+- debouncing API calls
 
 
 ## Gestione generi (genres)
