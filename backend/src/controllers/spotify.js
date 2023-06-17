@@ -186,7 +186,7 @@ spotifyRouter.get("/genres", authenticateUser, async (req, res) => {
   // invalid token: refresh spotify token and retry one time
   if (spotifyResponse.status === 401) {
     const token = await generateSpotifyToken(req.app)
-    spotifyResponse = await fetchSpotify.all(token)
+    spotifyResponse = await fetchSpotify.genres(token)
   }
 
   // check for spotify api errors after token refresh
