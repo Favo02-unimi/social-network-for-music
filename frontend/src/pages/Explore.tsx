@@ -1,16 +1,18 @@
 import type { FC } from "react"
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 
 import OpenTrack from "../components/Explore/OpenTrack"
 import SearchBox from "../components/Explore/SearchBox"
 import type Track from "../interfaces/Track"
 import spotifyService from "../services/spotify"
+import checkTokenExpiration from "../utils/checkTokenExpiration"
 
 const Explore : FC = () => {
 
   const { trackId } = useParams()
+  const navigate = useNavigate()
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -21,6 +23,13 @@ const Explore : FC = () => {
       setIsLoading(true)
 
       try {
+        const { valid, message } = checkTokenExpiration()
+        if (!valid) {
+          toast.error(message)
+          navigate("/login")
+          return
+        }
+
         const res = await spotifyService.track(id)
 
         setOpenTrack(res)
@@ -40,7 +49,7 @@ const Explore : FC = () => {
     if (trackId && openTrack?.id !== trackId) {
       fetchTrack(trackId)
     }
-  }, [trackId, openTrack?.id])
+  }, [trackId, openTrack?.id, navigate])
 
   return (
     <div className="w-full h-full border border-white/20 rounded-md p-6 flex justify-center items-center">

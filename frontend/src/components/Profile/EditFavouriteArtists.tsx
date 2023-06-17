@@ -1,12 +1,14 @@
 import type { FC } from "react"
 import { useState } from "react"
 import { FaSearch } from "react-icons/fa"
+import { useNavigate } from "react-router-dom"
 import { components, type SingleValue } from "react-select"
 import AsyncSelect from "react-select/async"
 import { toast } from "react-toastify"
 import debounce from "debounce"
 
 import spotifyService from "../../services/spotify"
+import checkTokenExpiration from "../../utils/checkTokenExpiration"
 import REGEX from "../../utils/regex"
 
 interface Option {
@@ -15,6 +17,8 @@ interface Option {
 }
 
 const EditFavourites : FC<{handleAdd : (o : Option) => void}> = ({ handleAdd }) => {
+
+  const navigate = useNavigate()
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isInvalid, setIsInvalid] = useState<boolean>(false)
@@ -42,6 +46,13 @@ const EditFavourites : FC<{handleAdd : (o : Option) => void}> = ({ handleAdd }) 
     }
 
     try {
+      const { valid, message } = checkTokenExpiration()
+      if (!valid) {
+        toast.error(message)
+        navigate("/login")
+        return
+      }
+
       const res = await spotifyService.artists(query)
 
       setList(res.artists.items.map(

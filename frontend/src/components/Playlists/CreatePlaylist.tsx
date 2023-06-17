@@ -12,6 +12,7 @@ import { TagsInput } from "react-tag-input-component"
 import { toast } from "react-toastify"
 
 import playlistsService from "../../services/playlists"
+import checkTokenExpiration from "../../utils/checkTokenExpiration"
 import REGEX from "../../utils/regex"
 import Loading from "../Loading"
 
@@ -54,6 +55,13 @@ const CreatePlaylist : FC = () => {
     }
 
     try {
+      const { valid, message } = checkTokenExpiration()
+      if (!valid) {
+        toast.error(message)
+        navigate("/login")
+        return
+      }
+
       const createdPlaylist = await playlistsService.create(title, description, isPublic, tags)
 
       toast.success("Playlist created successfully.")

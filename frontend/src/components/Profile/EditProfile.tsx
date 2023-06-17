@@ -7,6 +7,7 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 
 import usersService from "../../services/users"
+import checkTokenExpiration from "../../utils/checkTokenExpiration"
 import REGEX from "../../utils/regex"
 import Loading from "../Loading"
 
@@ -33,6 +34,13 @@ const EditProfile : FC = () => {
       setIsLoading(true)
 
       try {
+        const { valid, message } = checkTokenExpiration()
+        if (!valid) {
+          toast.error(message)
+          navigate("/login")
+          return
+        }
+
         const res = await usersService.getMe()
         setUsername(res.username)
         setEmail(res.email)
@@ -51,7 +59,7 @@ const EditProfile : FC = () => {
 
     fetchUser()
 
-  }, [id])
+  }, [id, navigate])
 
   // edit
   const handleEdit = async (e : FormEvent<HTMLFormElement>) => {
@@ -86,9 +94,15 @@ const EditProfile : FC = () => {
     }
 
     try {
-      const editedProfile = await usersService.edit(oldPassword, username, email, newPassword)
+      const { valid, message } = checkTokenExpiration()
+      if (!valid) {
+        toast.error(message)
+        navigate("/login")
+        return
+      }
 
-      window.localStorage.setItem("user", editedProfile.username)
+      await usersService.edit(oldPassword, username, email, newPassword)
+
       toast.success("Profile edited successfully.")
 
       navigate("/profile", { replace: true })

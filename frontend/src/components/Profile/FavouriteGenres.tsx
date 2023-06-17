@@ -1,10 +1,12 @@
 import type { FC } from "react"
 import { confirmAlert } from "react-confirm-alert"
 import { ImBin2 } from "react-icons/im"
+import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 import type User from "../../interfaces/User"
 import usersService from "../../services/users"
+import checkTokenExpiration from "../../utils/checkTokenExpiration"
 
 import EditFavouriteGenres from "./EditFavouriteGenres"
 
@@ -19,25 +21,13 @@ const FavouriteGenres : FC<{
   setIsLoading : (l : boolean) => void
 }> = ({ list, setUser, setIsLoading }) => {
 
+  const navigate = useNavigate()
+
   const handleAdd = async (selected : Option) => {
     const newList = list.slice()
     newList.push(selected.value)
 
-    try {
-      const res = await usersService.genres(newList)
-      setUser(res)
-      toast.success(`${selected.label} added to favourites`)
-    }
-    catch(e) {
-      if (e?.response?.data?.error) {
-        toast.error(e.response.data.error)
-      } else {
-        toast.error("Generic error, please try again")
-      }
-    }
-    finally {
-      setIsLoading(false)
-    }
+    update(newList, `${selected.label} added to favourites`)
   }
 
   const confirmRemove = (title : string) => {
@@ -60,10 +50,21 @@ const FavouriteGenres : FC<{
   const handleRemove = async (title : string) => {
     const newList = list.filter(i => i !== title)
 
+    update(newList, `${title} removed from favourites`)
+  }
+
+  const update = async (newList : string[], feedback : string) => {
     try {
+      const { valid, message } = checkTokenExpiration()
+      if (!valid) {
+        toast.error(message)
+        navigate("/login")
+        return
+      }
+
       const res = await usersService.genres(newList)
       setUser(res)
-      toast.success(`${title} removed from favourites`)
+      toast.success(feedback)
     }
     catch(e) {
       if (e?.response?.data?.error) {

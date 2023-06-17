@@ -1,15 +1,19 @@
 import type { FC } from "react"
 import { useState } from "react"
 import { confirmAlert } from "react-confirm-alert"
+import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 import usersService from "../../services/users"
+import checkTokenExpiration from "../../utils/checkTokenExpiration"
 import REGEX from "../../utils/regex"
 
 const DeleteAccount : FC<{
   setIsLoading : (loading : boolean) => void,
   handleLogout : () => void
 }> = ({ setIsLoading, handleLogout }) => {
+
+  const navigate = useNavigate()
 
   const [open, setOpen] = useState<boolean>(false)
   const [password, setPassword] = useState<string>("")
@@ -46,6 +50,13 @@ const DeleteAccount : FC<{
     setIsLoading(true)
 
     try {
+      const { valid, message } = checkTokenExpiration()
+      if (!valid) {
+        toast.error(message)
+        navigate("/login")
+        return
+      }
+
       await usersService.deletee(password)
 
       toast.success("Deleted account")

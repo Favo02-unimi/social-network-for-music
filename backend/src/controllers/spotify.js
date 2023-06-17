@@ -4,6 +4,7 @@ import fetchSpotify from "../spotify_utils/fetchSpotify.js"
 import generateSpotifyToken from "../spotify_utils/generateSpotifyToken.js"
 import checkSpotifyError from "../spotify_utils/checkSpotifyError.js"
 import validateQuery from "../validations/Query.js"
+import shuffleArray from "../utils/arrays.js"
 import User from "../models/User.js"
 
 const spotifyRouter = express.Router()
@@ -214,8 +215,23 @@ spotifyRouter.get("/recommendations", authenticateUser, async (req, res) => {
 
   const user = await User.findById(req.user.id)
 
-  const artists = user.favouriteArtists.map(a => a.id).join(",")
-  const genres = user.favouriteGenres.join(",")
+  let artistsArr = user.favouriteArtists.map(a => a.id)
+  let genresArr = user.favouriteGenres
+
+  // enforce artists + genres = max 5 (max number of seed in spotify api):
+  // merge arrays --> random shuffle --> pick 5 --> separate results
+  if ((artistsArr.length + genresArr.length) > 5) {
+    const combinedArray = [
+      ...artistsArr.map(e => ({ value: e, source: 1 })),
+      ...genresArr.map(e => ({ value: e, source: 2 }))
+    ]
+    const shuffled = shuffleArray(combinedArray).slice(0, 5)
+    artistsArr = shuffled.filter(e => e.source === 1).map(e => e.value)
+    genresArr = shuffled.filter(e => e.source === 2).map(e => e.value)
+  }
+
+  const artists = artistsArr.join(",")
+  const genres = genresArr.join(",")
 
   if (!artists && !genres) {
     return res.status(400).json({ error: "No favourite genres or artists: cannot generate recommendations" })

@@ -9,6 +9,7 @@ import { toast } from "react-toastify"
 
 import type PlaylistInterface from "../../interfaces/Playlist"
 import playlistsService from "../../services/playlists"
+import checkTokenExpiration from "../../utils/checkTokenExpiration"
 import Loading from "../Loading"
 
 import PlaylistImage from "./PlaylistImage"
@@ -29,6 +30,13 @@ const Playlist : FC = () => {
       setIsLoading(true)
 
       try {
+        const { valid, message } = checkTokenExpiration()
+        if (!valid) {
+          toast.error(message)
+          navigate("/login")
+          return
+        }
+
         const res = await playlistsService.getSingle(id ?? "")
 
         setPlaylist(res)
@@ -47,7 +55,7 @@ const Playlist : FC = () => {
 
     fetchData()
 
-  }, [id])
+  }, [id, navigate])
 
   if (!playlist) {
     return (
@@ -79,6 +87,13 @@ const Playlist : FC = () => {
     setIsLoading(true)
 
     try {
+      const { valid, message } = checkTokenExpiration()
+      if (!valid) {
+        toast.error(message)
+        navigate("/login")
+        return
+      }
+
       await playlistsService.deletee(playlist._id)
 
       toast.success(`Deleted playlist ${playlist.title}.`)
@@ -102,6 +117,13 @@ const Playlist : FC = () => {
     setIsLoading(true)
 
     try {
+      const { valid, message } = checkTokenExpiration()
+      if (!valid) {
+        toast.error(message)
+        navigate("/login")
+        return
+      }
+
       const updatedPlaylist = await playlistsService.follow(playlist._id)
 
       toast.success(`Playlist ${playlist.title} followed.`)
@@ -128,6 +150,13 @@ const Playlist : FC = () => {
     setIsLoading(true)
 
     try {
+      const { valid, message } = checkTokenExpiration()
+      if (!valid) {
+        toast.error(message)
+        navigate("/login")
+        return
+      }
+
       const updatedPlaylist = await playlistsService.unfollow(playlist._id)
 
       toast.success(`Playlist ${playlist.title} unfollowed.`)

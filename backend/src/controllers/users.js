@@ -200,7 +200,7 @@ usersRouter.delete("/delete", authenticateUser, async (req, res) => {
 usersRouter.patch("/artists", authenticateUser, async (req, res) => {
   /*
     #swagger.tags = ["Users"]
-    #swagger.summary = "Edit favourite artist"
+    #swagger.summary = "Edit favourite artist (AUTH required)"
   */
 
   const {
@@ -236,7 +236,7 @@ usersRouter.patch("/artists", authenticateUser, async (req, res) => {
 usersRouter.patch("/genres", authenticateUser, async (req, res) => {
   /*
     #swagger.tags = ["Users"]
-    #swagger.summary = "Edit favourite genres"
+    #swagger.summary = "Edit favourite genres (AUTH required)"
   */
 
   const {

@@ -5,11 +5,13 @@ import { BiAlbum } from "react-icons/bi"
 import { FiClock } from "react-icons/fi"
 import { ImBin2 } from "react-icons/im"
 import { MdPlayDisabled, MdPlaylistAdd } from "react-icons/md"
+import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 import type Playlist from "../../interfaces/Playlist"
 import type Track from "../../interfaces/Track"
 import playlistsService from "../../services/playlists"
+import checkTokenExpiration from "../../utils/checkTokenExpiration"
 import parseTime from "../../utils/parseTime"
 import PlayPreview from "../Explore/PlayPreview"
 import Loading from "../Loading"
@@ -21,6 +23,8 @@ const TrackRow : FC<{
   playlist : Playlist,
   setPlaylist : (p : Playlist) => void
 }> = ({ track, playlist, setPlaylist }) => {
+
+  const navigate = useNavigate()
 
   const [showAddToPlaylist, setShowAddToPlaylist] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -47,6 +51,13 @@ const TrackRow : FC<{
     setIsLoading(true)
 
     try {
+      const { valid, message } = checkTokenExpiration()
+      if (!valid) {
+        toast.error(message)
+        navigate("/login")
+        return
+      }
+
       const addedPlaylist = await playlistsService.removeTrack(playlist._id, track.id)
 
       setPlaylist({
