@@ -1,11 +1,13 @@
 import type { FC } from "react"
 import { confirmAlert } from "react-confirm-alert"
 import { ImBin2 } from "react-icons/im"
+import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 import type Artist from "../../interfaces/Artist"
 import type User from "../../interfaces/User"
 import usersService from "../../services/users"
+import checkTokenExpiration from "../../utils/checkTokenExpiration"
 
 import EditFavouriteArtists from "./EditFavouriteArtists"
 
@@ -20,11 +22,20 @@ const FavouriteArtists : FC<{
   setIsLoading : (l : boolean) => void
 }> = ({ list, setUser, setIsLoading }) => {
 
+  const navigate = useNavigate()
+
   const handleAdd = async (selected : Option) => {
     const newList = list.slice()
     newList.push({ id: selected.value, name: selected.label })
 
     try {
+      const { valid, message } = checkTokenExpiration()
+      if (!valid) {
+        toast.error(message)
+        navigate("/login")
+        return
+      }
+
       const res = await usersService.artists(newList)
       setUser(res)
       toast.success(`${selected.label} added to favourites`)
@@ -62,6 +73,13 @@ const FavouriteArtists : FC<{
     const newList = list.filter(i => i.id !== id)
 
     try {
+      const { valid, message } = checkTokenExpiration()
+      if (!valid) {
+        toast.error(message)
+        navigate("/login")
+        return
+      }
+
       const res = await usersService.artists(newList)
       setUser(res)
       toast.success(`${name} removed from favourites`)

@@ -5,6 +5,7 @@ import { toast } from "react-toastify"
 
 import type Track from "../../interfaces/Track"
 import spotifyService from "../../services/spotify"
+import checkTokenExpiration from "../../utils/checkTokenExpiration"
 import REGEX from "../../utils/regex"
 import Loading from "../Loading"
 
@@ -42,6 +43,13 @@ const SearchBox : FC<{
     }
 
     try {
+      const { valid, message } = checkTokenExpiration()
+      if (!valid) {
+        toast.error(message)
+        navigate("/login")
+        return
+      }
+
       const res = await spotifyService.tracks(query)
       setTracks(res?.tracks?.items)
     }

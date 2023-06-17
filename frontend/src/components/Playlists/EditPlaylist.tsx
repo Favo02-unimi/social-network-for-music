@@ -12,6 +12,7 @@ import { TagsInput } from "react-tag-input-component"
 import { toast } from "react-toastify"
 
 import playlistsService from "../../services/playlists"
+import checkTokenExpiration from "../../utils/checkTokenExpiration"
 import REGEX from "../../utils/regex"
 import Loading from "../Loading"
 
@@ -37,6 +38,13 @@ const EditPlaylist : FC = () => {
       setIsLoading(true)
 
       try {
+        const { valid, message } = checkTokenExpiration()
+        if (!valid) {
+          toast.error(message)
+          navigate("/login")
+          return
+        }
+
         const res = await playlistsService.getSingle(id ?? "")
 
         setTitle(res.title)
@@ -58,7 +66,7 @@ const EditPlaylist : FC = () => {
 
     fetchData()
 
-  }, [id])
+  }, [id, navigate])
 
   // edit
   const handleEdit = async (e : FormEvent<HTMLFormElement>) => {
@@ -87,6 +95,13 @@ const EditPlaylist : FC = () => {
     }
 
     try {
+      const { valid, message } = checkTokenExpiration()
+      if (!valid) {
+        toast.error(message)
+        navigate("/login")
+        return
+      }
+
       const editedPlaylist = await playlistsService.edit(id ?? "", title, description, isPublic, tags)
 
       toast.success("Playlist edited successfully.")

@@ -1,11 +1,13 @@
 import type { FC } from "react"
 import { useEffect, useState } from "react"
 import { FaSearch } from "react-icons/fa"
+import { useNavigate } from "react-router-dom"
 import { components, type SingleValue } from "react-select"
 import Select from "react-select"
 import { toast } from "react-toastify"
 
 import spotifyService from "../../services/spotify"
+import checkTokenExpiration from "../../utils/checkTokenExpiration"
 
 interface Option {
   label : string,
@@ -13,6 +15,8 @@ interface Option {
 }
 
 const EditFavourites : FC<{handleAdd : (o : Option) => void}> = ({ handleAdd }) => {
+
+  const navigate = useNavigate()
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -25,6 +29,13 @@ const EditFavourites : FC<{handleAdd : (o : Option) => void}> = ({ handleAdd }) 
       setIsLoading(true)
 
       try {
+        const { valid, message } = checkTokenExpiration()
+        if (!valid) {
+          toast.error(message)
+          navigate("/login")
+          return
+        }
+
         const res = await spotifyService.genres()
 
         setList(res.genres.map(
@@ -44,7 +55,7 @@ const EditFavourites : FC<{handleAdd : (o : Option) => void}> = ({ handleAdd }) 
     }
 
     fetchData()
-  }, [])
+  }, [navigate])
 
   return (
     <div className="mt-4 flex flex-col justify-center items-center text-center">

@@ -1,10 +1,11 @@
 import type { FC } from "react"
 import { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 import type Track from "../../interfaces/Track"
 import spotifyService from "../../services/spotify"
+import checkTokenExpiration from "../../utils/checkTokenExpiration"
 import Loading from "../Loading"
 
 import TrackCard from "./TrackCard"
@@ -12,6 +13,7 @@ import TrackCard from "./TrackCard"
 const Recommendations : FC<{customClasses ?: string}> = ({ customClasses }) => {
 
   const navigate = useNavigate()
+  const location = useLocation()
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -23,6 +25,26 @@ const Recommendations : FC<{customClasses ?: string}> = ({ customClasses }) => {
       setIsLoading(true)
 
       try {
+        const { valid, message, type } = checkTokenExpiration()
+        if (!valid) {
+
+          // in home do not display missing token error
+          if (location.pathname === "/home") {
+            // in home display only expired
+            if (type === "expired") {
+              toast.error(message)
+              navigate("/login")
+            }
+          }
+          // not in home display all errors
+          else {
+            toast.error(message)
+            navigate("/login")
+          }
+
+          return
+        }
+
         const res = await spotifyService.recommendations()
 
         setTracks(res.tracks)
@@ -32,11 +54,6 @@ const Recommendations : FC<{customClasses ?: string}> = ({ customClasses }) => {
 
           // do not display toast if no favourites
           if (e.response.data.error === "No favourite genres or artists: cannot generate recommendations") {
-            return
-          }
-
-          // do not display invalid token (homepage should be open to everyone)
-          if (e.response.data.error === "invalid token" || e.response.data.error === "missing token") {
             return
           }
 
@@ -52,7 +69,7 @@ const Recommendations : FC<{customClasses ?: string}> = ({ customClasses }) => {
 
     fetchData()
 
-  }, [])
+  }, [location, navigate])
 
   if (isLoading) {
     return (

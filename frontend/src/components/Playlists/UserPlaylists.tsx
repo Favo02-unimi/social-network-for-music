@@ -1,16 +1,19 @@
 import type { FC } from "react"
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 import type Playlist from "../../interfaces/Playlist"
 import playlistsService from "../../services/playlists"
+import checkTokenExpiration from "../../utils/checkTokenExpiration"
 import Loading from "../Loading"
 
 import FakePlaylistCard from "./FakePlaylistCard"
 import PlaylistCard from "./PlaylistCard"
 
 const UserPlaylists : FC = () => {
+
+  const navigate = useNavigate()
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -22,6 +25,13 @@ const UserPlaylists : FC = () => {
       setIsLoading(true)
 
       try {
+        const { valid, message } = checkTokenExpiration()
+        if (!valid) {
+          toast.error(message)
+          navigate("/login")
+          return
+        }
+
         const res = await playlistsService.getAll()
         setPlaylists(res)
       }
@@ -39,7 +49,7 @@ const UserPlaylists : FC = () => {
 
     fetchData()
 
-  }, [])
+  }, [navigate])
 
   if (isLoading || playlists?.length === 0) {
     return (

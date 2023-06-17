@@ -9,6 +9,7 @@ import FavouriteArtists from "../components/Profile/FavouriteArtists"
 import FavouriteGenres from "../components/Profile/FavouriteGenres"
 import type User from "../interfaces/User"
 import usersService from "../services/users"
+import checkTokenExpiration from "../utils/checkTokenExpiration"
 
 const Profile : FC = () => {
 
@@ -24,6 +25,13 @@ const Profile : FC = () => {
       setIsLoading(true)
 
       try {
+        const { valid, message } = checkTokenExpiration()
+        if (!valid) {
+          toast.error(message)
+          navigate("/login")
+          return
+        }
+
         const res = await usersService.getMe()
         setUser(res)
       }
@@ -41,7 +49,7 @@ const Profile : FC = () => {
 
     fetchUser()
 
-  }, [])
+  }, [navigate])
 
   const handleLogout = () => {
     window.localStorage.removeItem("token")

@@ -1,5 +1,6 @@
 import { type FC, useEffect,useState } from "react"
 import { MdPlaylistAdd } from "react-icons/md"
+import { useNavigate } from "react-router-dom"
 import type { SingleValue } from "react-select"
 import Select from "react-select"
 import { toast } from "react-toastify"
@@ -7,6 +8,7 @@ import { toast } from "react-toastify"
 import type Playlist from "../../interfaces/Playlist"
 import type Track from "../../interfaces/Track"
 import playlistsService from "../../services/playlists"
+import checkTokenExpiration from "../../utils/checkTokenExpiration"
 
 interface SelectPlaylistItem {
   value : string,
@@ -19,6 +21,8 @@ const AddToPlaylist : FC<{
   customClose ?: () => void
 }> = ({ track, customClasses, customClose }) => {
 
+  const navigate = useNavigate()
+
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [playlists, setPlaylists] = useState<SelectPlaylistItem[]>()
 
@@ -30,6 +34,13 @@ const AddToPlaylist : FC<{
       setIsLoading(true)
 
       try {
+        const { valid, message } = checkTokenExpiration()
+        if (!valid) {
+          toast.error(message)
+          navigate("/login")
+          return
+        }
+
         const res = await playlistsService.getAll()
         setPlaylists(res
           .filter((p : Playlist) => p.isCreator || p.isCollaborator)
@@ -54,7 +65,7 @@ const AddToPlaylist : FC<{
 
     fetchPlaylists()
 
-  }, [track])
+  }, [track, navigate])
 
   const handleAddToPlaylist = async () => {
 
@@ -67,6 +78,13 @@ const AddToPlaylist : FC<{
     }
 
     try {
+      const { valid, message } = checkTokenExpiration()
+      if (!valid) {
+        toast.error(message)
+        navigate("/login")
+        return
+      }
+
       const addedPlaylist = await playlistsService.addTrack(selectedPlaylist.value, track)
 
       toast.success(`Added to playlist ${addedPlaylist.title} successfully.`)
