@@ -38,7 +38,7 @@ const LoginForm : FC = () => {
 
       toast.success("Login successfull")
 
-      localStorage.setItem("user", loggedUser.username)
+      localStorage.setItem("expires", loggedUser.expires)
       localStorage.setItem("token", loggedUser.token)
 
       navigate("/home", { replace: true })

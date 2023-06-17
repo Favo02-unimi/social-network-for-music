@@ -9,7 +9,7 @@ const ProtectedRoute : FC<{children : React.ReactNode}> = ({ children }) => {
   const [auth, isLoading] = useAuth()
 
   if (!auth && !isLoading) {
-    localStorage.removeItem("user")
+    localStorage.removeItem("expires")
     localStorage.removeItem("token")
     return <Navigate to="/login" replace />
   }

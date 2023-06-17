@@ -45,7 +45,7 @@ const Profile : FC = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem("token")
-    window.localStorage.removeItem("user")
+    window.localStorage.removeItem("expires")
     navigate("/home")
   }
 

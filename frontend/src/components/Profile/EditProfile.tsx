@@ -86,9 +86,8 @@ const EditProfile : FC = () => {
     }
 
     try {
-      const editedProfile = await usersService.edit(oldPassword, username, email, newPassword)
+      await usersService.edit(oldPassword, username, email, newPassword)
 
-      window.localStorage.setItem("user", editedProfile.username)
       toast.success("Profile edited successfully.")
 
       navigate("/profile", { replace: true })
