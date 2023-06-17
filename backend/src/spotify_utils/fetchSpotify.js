@@ -13,7 +13,7 @@ const authorizedFetch = async (URL, token) => (
   })
 )
 
-const BASE_URL = "https://api.spotify.com/v1/search"
+const BASE_URL = "https://api.spotify.com/v1"
 
 /**
  * Search albums from spotify API, returning a promise
@@ -22,7 +22,7 @@ const BASE_URL = "https://api.spotify.com/v1/search"
  * @returns {Promise}
  */
 const albums = async (token, query) => {
-  const URL = `${BASE_URL}?q=${query}&type=album`
+  const URL = `${BASE_URL}/search?q=${query}&type=album`
   return await authorizedFetch(URL, token)
 }
 
@@ -33,7 +33,7 @@ const albums = async (token, query) => {
  * @returns {Promise}
  */
 const artists = async (token, query) => {
-  const URL = `${BASE_URL}?q=${query}&type=artist`
+  const URL = `${BASE_URL}/search?q=${query}&type=artist`
   return await authorizedFetch(URL, token)
 }
 
@@ -44,7 +44,7 @@ const artists = async (token, query) => {
  * @returns {Promise}
  */
 const tracks = async (token, query) => {
-  const URL = `${BASE_URL}?q=${query}&type=track`
+  const URL = `${BASE_URL}/search?q=${query}&type=track`
   return await authorizedFetch(URL, token)
 }
 
@@ -55,7 +55,17 @@ const tracks = async (token, query) => {
  * @returns {Promise}
  */
 const all = async (token, query) => {
-  const URL = `${BASE_URL}?q=${query}&type=album,artist,track`
+  const URL = `${BASE_URL}/search?q=${query}&type=album,artist,track`
+  return await authorizedFetch(URL, token)
+}
+
+/**
+ * Fetch all available genres from spotify API, returning a promise
+ * @param {string} token authorization token (without "Bearer")
+ * @returns {Promise}
+ */
+const genres = async (token) => {
+  const URL = `${BASE_URL}/recommendations/available-genre-seeds`
   return await authorizedFetch(URL, token)
 }
 
@@ -63,5 +73,6 @@ export default {
   all,
   albums,
   artists,
-  tracks
+  tracks,
+  genres
 }
