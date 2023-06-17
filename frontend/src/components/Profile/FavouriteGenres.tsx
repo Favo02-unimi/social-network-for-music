@@ -27,28 +27,7 @@ const FavouriteGenres : FC<{
     const newList = list.slice()
     newList.push(selected.value)
 
-    try {
-      const { valid, message } = checkTokenExpiration()
-      if (!valid) {
-        toast.error(message)
-        navigate("/login")
-        return
-      }
-
-      const res = await usersService.genres(newList)
-      setUser(res)
-      toast.success(`${selected.label} added to favourites`)
-    }
-    catch(e) {
-      if (e?.response?.data?.error) {
-        toast.error(e.response.data.error)
-      } else {
-        toast.error("Generic error, please try again")
-      }
-    }
-    finally {
-      setIsLoading(false)
-    }
+    update(newList, `${selected.label} added to favourites`)
   }
 
   const confirmRemove = (title : string) => {
@@ -71,6 +50,10 @@ const FavouriteGenres : FC<{
   const handleRemove = async (title : string) => {
     const newList = list.filter(i => i !== title)
 
+    update(newList, `${title} removed from favourites`)
+  }
+
+  const update = async (newList : string[], feedback : string) => {
     try {
       const { valid, message } = checkTokenExpiration()
       if (!valid) {
@@ -81,7 +64,7 @@ const FavouriteGenres : FC<{
 
       const res = await usersService.genres(newList)
       setUser(res)
-      toast.success(`${title} removed from favourites`)
+      toast.success(feedback)
     }
     catch(e) {
       if (e?.response?.data?.error) {

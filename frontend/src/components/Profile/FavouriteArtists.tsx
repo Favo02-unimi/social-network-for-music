@@ -24,32 +24,11 @@ const FavouriteArtists : FC<{
 
   const navigate = useNavigate()
 
-  const handleAdd = async (selected : Option) => {
+  const handleAdd = (selected : Option) => {
     const newList = list.slice()
     newList.push({ id: selected.value, name: selected.label })
 
-    try {
-      const { valid, message } = checkTokenExpiration()
-      if (!valid) {
-        toast.error(message)
-        navigate("/login")
-        return
-      }
-
-      const res = await usersService.artists(newList)
-      setUser(res)
-      toast.success(`${selected.label} added to favourites`)
-    }
-    catch(e) {
-      if (e?.response?.data?.error) {
-        toast.error(e.response.data.error)
-      } else {
-        toast.error("Generic error, please try again")
-      }
-    }
-    finally {
-      setIsLoading(false)
-    }
+    updateFavourites(newList, `${selected.label} added to favourites`)
   }
 
   const confirmRemove = (id : string, name : string) => {
@@ -69,9 +48,13 @@ const FavouriteArtists : FC<{
     })
   }
 
-  const handleRemove = async (id : string, name : string) => {
+  const handleRemove = (id : string, name : string) => {
     const newList = list.filter(i => i.id !== id)
 
+    updateFavourites(newList, `${name} removed from favourites`)
+  }
+
+  const updateFavourites = async (newList : Artist[], feedback : string) => {
     try {
       const { valid, message } = checkTokenExpiration()
       if (!valid) {
@@ -82,7 +65,7 @@ const FavouriteArtists : FC<{
 
       const res = await usersService.artists(newList)
       setUser(res)
-      toast.success(`${name} removed from favourites`)
+      toast.success(feedback)
     }
     catch(e) {
       if (e?.response?.data?.error) {
