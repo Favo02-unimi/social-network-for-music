@@ -1,5 +1,6 @@
 import type { FC } from "react"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 import type Track from "../../interfaces/Track"
@@ -7,15 +8,17 @@ import spotifyService from "../../services/spotify"
 import REGEX from "../../utils/regex"
 import Loading from "../Loading"
 
-import FakeTrackCard from "./FakeTrackCard"
+import Recommendations from "./Recommendations"
 import TrackCard from "./TrackCard"
 
 const SearchBox : FC<{
-  openTrack ?: Track,
-  setOpenTrack : ((t : Track) => void),
-}> = ({ openTrack, setOpenTrack }) => {
+  isLoading : boolean,
+  setIsLoading : (l : boolean) => void,
+  openTrack ?: Track
+}> = ({ isLoading, setIsLoading, openTrack }) => {
 
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const navigate = useNavigate()
+
   const [isInvalid, setIsInvalid] = useState<boolean>(false)
 
   const [tracks, setTracks] = useState<Track[]>()
@@ -69,10 +72,10 @@ const SearchBox : FC<{
 
       {!tracks || tracks.length === 0
         ?
-        <div className="relative w-full h-full mt-4 flex flex-wrap justify-center overflow-y-auto">
-          <div className="absolute w-full h-full flex justify-center items-center uppercase font-bold text-2xl -mt-10 opacity-60">Start typing to search tracks...</div>
-          {isLoading && <Loading small={true} />}
-          {Array(20).fill(true).map((_, i) => <FakeTrackCard key={i} />)}
+        <div className="relative w-full h-full mt-4 flex flex-col justify-center items-center overflow-y-auto">
+          <h1 className="mt-4 text-xl font-bold"><span className="text-spotify-green">Recommendations</span> for you, based on your favourites.</h1>
+          <h1 className="text-lg italic">Start typing to search for specific tracks.</h1>
+          <Recommendations customClasses="w-full h-full flex-wrap justify-center" />
         </div>
         :
         <div className="relative w-full h-full mt-4 flex flex-wrap justify-center items-center overflow-y-auto">
