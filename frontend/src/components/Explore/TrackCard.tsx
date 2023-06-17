@@ -5,11 +5,11 @@ import type Track from "../../interfaces/Track"
 const TrackCard : FC<{
   track : Track,
   openTrack ?: Track,
-  setOpenTrack : ((t : Track) => void)
-}> = ({ track, openTrack, setOpenTrack }) => (
+  onclick : ((t : Track) => void)
+}> = ({ track, openTrack, onclick }) => (
 
   <div
-    onClick={() => setOpenTrack(track)}
+    onClick={() => onclick(track)}
     className={`${openTrack?.id === track.id ? "bg-white/20 border-spotify-greendark" : ""} -skew-y-2 shrink-0 grow-0 m-4 w-40 pb-2 h-60 flex flex-col items-center border border-white/20 rounded-md text-center hover:bg-white/20 cursor-pointer transition-all duration-700`}>
 
     <img src={track.album.images[0].url} className="w-40 h-40 rounded-t-md opacity-80" />
