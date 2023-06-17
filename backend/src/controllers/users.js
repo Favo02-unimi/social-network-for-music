@@ -3,7 +3,7 @@ import express from "express"
 import authenticateUser from "../middlewares/authenticateUser.js"
 import User from "../models/User.js"
 import Playlist from "../models/Playlist.js"
-import { validateCreateUser, validateDeleteUser, validateEditUser } from "../validations/User.js"
+import { validateCreateUser, validateDeleteUser, validateEditUser, validateUserArtists, validateUserGenres } from "../validations/User.js"
 
 const usersRouter = express.Router()
 
@@ -191,5 +191,76 @@ usersRouter.delete("/delete", authenticateUser, async (req, res) => {
   res.status(204).end()
 })
 
+/**
+ * Edit current user favourite artists
+ * @param {Artist[]} favourites artists
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+usersRouter.patch("/artists", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Users"]
+    #swagger.summary = "Edit favourite artist"
+  */
+
+  const {
+    artists
+  } = req.body
+
+  // validate
+  const { valid, message } = validateUserArtists(artists)
+  if (!valid) {
+    return res.status(400).json({ error: `Invalid artists${message}` })
+  }
+
+  // check duplicates
+  const uniqueArtists = new Set(artists.map(a => a.id))
+  if (uniqueArtists.size !== artists.length) {
+    return res.status(400).json({ error: "Duplicated artist" })
+  }
+
+  const user = await User.findById(req.user.id)
+
+  user.favouriteArtists = artists
+
+  const savedUser = await user.save()
+  res.status(201).json(savedUser)
+})
+
+/**
+ * Edit current user favourite genres
+ * @param {string[]} favourites genres
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+usersRouter.patch("/genres", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Users"]
+    #swagger.summary = "Edit favourite genres"
+  */
+
+  const {
+    genres
+  } = req.body
+
+  // validate
+  const { valid, message } = validateUserGenres(genres)
+  if (!valid) {
+    return res.status(400).json({ error: `Invalid genres${message}` })
+  }
+
+  // check duplicates
+  const uniqueGenres = new Set(genres)
+  if (uniqueGenres.size !== genres.length) {
+    return res.status(400).json({ error: "Duplicated genre" })
+  }
+
+  const user = await User.findById(req.user.id)
+
+  user.favouriteGenres = genres
+
+  const savedUser = await user.save()
+  res.status(201).json(savedUser)
+})
 
 export default usersRouter

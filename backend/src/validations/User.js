@@ -29,9 +29,20 @@ const DeleteUserSchema = z.object({
 })
 const validateDeleteUser = (input) => validate(DeleteUserSchema, input)
 
+const UserArtistsSchema = z.array(z.object({
+  id: z.string(),
+  name: z.string()
+}))
+const validateUserArtists = (input) => validate(UserArtistsSchema, input)
+
+const UserGenresSchema = z.array(z.string())
+const validateUserGenres = (input) => validate(UserGenresSchema, input)
+
 export {
   validateLoginUser,
   validateCreateUser,
   validateEditUser,
-  validateDeleteUser
+  validateDeleteUser,
+  validateUserArtists,
+  validateUserGenres
 }
