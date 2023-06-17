@@ -70,11 +70,27 @@ const all = async (query : string) => {
   return res.data
 }
 
+/**
+ * Fetch genres
+ * @requires authorization header (JWT token)
+ * @throws {401} missing/invalid token
+ * @returns {200} genres
+ */
+const genres = async () => {
+
+  const headers = { headers: { "authorization": localStorage.getItem("token") } }
+
+  const res = await axios.get(`${baseUrl}/genres`, headers)
+
+  return res.data
+}
+
 const spotifyService = {
   albums,
   artists,
   tracks,
-  all
+  all,
+  genres
 }
 
 export default spotifyService

@@ -39,7 +39,7 @@ const SearchBox : FC<{
     }
 
     try {
-      const res = await spotifyService.all(query)
+      const res = await spotifyService.tracks(query)
       setTracks(res?.tracks?.items)
     }
     catch(e) {

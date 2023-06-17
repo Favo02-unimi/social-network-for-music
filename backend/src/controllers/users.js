@@ -2,7 +2,8 @@ import bcrypt from "bcrypt"
 import express from "express"
 import authenticateUser from "../middlewares/authenticateUser.js"
 import User from "../models/User.js"
-import { validateCreateUser, validateDeleteUser, validateEditUser } from "../validations/User.js"
+import Playlist from "../models/Playlist.js"
+import { validateCreateUser, validateDeleteUser, validateEditUser, validateUserArtists, validateUserGenres } from "../validations/User.js"
 
 const usersRouter = express.Router()
 
@@ -17,7 +18,7 @@ usersRouter.get("/me", authenticateUser, async (req, res) => {
     #swagger.summary = "Get current logged user (AUTH required)"
   */
 
-  const user = await User.find({ _id: req.user.id })
+  const user = await User.findById(req.user.id)
   res.json(user)
 })
 
@@ -105,7 +106,7 @@ usersRouter.patch("/edit", authenticateUser, async (req, res) => {
 
   if (username) {
     const existingUsername = await User.findOne({ username: new RegExp(`^${username}$`, "i") })
-    if (existingUsername) {
+    if (existingUsername && existingUsername._id.toString() !== req.user.id) {
       return res.status(400).json({ error: "Username already taken" })
     }
 
@@ -121,7 +122,7 @@ usersRouter.patch("/edit", authenticateUser, async (req, res) => {
 
   if (email) {
     const existingEmail = await User.findOne({ email: new RegExp(`^${email}$`, "i") })
-    if (existingEmail) {
+    if (existingEmail && existingEmail._id.toString() !== req.user.id) {
       return res.status(400).json({ error: "Email already used" })
     }
 
@@ -159,12 +160,107 @@ usersRouter.delete("/delete", authenticateUser, async (req, res) => {
     return res.status(401).json({ error: "Invalid old password" })
   }
 
-  // TODO: delete all user resources (playlists, ...)
+  // delete all user resources (delete creator playlists, unfollow playlists)
+  user.playlists.forEach(async playlist => {
+
+    // creator: delete playlist
+    if (playlist.isCreator) {
+
+      // update all followers
+      const followers = await User.find({ playlists: { $elemMatch: { id: playlist.id } } })
+      followers.forEach(async f => {
+        f.playlists = f.playlists.filter(p => p.id.toString() !== playlist.id.toString())
+        await f.save()
+      })
+
+      // delete playlist
+      await Playlist.findByIdAndDelete(playlist.id)
+    }
+
+    // collaborator/follower: unfollow
+    else {
+      const p = await Playlist.findById(playlist.id)
+      p.followers = p.followers.filter(f => f.userId.toString() !== user._id.toString())
+      await p.save()
+    }
+
+  })
 
   await User.findByIdAndDelete(req.user.id)
 
   res.status(204).end()
 })
 
+/**
+ * Edit current user favourite artists
+ * @param {Artist[]} favourites artists
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+usersRouter.patch("/artists", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Users"]
+    #swagger.summary = "Edit favourite artist"
+  */
+
+  const {
+    artists
+  } = req.body
+
+  // validate
+  const { valid, message } = validateUserArtists(artists)
+  if (!valid) {
+    return res.status(400).json({ error: `Invalid artists${message}` })
+  }
+
+  // check duplicates
+  const uniqueArtists = new Set(artists.map(a => a.id))
+  if (uniqueArtists.size !== artists.length) {
+    return res.status(400).json({ error: "Duplicated artist" })
+  }
+
+  const user = await User.findById(req.user.id)
+
+  user.favouriteArtists = artists
+
+  const savedUser = await user.save()
+  res.status(201).json(savedUser)
+})
+
+/**
+ * Edit current user favourite genres
+ * @param {string[]} favourites genres
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+usersRouter.patch("/genres", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Users"]
+    #swagger.summary = "Edit favourite genres"
+  */
+
+  const {
+    genres
+  } = req.body
+
+  // validate
+  const { valid, message } = validateUserGenres(genres)
+  if (!valid) {
+    return res.status(400).json({ error: `Invalid genres${message}` })
+  }
+
+  // check duplicates
+  const uniqueGenres = new Set(genres)
+  if (uniqueGenres.size !== genres.length) {
+    return res.status(400).json({ error: "Duplicated genre" })
+  }
+
+  const user = await User.findById(req.user.id)
+
+  user.favouriteGenres = genres
+
+  const savedUser = await user.save()
+  res.status(201).json(savedUser)
+})
 
 export default usersRouter

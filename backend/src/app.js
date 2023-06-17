@@ -15,7 +15,6 @@ import usersRouter from "./controllers/users.js"
 import loginRouter from "./controllers/login.js"
 import spotifyRouter from "./controllers/spotify.js"
 import playlistsRouter from "./controllers/playlists.js"
-import genresRouter from "./controllers/genres.js"
 
 // middlewares / utils imports
 import unknownEndpoint from "./middlewares/unknownEndpoint.js"
@@ -40,7 +39,6 @@ app.use("/api/login", loginRouter)
 
 app.use("/api/spotify", spotifyRouter)
 app.use("/api/playlists", playlistsRouter)
-app.use("/api/genres", genresRouter)
 
 app.use("/api/*", unknownEndpoint)
 

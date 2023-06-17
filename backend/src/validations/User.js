@@ -19,7 +19,7 @@ const validateCreateUser = (input) => validate(CreateUserSchema, input)
 const EditUserSchema = z.object({
   oldPassword: z.string().regex(regex.password, { message: regex.passwordDesc }),
   username: z.string().regex(regex.username, { message: regex.usernameDesc }).optional(),
-  newPassword: z.string().regex(regex.password, { message: regex.passwordDesc }).optional(),
+  newPassword: z.union([z.string().regex(regex.password, { message: regex.passwordDesc }).optional(), z.string().length(0)]),
   email: z.string().regex(regex.email, { message: regex.emailDesc }).optional()
 })
 const validateEditUser = (input) => validate(EditUserSchema, input)
@@ -29,9 +29,20 @@ const DeleteUserSchema = z.object({
 })
 const validateDeleteUser = (input) => validate(DeleteUserSchema, input)
 
+const UserArtistsSchema = z.array(z.object({
+  id: z.string(),
+  name: z.string()
+}))
+const validateUserArtists = (input) => validate(UserArtistsSchema, input)
+
+const UserGenresSchema = z.array(z.string())
+const validateUserGenres = (input) => validate(UserGenresSchema, input)
+
 export {
   validateLoginUser,
   validateCreateUser,
   validateEditUser,
-  validateDeleteUser
+  validateDeleteUser,
+  validateUserArtists,
+  validateUserGenres
 }

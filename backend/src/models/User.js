@@ -17,8 +17,17 @@ const userSchema = new mongoose.Schema(
       required: true,
       match: [REGEX.email, `Please fill a valid username: ${REGEX.emailDesc}`]
     },
-    favouriteArtists: { // TODO: validate artists Object
-      type: [Object],
+    favouriteArtists: {
+      type: [{
+        id: {
+          type: String,
+          required: true
+        },
+        name: {
+          type: String,
+          required: true
+        }
+      }],
       required: false,
       default: []
     },
