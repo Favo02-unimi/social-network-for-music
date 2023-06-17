@@ -101,13 +101,30 @@ const recommendations = async () => {
   return res.data
 }
 
+/**
+ * Fetch single track
+ * @param {string} id of track
+ * @requires authorization header (JWT token)
+ * @throws {401} missing/invalid token
+ * @returns {200} recommendations
+ */
+const track = async (id : string) => {
+
+  const headers = { headers: { "authorization": localStorage.getItem("token") } }
+
+  const res = await axios.get(`${baseUrl}/track/${id}`, headers)
+
+  return res.data
+}
+
 const spotifyService = {
   albums,
   artists,
   tracks,
   all,
   genres,
-  recommendations
+  recommendations,
+  track
 }
 
 export default spotifyService
