@@ -4,6 +4,7 @@ import fetchSpotify from "../spotify_utils/fetchSpotify.js"
 import generateSpotifyToken from "../spotify_utils/generateSpotifyToken.js"
 import checkSpotifyError from "../spotify_utils/checkSpotifyError.js"
 import validateQuery from "../validations/Query.js"
+import User from "../models/User.js"
 
 const spotifyRouter = express.Router()
 
@@ -185,7 +186,81 @@ spotifyRouter.get("/genres", authenticateUser, async (req, res) => {
   // invalid token: refresh spotify token and retry one time
   if (spotifyResponse.status === 401) {
     const token = await generateSpotifyToken(req.app)
-    spotifyResponse = await fetchSpotify.all(token)
+    spotifyResponse = await fetchSpotify.genres(token)
+  }
+
+  // check for spotify api errors after token refresh
+  // undefined == no errors
+  const errorJson = checkSpotifyError(spotifyResponse.status)
+
+  return res
+    .status(spotifyResponse.status)
+    // if error found return errorJson, otherwise response json
+    .json(errorJson ?? await spotifyResponse.json())
+})
+
+/**
+ * Fetch recommendations based on current user favourites
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+spotifyRouter.get("/recommendations", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Spotify"]
+    #swagger.summary = "Get recommendations based on current user favourites (AUTH required)"
+  */
+
+  const token = req.app.locals?.spotifyToken
+
+  const user = await User.findById(req.user.id)
+
+  const artists = user.favouriteArtists.map(a => a.id).join(",")
+  const genres = user.favouriteGenres.join(",")
+
+  if (!artists && !genres) {
+    return res.status(400).json({ error: "No favourite genres or artists: cannot generate recommendations" })
+  }
+
+  let spotifyResponse = await fetchSpotify.recommendations(token, artists, genres)
+
+  // invalid token: refresh spotify token and retry one time
+  if (spotifyResponse.status === 401) {
+    const token = await generateSpotifyToken(req.app)
+    spotifyResponse = await fetchSpotify.recommendations(token, artists, genres)
+  }
+
+  // check for spotify api errors after token refresh
+  // undefined == no errors
+  const errorJson = checkSpotifyError(spotifyResponse.status)
+
+  return res
+    .status(spotifyResponse.status)
+    // if error found return errorJson, otherwise response json
+    .json(errorJson ?? await spotifyResponse.json())
+})
+
+/**
+ * Fetch track
+ * @param {string} id of track to fetch
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+spotifyRouter.get("/track/:id", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Spotify"]
+    #swagger.summary = "Get specific track (AUTH required)"
+  */
+
+  const token = req.app.locals?.spotifyToken
+
+  const trackId = req.params.id
+
+  let spotifyResponse = await fetchSpotify.track(token, trackId)
+
+  // invalid token: refresh spotify token and retry one time
+  if (spotifyResponse.status === 401) {
+    const token = await generateSpotifyToken(req.app)
+    spotifyResponse = await fetchSpotify.track(token, trackId)
   }
 
   // check for spotify api errors after token refresh

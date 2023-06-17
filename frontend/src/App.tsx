@@ -45,6 +45,7 @@ const App : FC = () => {
       children: [
         { path: "*", element: <Navigate to="/home" replace /> },
         { path: "explore", element: <Explore /> },
+        { path: "explore/:trackId", element: <Explore /> },
         { path: "playlists", element: <Playlists /> },
         { path: "playlists/:id", element: <Playlist /> },
         { path: "playlists/create", element: <CreatePlaylist /> },

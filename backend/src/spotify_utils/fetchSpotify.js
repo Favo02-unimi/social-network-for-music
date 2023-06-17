@@ -69,10 +69,35 @@ const genres = async (token) => {
   return await authorizedFetch(URL, token)
 }
 
+/**
+ * Fetch all available genres from spotify API, returning a promise
+ * @param {string} token authorization token (without "Bearer")
+ * @param {string[]} artists list of artists (seed)
+ * @param {string[]} genres list of genres (seed)
+ * @returns {Promise}
+ */
+const recommendations = async (token, artists, genres) => {
+  const URL = `${BASE_URL}/recommendations?seed_artists=${artists}&seed_genres=${genres}`
+  return await authorizedFetch(URL, token)
+}
+
+/**
+ * Fetch single track from spotify API, returning a promise
+ * @param {string} token authorization token (without "Bearer")
+ * @param {string} id id of track
+ * @returns {Promise}
+ */
+const track = async (token, id) => {
+  const URL = `${BASE_URL}/tracks/${id}`
+  return await authorizedFetch(URL, token)
+}
+
 export default {
   all,
   albums,
   artists,
   tracks,
-  genres
+  genres,
+  recommendations,
+  track
 }
