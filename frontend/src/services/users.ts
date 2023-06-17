@@ -1,5 +1,7 @@
 import axios from "axios"
 
+import type Artist from "../interfaces/Artist"
+
 const baseUrl = "/api/users"
 
 /**
@@ -94,11 +96,45 @@ const deletee = async (password : string) => {
   return res.data
 }
 
+/**
+ * Edit current user favourite artists
+ * @param {Artist[]} artists edited artists
+ * @throws {401} missing/invalid token
+ * @throws {400} duplicated artist
+ * @returns {200} updated user
+ */
+const artists = async (artists : Artist[]) => {
+
+  const headers = { headers: { "authorization": localStorage.getItem("token") } }
+
+  const res = await axios.patch(`${baseUrl}/artists/`, { artists }, headers)
+
+  return res.data
+}
+
+/**
+ * Edit current user favourite genres
+ * @param {string[]} genre edited genres
+ * @throws {401} missing/invalid token
+ * @throws {400} duplicated genre
+ * @returns {200} updated user
+ */
+const genres = async (genres : string[]) => {
+
+  const headers = { headers: { "authorization": localStorage.getItem("token") } }
+
+  const res = await axios.patch(`${baseUrl}/genres/`, { genres }, headers)
+
+  return res.data
+}
+
 const usersService = {
   getMe,
   create,
   edit,
-  deletee
+  deletee,
+  artists,
+  genres
 }
 
 export default usersService
