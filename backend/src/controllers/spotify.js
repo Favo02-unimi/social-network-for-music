@@ -239,4 +239,38 @@ spotifyRouter.get("/recommendations", authenticateUser, async (req, res) => {
     .json(errorJson ?? await spotifyResponse.json())
 })
 
+/**
+ * Fetch track
+ * @param {string} id of track to fetch
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+spotifyRouter.get("/track/:id", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Spotify"]
+    #swagger.summary = "Get specific track (AUTH required)"
+  */
+
+  const token = req.app.locals?.spotifyToken
+
+  const trackId = req.params.id
+
+  let spotifyResponse = await fetchSpotify.track(token, trackId)
+
+  // invalid token: refresh spotify token and retry one time
+  if (spotifyResponse.status === 401) {
+    const token = await generateSpotifyToken(req.app)
+    spotifyResponse = await fetchSpotify.track(token, trackId)
+  }
+
+  // check for spotify api errors after token refresh
+  // undefined == no errors
+  const errorJson = checkSpotifyError(spotifyResponse.status)
+
+  return res
+    .status(spotifyResponse.status)
+    // if error found return errorJson, otherwise response json
+    .json(errorJson ?? await spotifyResponse.json())
+})
+
 export default spotifyRouter
