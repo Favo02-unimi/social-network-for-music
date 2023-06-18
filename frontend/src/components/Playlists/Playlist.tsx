@@ -1,7 +1,7 @@
 import type { FC } from "react"
 import { useEffect, useState } from "react"
 import { confirmAlert } from "react-confirm-alert"
-import { FaHeart, FaHeartBroken, FaLock } from "react-icons/fa"
+import { FaHeart, FaHeartBroken, FaLock, FaUsers } from "react-icons/fa"
 import { ImBin2 } from "react-icons/im"
 import { MdModeEdit, MdPublic } from "react-icons/md"
 import { Link, useNavigate, useParams } from "react-router-dom"
@@ -12,6 +12,7 @@ import playlistsService from "../../services/playlists"
 import checkTokenExpiration from "../../utils/checkTokenExpiration"
 import Loading from "../Loading"
 
+import Followers from "./Followers"
 import PlaylistImage from "./PlaylistImage"
 import TrackRow from "./TrackRow"
 
@@ -23,6 +24,8 @@ const Playlist : FC = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [playlist, setPlaylist] = useState<PlaylistInterface>()
+
+  const [showFollowers, setShowFollowers] = useState<boolean>(false)
 
   useEffect(() => {
 
@@ -116,6 +119,8 @@ const Playlist : FC = () => {
 
     setIsLoading(true)
 
+    setShowFollowers(false)
+
     try {
       const { valid, message } = checkTokenExpiration()
       if (!valid) {
@@ -148,6 +153,8 @@ const Playlist : FC = () => {
   const handleUnfollowPlaylist = async () => {
 
     setIsLoading(true)
+
+    setShowFollowers(false)
 
     try {
       const { valid, message } = checkTokenExpiration()
@@ -192,7 +199,9 @@ const Playlist : FC = () => {
         </h1>
 
         <h2 className="uppercase px-2 text-ellipsis whitespace-nowrap overflow-hidden font-bold text-white/50 shrink-0">
-          BY {playlist.creator} - {playlist.followers.length} followers
+          <span>BY {playlist.creator}</span>
+          <> - </>
+          <span className="cursor-pointer" onClick={() => setShowFollowers(!showFollowers)}>{playlist.followers.length} followers</span>
         </h2>
 
         <h4 className="text-center mt-2">{playlist.description}</h4>
@@ -237,10 +246,19 @@ const Playlist : FC = () => {
             </div>
           }
 
+          {(playlist.isCreator) &&
+            <div
+              onClick={() => setShowFollowers(!showFollowers)}
+              className={`text-white/70 w-full block border rounded-md px-4 py-1 my-4 text-center hover:bg-white/20 hover:text-white transition-all duration-700 cursor-pointer ${showFollowers ? "bg-white/20" : ""}`}
+            >
+              <FaUsers className="inline -mt-1 mr-1" />Manage collaborators
+            </div>
+          }
+
           {(playlist.isCreator || playlist.isCollaborator) &&
             <Link
               to={`/playlists/${playlist._id}/edit`}
-              className="text-white/70 w-full block border rounded-md px-4 py-1 mt-4 mb-2 text-center hover:bg-white/20 hover:text-white transition-all duration-700"
+              className="text-white/70 w-full block border rounded-md px-4 py-1 my-4 text-center hover:bg-white/20 hover:text-white transition-all duration-700"
             >
               <MdModeEdit className="inline -mt-1 mr-1" />Edit playlist
             </Link>
@@ -249,7 +267,7 @@ const Playlist : FC = () => {
           {playlist.isCreator &&
             <div
               onClick={handleDeletePlaylist}
-              className="cursor-pointer text-red-700/70 w-full block border border-red-700/70 rounded-md px-4 py-1 text-center hover:bg-red-700/20 hover:text-red-700 transition-all duration-700"
+              className="cursor-pointer text-red-700/70 w-full block border border-red-700/70 rounded-md px-4 py-1 my-4 text-center hover:bg-red-700/20 hover:text-red-700 transition-all duration-700"
             >
               <ImBin2 className="inline -mt-1 mr-1" />Delete playlist
             </div>
@@ -258,15 +276,26 @@ const Playlist : FC = () => {
 
       </div>
 
-      <div className="w-2/3 h-full pl-4 flex flex-col justify-center overflow-y-auto">
-        {playlist.tracks.map(t =>
-          <TrackRow
-            key={t.id}
-            track={t}
+      <div className="relative w-2/3 h-full pl-4 flex flex-col justify-center overflow-y-auto">
+        {showFollowers
+          ?
+          <Followers
             playlist={playlist}
+            isCreator={playlist.isCreator}
+            setIsLoading={setIsLoading}
+            setShowFollowers={setShowFollowers}
             setPlaylist={setPlaylist}
           />
-        )}
+          :
+          playlist.tracks.map(t =>
+            <TrackRow
+              key={t.id}
+              track={t}
+              playlist={playlist}
+              setPlaylist={setPlaylist}
+            />
+          )
+        }
       </div>
 
     </div>
