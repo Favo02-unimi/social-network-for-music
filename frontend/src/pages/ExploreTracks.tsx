@@ -9,7 +9,7 @@ import type Track from "../interfaces/Track"
 import spotifyService from "../services/spotify"
 import checkTokenExpiration from "../utils/checkTokenExpiration"
 
-const Explore : FC = () => {
+const ExploreTracks : FC = () => {
 
   const { trackId } = useParams()
   const navigate = useNavigate()
@@ -72,4 +72,4 @@ const Explore : FC = () => {
   )
 }
 
-export default Explore
+export default ExploreTracks

@@ -9,7 +9,7 @@ import EditProfile from "./components/Profile/EditProfile"
 import ProtectedRoute from "./components/ProtectedRoute"
 import Sidebar from "./components/Sidebar"
 import SideContent from "./components/SideContent"
-import Explore from "./pages/Explore"
+import ExploreTracks from "./pages/ExploreTracks"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Playlists from "./pages/Playlists"
@@ -44,8 +44,8 @@ const App : FC = () => {
       element: <ProtectedRoute><Sidebar sideContent={<SideContent />}><Outlet /></Sidebar></ProtectedRoute>,
       children: [
         { path: "*", element: <Navigate to="/home" replace /> },
-        { path: "explore", element: <Explore /> },
-        { path: "explore/:trackId", element: <Explore /> },
+        { path: "explore/tracks", element: <ExploreTracks /> },
+        { path: "explore/tracks/:trackId", element: <ExploreTracks /> },
         { path: "playlists", element: <Playlists /> },
         { path: "playlists/:id", element: <Playlist /> },
         { path: "playlists/create", element: <CreatePlaylist /> },

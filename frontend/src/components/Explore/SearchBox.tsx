@@ -137,7 +137,7 @@ const SearchBox : FC<{
               track={t}
               key={t.id}
               openTrack={openTrack}
-              onclick={() => navigate(`/explore/${t.id}`)}
+              onclick={() => navigate(`/explore/tracks/${t.id}`)}
             />
           )}
         </div>

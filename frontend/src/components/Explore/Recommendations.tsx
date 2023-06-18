@@ -90,7 +90,7 @@ const Recommendations : FC<{customClasses ?: string}> = ({ customClasses }) => {
 
   return (
     <div className={`relative w-full flex items-center overflow-x-auto ${customClasses}`}>
-      {tracks?.map(t => <TrackCard key={t.id} track={t} onclick={() => {navigate(`/explore/${t.id}`)}} />)}
+      {tracks?.map(t => <TrackCard key={t.id} track={t} onclick={() => {navigate(`/explore/tracks/${t.id}`)}} />)}
     </div>
   )
 }

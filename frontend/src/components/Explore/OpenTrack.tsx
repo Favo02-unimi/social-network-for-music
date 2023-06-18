@@ -19,7 +19,7 @@ const OpenTrack : FC<{
   const navigate = useNavigate()
 
   const handleClose = () => {
-    navigate("/explore")
+    navigate("/explore/tracks")
     setOpenTrack(undefined)
   }
 
