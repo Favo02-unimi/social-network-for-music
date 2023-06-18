@@ -39,16 +39,31 @@ const artists = async (query : string) => {
 /**
  * Search tracks by @param query filter
  * @param {string} query filter
+ * @param {string} artist artist filter
+ * @param {string} genre genre filter
+ * @param {number} yearMin min release year filter
+ * @param {number} yearMax max release year filter
  * @requires authorization header (JWT token)
  * @throws {401} missing/invalid token
  * @throws {400} invalid query
  * @returns {200} tracks
  */
-const tracks = async (query : string) => {
+const tracks = async (query : string, artist : string, genre : string, yearMin : number, yearMax : number) => {
 
   const headers = { headers: { "authorization": localStorage.getItem("token") } }
 
-  const res = await axios.get(`${baseUrl}/tracks/${query}`, headers)
+  let URL = `${baseUrl}/tracks/${query}`
+
+  if (artist.length > 2) {
+    URL = `${URL} artist:${artist}`
+  }
+  if (genre.length > 2) {
+    URL = `${URL} genre:${genre}`
+  }
+
+  URL = `${URL} year:${yearMin}-${yearMax}`
+
+  const res = await axios.get(URL, headers)
 
   return res.data
 }
