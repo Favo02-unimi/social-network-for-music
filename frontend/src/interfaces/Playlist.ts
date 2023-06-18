@@ -1,3 +1,4 @@
+import type Follower from "./Follower"
 import type Track from "./Track"
 
 interface Playlist {
@@ -8,11 +9,7 @@ interface Playlist {
   isPublic : boolean,
   tracks : Track[],
   creator : string,
-  followers : [{
-    userId : string,
-    isCreator : boolean,
-    isCollaborator : boolean
-  }],
+  followers : Follower[],
   isCreator : boolean,
   isCollaborator : boolean,
   isFollower : boolean
