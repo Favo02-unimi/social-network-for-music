@@ -1,0 +1,47 @@
+.multi-range-slider {
+  box-shadow: none !important;
+  background-color: rgb(255 255 255 / 0.2) !important;
+  border: none !important;
+}
+
+.bar-left,
+.bar-right,
+.bar-inner {
+  box-shadow: none !important;
+}
+
+.bar {
+  width: 95% !important;
+  margin: auto !important;
+}
+
+.bar-inner {
+  background-color: #1DB954 !important;
+  border: none !important;
+}
+
+.thumb {
+  background-color: #191414 !important;
+  margin-top: 0 !important;
+  
+}
+
+.thumb::before {
+  border: none !important;
+  box-shadow: none !important;
+  margin-top: -6px !important;
+}
+
+.caption {
+  display: none !important;
+}
+
+.labels {
+  margin-top: 0 !important;
+}
+
+.label {
+  margin: 0 30px;
+  font-size: 1em !important;
+  font-weight: 700;
+}
