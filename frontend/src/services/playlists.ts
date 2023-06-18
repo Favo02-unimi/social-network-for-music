@@ -216,6 +216,24 @@ const unfollow = async (id : string) => {
   return res.data
 }
 
+/**
+ * Get @param id playlist followers
+ * @param {string} id of playlist to get followers
+ * @requires authorization header (JWT token)
+ * @throws {401} missing/invalid token
+ * @throws {404} playlist not found
+ * @throws {401} private playlist and user not creator/collaborator
+ * @returns {200} playlist
+ */
+const followers = async (id : string) => {
+
+  const headers = { headers: { "authorization": localStorage.getItem("token") } }
+
+  const res = await axios.get(`${baseUrl}/${id}/followers`, headers)
+
+  return res.data
+}
+
 const playlistsService = {
   getPublic,
   getSingle,
@@ -226,7 +244,8 @@ const playlistsService = {
   addTrack,
   removeTrack,
   follow,
-  unfollow
+  unfollow,
+  followers,
 }
 
 export default playlistsService
