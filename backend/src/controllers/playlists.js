@@ -492,4 +492,98 @@ playlistsRouter.get("/:id/followers", authenticateUser, async (req, res) => {
   })))
 })
 
+/**
+ * Make @param userid collaborator of @param id playlist
+ * @param {String} id id of playlist to add collaborator
+ * @param {String} userid id of user to make collaborator
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+playlistsRouter.post("/:id/addcollaborator/:userid", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = Make {userid} collaborator of {id} playlist (AUTH required)"
+  */
+
+  // validate id
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
+  const playlist = await Playlist.findById(req.params.id)
+
+  if (!playlist) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
+  // check user is creator to make change
+  const creatorInFollowers = playlist.followers.find(f => f.userId.toString() === req.user.id)
+  if (!creatorInFollowers.isCreator) {
+    return res.status(401).json({ error: "You must be the creator to make collaborators" })
+  }
+
+  const userId = req.params.userid
+
+  const userInFollowers = playlist.followers.find(f => f.userId.toString() === userId)
+  if (!userInFollowers) {
+    return res.status(400).json({ error: "User does not follow the playlist" })
+  }
+
+  userInFollowers.isCollaborator = true
+  const savedPlaylist = await playlist.save()
+
+  const user = await User.findById(userId)
+  user.playlists.find(p => p.id.toString() === req.params.id).isCollaborator = true
+  await user.save()
+
+  res.status(200).json(savedPlaylist)
+})
+
+/**
+ * Remove @param userid collaborator from @param id playlist
+ * @param {String} id id of playlist to remove collaborator
+ * @param {String} userid id of user to remove collaborator
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+playlistsRouter.post("/:id/removecollaborator/:userid", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = Remove {userid} collaborator from {id} playlist (AUTH required)"
+  */
+
+  // validate id
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
+  const playlist = await Playlist.findById(req.params.id)
+
+  if (!playlist) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
+  // check user is creator to make change
+  const creatorInFollowers = playlist.followers.find(f => f.userId.toString() === req.user.id)
+  if (!creatorInFollowers.isCreator) {
+    return res.status(401).json({ error: "You must be the creator to make collaborators" })
+  }
+
+  const userId = req.params.userid
+
+  const userInFollowers = playlist.followers.find(f => f.userId.toString() === userId)
+  if (!userInFollowers?.isCollaborator) {
+    return res.status(400).json({ error: "User is not collaborator" })
+  }
+
+  userInFollowers.isCollaborator = false
+  const savedPlaylist = await playlist.save()
+
+  const user = await User.findById(userId)
+  user.playlists.find(p => p.id.toString() === req.params.id).isCollaborator = false
+  await user.save()
+
+  res.status(200).json(savedPlaylist)
+})
+
 export default playlistsRouter
