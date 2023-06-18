@@ -79,8 +79,13 @@ const SearchBox : FC<{
       }
     }
 
+    // debounce
+    const timeoutId = setTimeout(() => {
+      handleSearch()
+    }, 300)
 
-    handleSearch()
+    // clear debounce
+    return () => clearTimeout(timeoutId)
   }, [query, artist, genre, yearMin, yearMax, setIsLoading, navigate])
 
   return (
