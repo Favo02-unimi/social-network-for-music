@@ -442,5 +442,54 @@ playlistsRouter.post("/:id/unfollow", authenticateUser, async (req, res) => {
   res.status(200).json(savedPlaylist)
 })
 
+/**
+ * Get followers of a playlist
+ * @param {String} id id of playlist to get followers
+ * @requires authorization header (JWT token)
+ * @returns {Response}
+ */
+playlistsRouter.get("/:id/followers", authenticateUser, async (req, res) => {
+  /*
+    #swagger.tags = ["Playlists"]
+    #swagger.summary = "Get followers of {id} playlist (AUTH required)"
+  */
+
+  // validate id
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
+  const playlist = await Playlist.findById(req.params.id).populate("followers.userId", "username")
+
+  if (!playlist) {
+    return res.status(404).json({ error: "Playlist not found" })
+  }
+
+  // find current user in playlists follower (must be following if creator/collaborator)
+  const userInFollowers = playlist.followers.find(f => f.userId.toString() === req.user.id)
+
+  // check user is creator/collaborator
+  let isCreator = false
+  let isCollaborator = false
+  if (userInFollowers) {
+    isCreator = userInFollowers.isCreator
+    isCollaborator = userInFollowers.isCollaborator
+  }
+
+  // if not public check user is creator/collaborator (authorization)
+  if (!playlist.isPublic) {
+    if (!(isCreator || isCollaborator)) {
+      return res.status(401).json({ error: "Unauthorized" })
+    }
+  }
+
+  // "normalize" return (only followers)
+  res.json(playlist.followers.map(f => ({
+    userId: f.userId._id,
+    username: f.userId.username,
+    isCreator: f.isCreator,
+    isCollaborator: f.isCollaborator
+  })))
+})
 
 export default playlistsRouter
