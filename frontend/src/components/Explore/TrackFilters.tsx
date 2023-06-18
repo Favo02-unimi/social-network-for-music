@@ -4,7 +4,7 @@ import MultiRangeSlider from "multi-range-slider-react"
 
 import "../../assets/styles/sliderComponent.css"
 
-const Filters : FC<{
+const TrackFilters : FC<{
   artist : string,
   setArtist : (a : string) => void,
   genre : string,
@@ -61,4 +61,4 @@ const Filters : FC<{
   )
 }
 
-export default Filters
+export default TrackFilters
