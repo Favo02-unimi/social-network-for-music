@@ -127,7 +127,7 @@ const SearchBox : FC<{
         <div className="relative w-full h-full mt-4 flex flex-col justify-center items-center overflow-y-auto">
           <h1 className="text-xl font-bold"><span className="text-spotify-green">Recommendations</span> for you, based on your favourites.</h1>
           <h1 className="text-lg italic">Start typing to search for specific tracks.</h1>
-          <Recommendations customClasses="w-full h-full flex-wrap justify-center" />
+          <Recommendations customClasses="w-full h-full !flex-wrap !justify-center" />
         </div>
         :
         <div className="relative w-full h-full mt-2 flex flex-wrap justify-center items-center overflow-y-auto">

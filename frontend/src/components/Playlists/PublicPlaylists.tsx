@@ -62,7 +62,7 @@ const PublicPlaylists : FC = () => {
   }
 
   return (
-    <div className="relative w-full flex items-center overflow-x-auto">
+    <div className="relative w-full flex flex-col md:flex-row items-center overflow-y-auto md:overflow-x-auto">
       {playlists?.map(p => <PlaylistCard key={p._id} p={p} />)}
     </div>
   )
