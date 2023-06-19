@@ -19,7 +19,7 @@ const TrackFilters : FC<{
         placeholder="Title"
         value={title}
         onChange={({ target }) => { setTitle(target.value) }}
-        className="w-[200px] text-white bg-white/20 border-2 border-transparent py-2 px-3 rounded-md leading-tight outline-none placeholder:text-gray-400 focus-within:border-spotify-green transition-all duration-700"
+        className="w-full text-white bg-white/20 border-2 border-transparent py-2 px-3 rounded-md leading-tight outline-none placeholder:text-gray-400 focus-within:border-spotify-green transition-all duration-700"
       />
     </div>
 
@@ -30,7 +30,7 @@ const TrackFilters : FC<{
         placeholder="Author"
         value={author}
         onChange={({ target }) => { setAuthor(target.value) }}
-        className="w-[200px] text-white bg-white/20 border-2 border-transparent py-2 px-3 rounded-md leading-tight outline-none placeholder:text-gray-400 focus-within:border-spotify-green transition-all duration-700"
+        className="w-full text-white bg-white/20 border-2 border-transparent py-2 px-3 rounded-md leading-tight outline-none placeholder:text-gray-400 focus-within:border-spotify-green transition-all duration-700"
       />
     </div>
 
@@ -41,7 +41,7 @@ const TrackFilters : FC<{
         placeholder="Tag"
         value={tag}
         onChange={({ target }) => { setTag(target.value) }}
-        className="w-[200px] text-white bg-white/20 border-2 border-transparent py-2 px-3 rounded-md leading-tight outline-none placeholder:text-gray-400 focus-within:border-spotify-green transition-all duration-700"
+        className="w-full text-white bg-white/20 border-2 border-transparent py-2 px-3 rounded-md leading-tight outline-none placeholder:text-gray-400 focus-within:border-spotify-green transition-all duration-700"
       />
     </div>
 
@@ -52,7 +52,7 @@ const TrackFilters : FC<{
         placeholder="Track"
         value={track}
         onChange={({ target }) => { setTrack(target.value) }}
-        className="w-[200px] text-white bg-white/20 border-2 border-transparent py-2 px-3 rounded-md leading-tight outline-none placeholder:text-gray-400 focus-within:border-spotify-green transition-all duration-700"
+        className="w-full text-white bg-white/20 border-2 border-transparent py-2 px-3 rounded-md leading-tight outline-none placeholder:text-gray-400 focus-within:border-spotify-green transition-all duration-700"
       />
     </div>
 
