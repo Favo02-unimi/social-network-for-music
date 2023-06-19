@@ -30,7 +30,7 @@ const TrackFilters : FC<{
             placeholder="Artist"
             value={artist}
             onChange={({ target }) => { setArtist(target.value) }}
-            className="w-[200px] text-white bg-white/20 border-2 border-transparent py-2 px-3 rounded-md leading-tight outline-none placeholder:text-gray-400 focus-within:border-spotify-green transition-all duration-700"
+            className="w-full text-white bg-white/20 border-2 border-transparent py-2 px-3 rounded-md leading-tight outline-none placeholder:text-gray-400 focus-within:border-spotify-green transition-all duration-700"
           />
         </div>
         <div className="inline w-1/2 ml-2">
@@ -40,7 +40,7 @@ const TrackFilters : FC<{
             placeholder="Genre"
             value={genre}
             onChange={({ target }) => { setGenre(target.value) }}
-            className="w-[200px] text-white bg-white/20 border-2 border-transparent py-2 px-3 rounded-md leading-tight outline-none placeholder:text-gray-400 focus-within:border-spotify-green transition-all duration-700"
+            className="w-full text-white bg-white/20 border-2 border-transparent py-2 px-3 rounded-md leading-tight outline-none placeholder:text-gray-400 focus-within:border-spotify-green transition-all duration-700"
           />
         </div>
       </div>
