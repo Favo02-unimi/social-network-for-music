@@ -205,6 +205,10 @@ playlistsRouter.patch("/edit/:id", authenticateUser, async (req, res) => {
   }
 
   if("isPublic" in req.body) {
+    // stop making playlist private if there are followers that are not collaborators
+    if (!isPublic && playlist.followers.find(f => !f.isCollaborator && !f.isCreator)) {
+      return res.status(400).json({ error: "Cannot make playlist private: there are followers not collaborators" })
+    }
     playlist.isPublic = isPublic
   }
 

@@ -10,9 +10,9 @@ import checkTokenExpiration from "../../utils/checkTokenExpiration"
 import REGEX from "../../utils/regex"
 import Loading from "../Loading"
 
-import Filters from "./Filters"
 import Recommendations from "./Recommendations"
 import TrackCard from "./TrackCard"
+import TrackFilters from "./TrackFilters"
 
 const SearchBox : FC<{
   isLoading : boolean,
@@ -60,7 +60,7 @@ const SearchBox : FC<{
         const { valid, message } = checkTokenExpiration()
         if (!valid) {
           toast.error(message)
-          navigate("/login")
+          navigate("/login", { replace: true })
           return
         }
 
@@ -110,7 +110,7 @@ const SearchBox : FC<{
           {filtersOpen ? <MdExpandLess className="inline -mt-1" /> : <MdExpandMore className="inline -mt-1" />}
         </h2>
 
-        {filtersOpen && <Filters
+        {filtersOpen && <TrackFilters
           artist={artist}
           setArtist={setArtist}
           genre={genre}
@@ -137,7 +137,7 @@ const SearchBox : FC<{
               track={t}
               key={t.id}
               openTrack={openTrack}
-              onclick={() => navigate(`/explore/${t.id}`)}
+              onclick={() => navigate(`/explore/tracks/${t.id}`)}
             />
           )}
         </div>

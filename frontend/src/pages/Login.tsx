@@ -1,5 +1,6 @@
 import type { FC } from "react"
-import { Navigate } from "react-router-dom"
+import { IoIosArrowBack } from "react-icons/io"
+import { Link, Navigate } from "react-router-dom"
 
 import LoginForm from "../components/Login/LoginForm"
 import useAuth from "../hooks/useAuth"
@@ -13,7 +14,12 @@ const Login : FC = () => {
   }
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center">
+    <div className="relative w-screen h-screen flex items-center justify-center">
+
+      <Link to="/home" className="absolute top-6 left-5 uppercase italic hover:text-white/80">
+        <IoIosArrowBack className="inline text-2xl -mt-1" />Home
+      </Link>
+
       <LoginForm />
     </div>
   )
