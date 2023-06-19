@@ -24,22 +24,11 @@ import "../src/assets/styles/confirmationComponent.css"
 const App : FC = () => {
 
   const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Navigate to="/home" replace />
-    },
-    {
-      path: "/home",
-      element: <Sidebar sideContent={<SideContent />}><Home /></Sidebar>
-    },
-    {
-      path: "/login",
-      element: <Login />
-    },
-    {
-      path: "/register",
-      element: <Register />
-    },
+    { path: "/", element: <Navigate to="/home" replace /> },
+    { path: "/home", element: <Sidebar sideContent={<SideContent />}><Home /></Sidebar> },
+    { path: "/login", element: <Login /> },
+    { path: "/register", element: <Register /> },
+    { path: "explore/playlists", element: <Sidebar sideContent={<SideContent />}><ExplorePublicPlaylists /></Sidebar> },
     {
       path: "*",
       element: <ProtectedRoute><Sidebar sideContent={<SideContent />}><Outlet /></Sidebar></ProtectedRoute>,
@@ -47,7 +36,6 @@ const App : FC = () => {
         { path: "*", element: <Navigate to="/home" replace /> },
         { path: "explore/tracks", element: <ExploreTracks /> },
         { path: "explore/tracks/:trackId", element: <ExploreTracks /> },
-        { path: "explore/playlists", element: <ExplorePublicPlaylists /> },
         { path: "playlists", element: <Playlists /> },
         { path: "playlists/:id", element: <Playlist /> },
         { path: "playlists/create", element: <CreatePlaylist /> },
