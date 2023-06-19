@@ -117,7 +117,7 @@ const PublicPlaylists : FC = () => {
             </h3>
           </div>
           :
-          <div className="relative w-full h-full flex items-center overflow-x-auto">
+          <div className="relative w-full h-full flex flex-wrap justify-center items-center overflow-y-auto">
             {filteredPlaylists?.map(p => <PlaylistCard key={p._id} p={p} />)}
           </div>
       }
