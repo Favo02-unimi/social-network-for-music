@@ -26,7 +26,7 @@ const ExploreTracks : FC = () => {
         const { valid, message } = checkTokenExpiration()
         if (!valid) {
           toast.error(message)
-          navigate("/login")
+          navigate("/login", { replace: true })
           return
         }
 

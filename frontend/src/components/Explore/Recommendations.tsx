@@ -33,13 +33,13 @@ const Recommendations : FC<{customClasses ?: string}> = ({ customClasses }) => {
             // in home display only expired
             if (type === "expired") {
               toast.error(message)
-              navigate("/login")
+              navigate("/login", { replace: true })
             }
           }
           // not in home display all errors
           else {
             toast.error(message)
-            navigate("/login")
+            navigate("/login", { replace: true })
           }
 
           return
