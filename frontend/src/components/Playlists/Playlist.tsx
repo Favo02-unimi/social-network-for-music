@@ -183,14 +183,14 @@ const Playlist : FC = () => {
   }
 
   return (
-    <div className="relative w-full h-full border border-white/20 rounded-md p-6 flex justify-center items-center">
+    <div className="relative w-full h-full min-h-screen md:min-h-0 border border-white/20 rounded-md p-6 flex flex-col md:flex-row justify-center items-center">
       {isLoading && <Loading small />}
 
-      <div className="w-1/3 h-full border-r border-white/20 pr-4 flex flex-col justify-center items-center -skew-y-2">
+      <div className="w-full md:w-1/3 h-full md:border-r border-white/20 md:pr-4 flex flex-col justify-center items-center -skew-y-2">
 
-        <PlaylistImage tracks={playlist.tracks} customClasses="h-80 w-80 rounded-md" />
+        <PlaylistImage tracks={playlist.tracks} customClasses="h-36 w-36 md:h-64 md:w-64 rounded-md" />
 
-        <h1 className="mt-2 font-bold text-spotify-green text-3xl shrink-0">
+        <h1 className="mt-2 font-bold text-spotify-green text-2xl md:text-3xl shrink-0">
           {playlist.title}
           {playlist.isPublic
             ? <MdPublic className="inline text-spotify-greendark text-xl -mt-1 ml-2" />
@@ -207,7 +207,7 @@ const Playlist : FC = () => {
         <h4 className="text-center mt-2">{playlist.description}</h4>
 
         <div>
-          <h3 className="mt-1 text-xl font-bold">{playlist.tracks.length} tracks</h3>
+          <h3 className="mt-1 text-lg md:text-xl font-bold">{playlist.tracks.length} tracks</h3>
         </div>
 
         <div className="mt-2 shrink-0 w-full flex flex-row flex-wrap justify-center">
@@ -224,8 +224,6 @@ const Playlist : FC = () => {
             }
           </h3>
         }
-
-        {/* TODO: collaborators */}
 
         <div>
           {!playlist.isFollower &&
@@ -249,7 +247,7 @@ const Playlist : FC = () => {
           {(playlist.isCreator) &&
             <div
               onClick={() => setShowFollowers(!showFollowers)}
-              className={`text-white/70 w-full block border rounded-md px-4 py-1 my-4 text-center hover:bg-white/20 hover:text-white transition-all duration-700 cursor-pointer ${showFollowers ? "bg-white/20" : ""}`}
+              className={`text-white/70 w-full block border rounded-md px-4 py-1 my-4 text-center md:hover:bg-white/20 md:hover:text-white transition-all duration-700 cursor-pointer ${showFollowers ? "bg-white/20" : ""}`}
             >
               <FaUsers className="inline -mt-1 mr-1" />Manage collaborators
             </div>
@@ -276,7 +274,7 @@ const Playlist : FC = () => {
 
       </div>
 
-      <div className="relative w-2/3 h-full pl-4 flex flex-col justify-center overflow-y-auto">
+      <div className="hidden md:flex relative w-full md:w-2/3 h-full md:pl-4 flex-col justify-center overflow-y-auto">
         {showFollowers
           ?
           <Followers
@@ -297,6 +295,31 @@ const Playlist : FC = () => {
           )
         }
       </div>
+
+      <div className="flex md:hidden relative w-full md:w-2/3 h-full md:pl-4 flex-col justify-center overflow-y-auto">
+        {showFollowers
+          &&
+          <Followers
+            playlist={playlist}
+            isCreator={playlist.isCreator}
+            setIsLoading={setIsLoading}
+            setShowFollowers={setShowFollowers}
+            setPlaylist={setPlaylist}
+          />
+        }
+        {
+          playlist.tracks.map(t =>
+            <TrackRow
+              key={t.id}
+              track={t}
+              playlist={playlist}
+              setPlaylist={setPlaylist}
+            />
+          )
+        }
+      </div>
+
+
 
     </div>
   )

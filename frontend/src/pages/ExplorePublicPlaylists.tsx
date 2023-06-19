@@ -74,7 +74,7 @@ const PublicPlaylists : FC = () => {
   }, [playlists, title, author, tag, track])
 
   return (
-    <div className="relative w-full h-full border border-white/20 rounded-md p-6 flex flex-col justify-center items-center">
+    <div className="relative w-full min-h-screen md:min-h-0 h-full border border-white/20 rounded-md p-6 flex flex-col justify-start md:justify-center items-center">
       {isLoading && <Loading small />}
 
       <h1 className="text-xl font-bold">{playlists.length} public <span className="text-spotify-green">playlists</span> found</h1>
@@ -117,14 +117,14 @@ const PublicPlaylists : FC = () => {
             </h3>
           </div>
           :
-          <div className="relative w-full h-full flex flex-wrap justify-center items-center overflow-y-auto">
+          <div className="relative w-full h-full flex flex-wrap justify-center items-center overflow-y-auto pb-20">
             {filteredPlaylists?.map(p => <PlaylistCard key={p._id} p={p} />)}
           </div>
       }
 
       <Link
         to="/playlists/create"
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 -skew-y-2 text-xl uppercase bg-spotify-green hover:bg-spotify-greendark text-white font-bold py-2 px-4 rounded-md transition-all duration-700 z-10"
+        className="fixed md:absolute bottom-10 left-1/2 -translate-x-1/2 -skew-y-2 text-xl uppercase bg-spotify-green hover:bg-spotify-greendark text-white font-bold py-2 px-4 rounded-md transition-all duration-700 z-10 text-center"
       ><FaPlus className="inline -mt-1 mr-2 text-xl" />New playlist</Link>
     </div>
   )

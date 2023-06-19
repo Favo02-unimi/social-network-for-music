@@ -24,12 +24,12 @@ const OpenTrack : FC<{
   }
 
   return (
-    <div className=" -skew-y-2 relative p-4 text-center ml-2 w-1/3 h-full border-l-2 border-white/20 flex flex-col justify-center items-center">
+    <div className="-skew-y-2 min-h-screen md:min-h-0 relative p-4 text-center md:ml-2 w-full md:w-1/3 h-full md:border-l-2 border-white/20 flex flex-col justify-center items-center">
       {isLoading && <Loading small />}
 
       <IoCloseSharp
         onClick={handleClose}
-        className="absolute top-2 right-2 h-6 w-6 cursor-pointer"
+        className="absolute -top-2 -left-2 md:left-auto md:top-2 md:right-2 h-6 w-6 cursor-pointer"
       />
 
       <img src={track.album.images[0].url} className="w-72 h-72 rounded-md" />

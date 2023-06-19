@@ -124,8 +124,8 @@ const Followers : FC<{
   }
 
   return (
-    <>
-      <div onClick={() => setShowFollowers(false)} className="cursor-pointer absolute top-6 left-5 uppercase italic hover:text-white/80">
+    <div className="my-4 md:my-0">
+      <div onClick={() => setShowFollowers(false)} className="hidden md:block cursor-pointer absolute top-6 left-5 uppercase italic hover:text-white/80">
         <IoIosArrowBack className="inline text-2xl -mt-1" />Tracks
       </div>
 
@@ -163,8 +163,7 @@ const Followers : FC<{
 
         </div>
       )}
-
-    </>
+    </div>
   )
 }
 

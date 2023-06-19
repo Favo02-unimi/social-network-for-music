@@ -10,9 +10,9 @@ const TrackCard : FC<{
 
   <div
     onClick={() => onclick(track)}
-    className={`${openTrack?.id === track.id ? "bg-white/20 border-spotify-greendark" : ""} -skew-y-2 shrink-0 grow-0 m-4 w-40 pb-2 h-60 flex flex-col items-center border border-white/20 rounded-md text-center hover:bg-white/20 cursor-pointer transition-all duration-700`}>
+    className={`${openTrack?.id === track.id ? "bg-white/20 border-spotify-greendark" : ""} -skew-y-2 shrink-0 grow-0 m-4 w-28 md:w-40 pb-2 h-48 md:h-60 flex flex-col items-center border border-white/20 rounded-md text-center hover:bg-white/20 cursor-pointer transition-all duration-700`}>
 
-    <img src={track.album.images[0].url} className="w-40 h-40 rounded-t-md opacity-80" />
+    <img src={track.album.images[0].url} className="w-28 h-28 md:w-40 md:h-40 rounded-t-md opacity-80" />
 
     <h1 className="w-full my-1 px-2 font-bold text-ellipsis whitespace-nowrap overflow-hidden">{track.name}</h1>
 

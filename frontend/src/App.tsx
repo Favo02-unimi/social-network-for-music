@@ -47,7 +47,7 @@ const App : FC = () => {
   ])
 
   return (
-    <div className="h-screen w-screen bg-spotify-black text-white">
+    <div className="h-full md:h-screen w-screen bg-spotify-black text-white">
       <ToastContainer
         position="top-center"
         transition={Slide}

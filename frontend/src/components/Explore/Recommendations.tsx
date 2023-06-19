@@ -73,7 +73,7 @@ const Recommendations : FC<{customClasses ?: string}> = ({ customClasses }) => {
 
   if (isLoading) {
     return (
-      <div className="relative h-full">
+      <div className="relative h-full min-h-screen md:min-h-0">
         <Loading small />
       </div>
     )
@@ -89,7 +89,7 @@ const Recommendations : FC<{customClasses ?: string}> = ({ customClasses }) => {
   }
 
   return (
-    <div className={`relative w-full flex items-center overflow-x-auto ${customClasses}`}>
+    <div className={`relative ${customClasses}`}>
       {tracks?.map(t => <TrackCard key={t.id} track={t} onclick={() => {navigate(`/explore/tracks/${t.id}`)}} />)}
     </div>
   )

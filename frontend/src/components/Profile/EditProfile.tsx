@@ -120,15 +120,15 @@ const EditProfile : FC = () => {
   }
 
   return (
-    <div className="relative w-full h-full border border-white/20 rounded-md p-6 flex justify-center items-center">
+    <div className="relative w-full h-full min-h-screen md:min-h-0 border border-white/20 rounded-md p-6 flex justify-center items-center">
 
       {isLoading && <Loading small />}
 
-      <Link to="/profile" className=" absolute top-6 left-5 uppercase italic hover:text-white/80">
+      <Link to="/profile" className="absolute top-6 left-5 uppercase italic hover:text-white/80">
         <IoIosArrowBack className="inline text-2xl -mt-1" />Profile
       </Link>
 
-      <form onSubmit={handleEdit} className="w-10/12 max-w-md mb-20">
+      <form onSubmit={handleEdit} className="mt-10 w-10/12 max-w-md mb-20">
 
         <div className="text-center mb-5">
           <h1 className="text-4xl font-bold mb-2 text-spotify-green">Edit profile</h1>
