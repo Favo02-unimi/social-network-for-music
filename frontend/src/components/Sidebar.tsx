@@ -58,7 +58,7 @@ const Sidebar : FC<{sideContent : ReactElement, children ?: ReactElement}> = ({ 
         </div>
       </div>
       <div
-        className={`${menuOpen ? "hidden" : "block"} md:block grow shrink h-full md:h-screen p-4 pt-10 md:pt-0`}
+        className={`${menuOpen ? "hidden" : "block"} md:block grow shrink h-full md:h-screen p-4 pt-10 md:pt-4`}
         style={{ width: `calc(100vw - ${sidebarWidth}px)` }}
       >
         {children}
