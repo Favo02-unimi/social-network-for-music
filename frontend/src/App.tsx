@@ -9,6 +9,7 @@ import EditProfile from "./components/Profile/EditProfile"
 import ProtectedRoute from "./components/ProtectedRoute"
 import Sidebar from "./components/Sidebar"
 import SideContent from "./components/SideContent"
+import ExplorePublicPlaylists from "./pages/ExplorePublicPlaylists"
 import ExploreTracks from "./pages/ExploreTracks"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
@@ -46,6 +47,7 @@ const App : FC = () => {
         { path: "*", element: <Navigate to="/home" replace /> },
         { path: "explore/tracks", element: <ExploreTracks /> },
         { path: "explore/tracks/:trackId", element: <ExploreTracks /> },
+        { path: "explore/playlists", element: <ExplorePublicPlaylists /> },
         { path: "playlists", element: <Playlists /> },
         { path: "playlists/:id", element: <Playlist /> },
         { path: "playlists/create", element: <CreatePlaylist /> },

@@ -10,6 +10,7 @@ const SideContent : FC = () => {
   const links = [
     { to: "/home", text: "Homepage" },
     { to: "/explore/tracks", text: "Explore tracks" },
+    { to: "/explore/playlists", text: "Public playlists" },
     { to: "/playlists", text: "My Playlists" }
   ]
 
