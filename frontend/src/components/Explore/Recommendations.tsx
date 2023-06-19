@@ -73,7 +73,7 @@ const Recommendations : FC<{customClasses ?: string}> = ({ customClasses }) => {
 
   if (isLoading) {
     return (
-      <div className="relative h-full min-h-screen">
+      <div className="relative h-full min-h-screen md:min-h-0">
         <Loading small />
       </div>
     )
