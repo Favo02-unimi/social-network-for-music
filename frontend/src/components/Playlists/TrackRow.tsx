@@ -82,59 +82,63 @@ const TrackRow : FC<{
   }
 
   return (
-    <div className="w-full my-2 mb-4 h-16 flex flex-row items-center transition-all duration-700">
+    <div className="w-full my-2 mb-4 h-full md:h-16 flex flex-col md:flex-row items-center transition-all duration-700 border-t pt-4 md:pt-0 border-white/30 md:border-t-0">
 
-      {track.preview_url
-        ? <PlayPreview url={track.preview_url} customClasses="mr-3 w-10 text-center hover:border-spotify-greendark border-transparent" />
-        : <MdPlayDisabled title="Preview unavailable" className="inline w-10 text-2xl mr-3 text-white/20" />
-      }
+      <div className="w-full md:w-1/2 flex flex-row items-center">
+        {track.preview_url
+          ? <PlayPreview url={track.preview_url} customClasses="mr-3 w-10 text-center hover:border-spotify-greendark border-transparent" />
+          : <MdPlayDisabled title="Preview unavailable" className="inline w-10 text-2xl mr-3 text-white/20" />
+        }
 
-      <img src={track.album.images[0].url} className="w-16 h-16 opacity-80" />
+        <img src={track.album.images[0].url} className="w-16 h-16 opacity-80" />
 
-      <div className="w-2/4 flex flex-col items-center px-2">
-        <h1 className="w-full font-bold text-ellipsis whitespace-nowrap overflow-hidden">{track.name}</h1>
+        <div className="w-full flex flex-col items-center px-2">
+          <h1 className="w-full font-bold text-ellipsis whitespace-nowrap overflow-hidden">{track.name}</h1>
 
-        <div className="w-full overflow-hidden">
-          {track.explicit && <h2 title="Explicit" className="inline text-red-700 text-xs uppercase border border-red-700 px-1 pb-0.5 rounded opacity-70 mr-1">E</h2>}
-          {track.artists.map((a, i) =>
-            <h2 className="inline uppercase text-sm text-ellipsis whitespace-nowrap overflow-hidden" key={a.id}>
-              {a.name}{i < track.artists.length - 1 ? ", " : ""}
-            </h2>
-          )}
+          <div className="w-full overflow-hidden">
+            {track.explicit && <h2 title="Explicit" className="inline text-red-700 text-xs uppercase border border-red-700 px-1 pb-0.5 rounded opacity-70 mr-1">E</h2>}
+            {track.artists.map((a, i) =>
+              <h2 className="inline uppercase text-sm text-ellipsis whitespace-nowrap overflow-hidden" key={a.id}>
+                {a.name}{i < track.artists.length - 1 ? ", " : ""}
+              </h2>
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="w-2/4 flex flex-col items-center px-2">
-        <h2><BiAlbum className="inline -mt-1 mr-1" />{track.album.name}</h2>
-        <h2 className="text-white/60"><FiClock className="inline -mt-1 mr-1" />{parseTime.parseDuration(track.duration_ms).minutes}:{parseTime.parseDuration(track.duration_ms).seconds}</h2>
-      </div>
+      <div className="md:w-1/2 relative flex flex-row items-center mt-4">
+        <div className="w-full flex flex-col items-center px-2">
+          <h2><BiAlbum className="inline -mt-1 mr-1" />{track.album.name}</h2>
+          <h2 className="text-white/60"><FiClock className="inline -mt-1 mr-1" />{parseTime.parseDuration(track.duration_ms).minutes}:{parseTime.parseDuration(track.duration_ms).seconds}</h2>
+        </div>
 
 
-      <div className="relative h-full w-1/4 flex justify-center items-center gap-2">
-        {isLoading && <Loading small />}
+        <div className="relative h-full w-1/4 flex justify-center items-center gap-2">
+          {isLoading && <Loading small />}
 
-        <div className="relative h-full flex justify-center items-center">
-          {showAddToPlaylist &&
-            <AddToPlaylist
-              track={track}
-              customClose={() => setShowAddToPlaylist(false)}
-              customClasses="absolute !w-96 top-1/2 -translate-y-1/2 right-full backdrop-blur text-center"
+          <div className="relative h-full flex justify-center items-center">
+            {showAddToPlaylist &&
+              <AddToPlaylist
+                track={track}
+                customClose={() => setShowAddToPlaylist(false)}
+                customClasses="absolute !w-52 md:!w-96 top-1/2 -translate-y-1/2 right-full backdrop-blur text-center"
+              />
+            }
+            <MdPlaylistAdd
+              title="Add to other playlist"
+              onClick={() => setShowAddToPlaylist(!showAddToPlaylist)}
+              className="text-2xl text-white/70 hover:text-white cursor-pointer"
+            />
+          </div>
+
+          {(playlist.isCreator || playlist.isCollaborator) &&
+            <ImBin2
+              title="Remove from playlist"
+              onClick={handleRemoveFromPlaylist}
+              className="text-lg text-red-700/70 hover:text-red-700 cursor-pointer"
             />
           }
-          <MdPlaylistAdd
-            title="Add to other playlist"
-            onClick={() => setShowAddToPlaylist(!showAddToPlaylist)}
-            className="text-2xl text-white/70 hover:text-white cursor-pointer"
-          />
         </div>
-
-        {(playlist.isCreator || playlist.isCollaborator) &&
-          <ImBin2
-            title="Remove from playlist"
-            onClick={handleRemoveFromPlaylist}
-            className="text-lg text-red-700/70 hover:text-red-700 cursor-pointer"
-          />
-        }
       </div>
     </div>
   )
