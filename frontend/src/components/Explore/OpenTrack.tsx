@@ -24,7 +24,7 @@ const OpenTrack : FC<{
   }
 
   return (
-    <div className="-skew-y-2 relative p-4 text-center mt-10 md:mt-0 md:ml-2 w-full md:w-1/3 h-full md:border-l-2 border-white/20 flex flex-col justify-center items-center">
+    <div className="-skew-y-2 relative p-4 text-center md:ml-2 w-full md:w-1/3 h-full md:border-l-2 border-white/20 flex flex-col justify-center items-center">
       {isLoading && <Loading small />}
 
       <IoCloseSharp

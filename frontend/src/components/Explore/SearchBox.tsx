@@ -89,7 +89,7 @@ const SearchBox : FC<{
   }, [query, artist, genre, yearMin, yearMax, setIsLoading, navigate])
 
   return (
-    <div className={`${openTrack ? "hidden md:block md:w-2/3 md:overflow-y-hidden" : "w-full"} min-h-screen md:min-h-0 mt-10 md:mt-0 h-full flex flex-col justify-center items-center`}>
+    <div className={`${openTrack ? "hidden md:block md:w-2/3 md:overflow-y-hidden" : "w-full"} min-h-screen md:min-h-0 h-full flex flex-col justify-center items-center`}>
       <h1 className="text-2xl font-bold text-center">Explore <span className="text-spotify-green italic">tracks</span> to fill your <span className="text-spotify-green italic">playlists</span>!</h1>
 
       <div className="flex w-full flex-col justify-center items-center">

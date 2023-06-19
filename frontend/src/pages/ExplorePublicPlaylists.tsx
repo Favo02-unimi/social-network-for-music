@@ -74,7 +74,7 @@ const PublicPlaylists : FC = () => {
   }, [playlists, title, author, tag, track])
 
   return (
-    <div className="mt-10 md:mt-0 relative w-full min-h-screen md:min-h-0 h-full border border-white/20 rounded-md p-6 flex flex-col justify-start md:justify-center items-center">
+    <div className="relative w-full min-h-screen md:min-h-0 h-full border border-white/20 rounded-md p-6 flex flex-col justify-start md:justify-center items-center">
       {isLoading && <Loading small />}
 
       <h1 className="text-xl font-bold">{playlists.length} public <span className="text-spotify-green">playlists</span> found</h1>
