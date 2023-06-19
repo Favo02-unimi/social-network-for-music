@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import UserPlaylists from "../components/Playlists/UserPlaylists"
 
 const Playlists : FC = () => (
-  <div className="relative w-full h-full border border-white/20 rounded-md p-6 flex flex-col text-center">
+  <div className="relative w-full h-full min-h-screen md:min-h-0 border border-white/20 rounded-md p-6 flex flex-col text-center">
 
     <h1 className="text-2xl font-bold text-center">
       <span>Your </span>
@@ -21,7 +21,7 @@ const Playlists : FC = () => (
 
     <Link
       to="/playlists/create"
-      className="absolute bottom-10 left-1/2 -translate-x-1/2 -skew-y-2 text-xl uppercase bg-spotify-green hover:bg-spotify-greendark text-white font-bold py-2 px-4 rounded-md transition-all duration-700 z-10"
+      className="fixed md:absolute bottom-10 left-1/2 -translate-x-1/2 -skew-y-2 text-xl uppercase bg-spotify-green hover:bg-spotify-greendark text-white font-bold py-2 px-4 rounded-md transition-all duration-700 z-10"
     ><FaPlus className="inline -mt-1 mr-2 text-xl" />New playlist</Link>
 
   </div>
