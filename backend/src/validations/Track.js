@@ -27,7 +27,7 @@ const TrackSchema = z.object({
     spotify: z.string().url()
   }),
   name: z.string(),
-  popularity: z.number().positive(),
+  popularity: z.number().nonnegative(),
   preview_url: z.string().url().nullable()
 })
 const validateTrack = (input) => validate(TrackSchema, input)
