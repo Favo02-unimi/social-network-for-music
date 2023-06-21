@@ -42,7 +42,7 @@ app.use("/api/playlists", playlistsRouter)
 
 app.use("/api/*", unknownEndpoint)
 
-// frontend
+// serve frontend (only in production: serve build folder)
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 

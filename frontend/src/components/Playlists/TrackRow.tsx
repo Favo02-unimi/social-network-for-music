@@ -98,7 +98,11 @@ const TrackRow : FC<{
           <div className="w-full overflow-hidden">
             {track.explicit && <h2 title="Explicit" className="inline text-red-700 text-xs uppercase border border-red-700 px-1 pb-0.5 rounded opacity-70 mr-1">E</h2>}
             {track.artists.map((a, i) =>
-              <h2 className="inline uppercase text-sm text-ellipsis whitespace-nowrap overflow-hidden" key={a.id}>
+              <h2
+                onClick={() => navigate("/explore/tracks", { state: { redirectArtist: a.name } })}
+                key={a.id}
+                className="cursor-pointer hover:underline inline uppercase text-sm text-ellipsis whitespace-nowrap overflow-hidden"
+              >
                 {a.name}{i < track.artists.length - 1 ? ", " : ""}
               </h2>
             )}
