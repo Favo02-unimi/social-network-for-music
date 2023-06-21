@@ -93,11 +93,18 @@ const FavouriteArtists : FC<{
     <div className="flex flex-col items-center">
       <h2 className="text-xl font-bold text-center">Favourite <span className="text-spotify-green">artists</span></h2>
 
-      {/* TODO: link artists/genre to search for that artist/genre */}
       <div className="w-2/3 mt-2 flex flex-wrap justify-center items-center">
         {list.map(a =>
-          <div key={a.id} className="ml-0.5 bg-gray-300/30 px-2 py-0.5 rounded m-0.5">
-            {a.name}
+          <div
+            key={a.id}
+            className="ml-0.5 bg-gray-300/30 px-2 py-0.5 rounded m-0.5"
+          >
+            <span
+              onClick={() => navigate("/explore/tracks", { state: { redirectArtist: a.name } })}
+              className="cursor-pointer hover:underline"
+            >
+              {a.name}
+            </span>
             <ImBin2
               onClick={() => confirmRemove(a.id, a.name)}
               title="Remove"
