@@ -2,7 +2,7 @@ import type { FC } from "react"
 import { useEffect, useState } from "react"
 import { FaPlus } from "react-icons/fa"
 import { MdExpandLess, MdExpandMore } from "react-icons/md"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { toast } from "react-toastify"
 
 import Loading from "../components/Loading"
@@ -12,6 +12,8 @@ import type Playlist from "../interfaces/Playlist"
 import playlistsService from "../services/playlists"
 
 const PublicPlaylists : FC = () => {
+
+  const { state } = useLocation()
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -50,6 +52,19 @@ const PublicPlaylists : FC = () => {
     fetchData()
 
   }, [])
+
+  // apply filter if redirected here with specific filter
+  // by clicking on tags
+  useEffect(() => {
+    if (state) {
+      const { redirectTag } = state
+
+      if (redirectTag) {
+        setFiltersOpen(true)
+        setTag(redirectTag)
+      }
+    }
+  }, [state])
 
   useEffect(() => {
     setFilteredPlaylists(playlists.filter(p => {
