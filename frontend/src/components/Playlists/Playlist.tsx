@@ -211,7 +211,13 @@ const Playlist : FC = () => {
         </div>
 
         <div className="mt-2 shrink-0 w-full flex flex-row flex-wrap justify-center">
-          {playlist.tags.map(t => <h3 className="bg-gray-500/40 inline m-1 rounded px-2 py-0.5" key={t}>{t}</h3>)}
+          {playlist.tags.map(t =>
+            <h3
+              onClick={() => navigate("/explore/playlists", { state: { redirectTag: t } })}
+              key={t}
+              className="cursor-pointer hover:underline bg-gray-500/40 inline m-1 rounded px-2 py-0.5"
+            >{t}</h3>
+          )}
         </div>
 
         {(playlist.isCreator || playlist.isCollaborator || playlist.isFollower) &&
