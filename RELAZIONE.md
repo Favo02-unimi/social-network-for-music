@@ -4,6 +4,18 @@ Relazione del progetto _"Social Network for Music"_ per il corso _"Programmazion
 
 Realizzata da Luca Favini (matricola 987617).
 
+- [Testing e Deploy](#testing-e-deploy)
+- [Struttura del progetto](#strutturra-del-progetto)
+  - [Stack tecnologico](#stack-tecnologico)
+  - [Organizzazione codice](#organizzazione-codice)
+- [Struttura del sito web](#struttura-del-sito-web)
+- [Scelte implementative significative](#scelte-implementative-significative)
+  - [Gestione generi](#gestione-generi-genres)
+  - [Memorizzazione token Spotify](#memorizzazione-token-spotify)
+    - [Refresh token](#refresh-token)
+  - [Requests validation](#requests-validation)
+    - [Pacchetto Zod](#pacchetto-zod-per-validazione-backend)
+
 ## Testing e Deploy
 
 Istruzioni per avviare l'applicazione - **fase di testing** (react in modalità di development, backend che si riavvia ad ogni file modificato):
@@ -123,10 +135,10 @@ Struttura cartelle (in `src/`):
 ## Scelte implementative significative
 
 - [Gestione generi](#gestione-generi-genres)
-- [Operazioni di modifica specifiche](#operazioni-di-modifica-specifiche-follow-playlists-user-favourites-artists-genres)
 - [Memorizzazione token Spotify](#memorizzazione-token-spotify)
-- [Requests validation (`Zod`)](#requests-validation)
-
+  - [Refresh token](#refresh-token)
+- [Requests validation](#requests-validation)
+  - [Pacchetto Zod](#pacchetto-zod-per-validazione-backend)
 
 ## Gestione generi
 
