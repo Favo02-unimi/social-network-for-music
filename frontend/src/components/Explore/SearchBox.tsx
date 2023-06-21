@@ -1,7 +1,7 @@
 import type { FC } from "react"
 import { useEffect, useState } from "react"
 import { MdExpandLess, MdExpandMore } from "react-icons/md"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 import type Track from "../../interfaces/Track"
@@ -20,6 +20,8 @@ const SearchBox : FC<{
   openTrack ?: Track
 }> = ({ isLoading, setIsLoading, openTrack }) => {
 
+  const { state } = useLocation()
+
   const [query, setQuery] = useState<string>("")
 
   const [filtersOpen, setFiltersOpen] = useState<boolean>(false)
@@ -33,6 +35,24 @@ const SearchBox : FC<{
   const [isInvalid, setIsInvalid] = useState<boolean>(false)
 
   const [tracks, setTracks] = useState<Track[]>()
+
+  // apply filter if redirected here with specific filter
+  // by clicking on artist name or genre
+  useEffect(() => {
+    if (state) {
+      const { redirectArtist, redirectGenre } = state
+
+      if (redirectArtist) {
+        setFiltersOpen(true)
+        setArtist(redirectArtist)
+      }
+
+      if (redirectGenre) {
+        setFiltersOpen(true)
+        setGenre(redirectGenre)
+      }
+    }
+  }, [state])
 
   useEffect(() => {
     const handleSearch = async () => {
