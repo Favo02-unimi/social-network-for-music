@@ -90,7 +90,11 @@ const Recommendations : FC<{customClasses ?: string}> = ({ customClasses }) => {
 
   return (
     <div className={`relative ${customClasses}`}>
-      {tracks?.map(t => <TrackCard key={t.id} track={t} onclick={() => {navigate(`/explore/tracks/${t.id}`)}} />)}
+      {tracks?.map(t =>
+        <Link key={t.id} to={`/explore/tracks/${t.id}`}>
+          <TrackCard track={t} />
+        </Link>
+      )}
     </div>
   )
 }

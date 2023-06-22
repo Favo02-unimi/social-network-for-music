@@ -3,6 +3,7 @@ import { BsSpotify } from "react-icons/bs"
 import { IoCloseSharp } from "react-icons/io5"
 import { Link, useNavigate } from "react-router-dom"
 
+import playlistImg from "../../assets/images/playlist-placeholder.webp"
 import type Track from "../../interfaces/Track"
 import parseTime from "../../utils/parseTime"
 import Loading from "../Loading"
@@ -32,7 +33,7 @@ const OpenTrack : FC<{
         className="absolute -top-2 -left-2 md:left-auto md:top-2 md:right-2 h-6 w-6 cursor-pointer"
       />
 
-      <img src={track.album.images[0].url} className="w-72 h-72 rounded-md" />
+      <img src={track.album.images[0]?.url ?? playlistImg} className="w-72 h-72 rounded-md" />
 
       <h1 className="mt-4 text-2xl font-bold">{track.name}</h1>
 
@@ -40,13 +41,11 @@ const OpenTrack : FC<{
 
       <div className="mt-4 text-center bg-spotify-greendark rounded-md font-bold px-4 py-1">
         {track.artists.map((a, i) =>
-          <h2
-            onClick={() => navigate("/explore/tracks", { state: { redirectArtist: a.name } })}
-            key={a.id}
-            className="cursor-pointer hover:underline uppercase px-2 text-ellipsis whitespace-nowrap overflow-hidden"
-          >
-            {a.name}{i < track.artists.length - 1 ? ", " : ""}
-          </h2>
+          <Link to="/explore/tracks" state={{ redirectArtist: a.name }} key={a.id}>
+            <h2 className="cursor-pointer hover:underline uppercase px-2 text-ellipsis whitespace-nowrap overflow-hidden">
+              {a.name}{i < track.artists.length - 1 ? ", " : ""}
+            </h2>
+          </Link>
         )}
       </div>
 

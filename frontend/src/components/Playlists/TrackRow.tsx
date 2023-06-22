@@ -5,9 +5,10 @@ import { BiAlbum } from "react-icons/bi"
 import { FiClock } from "react-icons/fi"
 import { ImBin2 } from "react-icons/im"
 import { MdPlayDisabled, MdPlaylistAdd } from "react-icons/md"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
+import placeholderImg from "../../assets/images/playlist-placeholder.webp"
 import type Playlist from "../../interfaces/Playlist"
 import type Track from "../../interfaces/Track"
 import playlistsService from "../../services/playlists"
@@ -90,7 +91,7 @@ const TrackRow : FC<{
           : <MdPlayDisabled title="Preview unavailable" className="inline w-10 text-2xl mr-3 text-white/20" />
         }
 
-        <img src={track.album.images[0].url} className="w-16 h-16 opacity-80" />
+        <img src={track.album.images[0]?.url ?? placeholderImg} className="w-16 h-16 opacity-80" />
 
         <div className="w-full flex flex-col items-center px-2">
           <h1 className="w-full font-bold text-ellipsis whitespace-nowrap overflow-hidden">{track.name}</h1>
@@ -98,13 +99,13 @@ const TrackRow : FC<{
           <div className="w-full overflow-hidden">
             {track.explicit && <h2 title="Explicit" className="inline text-red-700 text-xs uppercase border border-red-700 px-1 pb-0.5 rounded opacity-70 mr-1">E</h2>}
             {track.artists.map((a, i) =>
-              <h2
-                onClick={() => navigate("/explore/tracks", { state: { redirectArtist: a.name } })}
-                key={a.id}
-                className="cursor-pointer hover:underline inline uppercase text-sm text-ellipsis whitespace-nowrap overflow-hidden"
-              >
-                {a.name}{i < track.artists.length - 1 ? ", " : ""}
-              </h2>
+              <Link to="/explore/tracks" state={{ redirectArtist: a.name }} key={a.id}>
+                <h2
+                  className="cursor-pointer hover:underline inline uppercase text-sm text-ellipsis whitespace-nowrap overflow-hidden"
+                >
+                  {a.name}{i < track.artists.length - 1 ? ", " : ""}
+                </h2>
+              </Link>
             )}
           </div>
         </div>

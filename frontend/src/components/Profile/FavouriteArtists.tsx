@@ -1,7 +1,7 @@
 import type { FC } from "react"
 import { confirmAlert } from "react-confirm-alert"
 import { ImBin2 } from "react-icons/im"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 import type Artist from "../../interfaces/Artist"
@@ -99,12 +99,13 @@ const FavouriteArtists : FC<{
             key={a.id}
             className="ml-0.5 bg-gray-300/30 px-2 py-0.5 rounded m-0.5"
           >
-            <span
-              onClick={() => navigate("/explore/tracks", { state: { redirectArtist: a.name } })}
-              className="cursor-pointer hover:underline"
+            <Link
+              to="/explore/tracks"
+              state={{ redirectArtist: a.name }}
+              className="hover:underline"
             >
               {a.name}
-            </span>
+            </Link>
             <ImBin2
               onClick={() => confirmRemove(a.id, a.name)}
               title="Remove"
