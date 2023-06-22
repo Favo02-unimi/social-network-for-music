@@ -168,7 +168,7 @@ const addTrack = async(id : string, track : Track) => {
  * @throws {404} playlist not found
  * @throws {401} user not creator/collaborator of playlist
  * @throws {404} track not found in playlist
- * @returns {204} updated playlist
+ * @returns {200} updated playlist
  */
 const removeTrack = async(id : string, trackId : string) => {
 
