@@ -1,7 +1,7 @@
 import type { FC } from "react"
 import { useEffect, useState } from "react"
 import { MdExpandLess, MdExpandMore } from "react-icons/md"
-import { useLocation, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 import type Track from "../../interfaces/Track"
@@ -153,12 +153,12 @@ const SearchBox : FC<{
         <div className="relative w-full h-full mt-2 flex flex-wrap justify-center items-center overflow-y-auto">
           {isLoading && <Loading small={true} />}
           {tracks.map(t =>
-            <TrackCard
-              track={t}
-              key={t.id}
-              openTrack={openTrack}
-              onclick={() => navigate(`/explore/tracks/${t.id}`)}
-            />
+            <Link to={`/explore/tracks/${t.id}`} key={t.id}>
+              <TrackCard
+                track={t}
+                openTrack={openTrack}
+              />
+            </Link>
           )}
         </div>
       }

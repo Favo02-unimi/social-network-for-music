@@ -1,7 +1,7 @@
 import type { FC } from "react"
 import { confirmAlert } from "react-confirm-alert"
 import { ImBin2 } from "react-icons/im"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 import type User from "../../interfaces/User"
@@ -95,12 +95,13 @@ const FavouriteGenres : FC<{
       <div className="w-2/3 mt-2 flex flex-wrap justify-center items-center">
         {list.map(g =>
           <div key={g} className="ml-0.5 bg-gray-300/30 px-2 py-0.5 rounded m-0.5">
-            <span
-              onClick={() => navigate("/explore/tracks", { state: { redirectGenre: g } })}
-              className="cursor-pointer hover:underline"
+            <Link
+              to="/explore/tracks"
+              state={{ redirectGenre: g }}
+              className="hover:underline"
             >
               {g}
-            </span>
+            </Link>
             <ImBin2
               onClick={() => confirmRemove(g)}
               title="Remove"

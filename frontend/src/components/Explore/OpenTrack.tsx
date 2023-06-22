@@ -40,13 +40,11 @@ const OpenTrack : FC<{
 
       <div className="mt-4 text-center bg-spotify-greendark rounded-md font-bold px-4 py-1">
         {track.artists.map((a, i) =>
-          <h2
-            onClick={() => navigate("/explore/tracks", { state: { redirectArtist: a.name } })}
-            key={a.id}
-            className="cursor-pointer hover:underline uppercase px-2 text-ellipsis whitespace-nowrap overflow-hidden"
-          >
-            {a.name}{i < track.artists.length - 1 ? ", " : ""}
-          </h2>
+          <Link to="/explore/tracks" state={{ redirectArtist: a.name }} key={a.id}>
+            <h2 className="cursor-pointer hover:underline uppercase px-2 text-ellipsis whitespace-nowrap overflow-hidden">
+              {a.name}{i < track.artists.length - 1 ? ", " : ""}
+            </h2>
+          </Link>
         )}
       </div>
 

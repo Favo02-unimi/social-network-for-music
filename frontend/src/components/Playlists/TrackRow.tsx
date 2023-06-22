@@ -5,7 +5,7 @@ import { BiAlbum } from "react-icons/bi"
 import { FiClock } from "react-icons/fi"
 import { ImBin2 } from "react-icons/im"
 import { MdPlayDisabled, MdPlaylistAdd } from "react-icons/md"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 import type Playlist from "../../interfaces/Playlist"
@@ -98,13 +98,13 @@ const TrackRow : FC<{
           <div className="w-full overflow-hidden">
             {track.explicit && <h2 title="Explicit" className="inline text-red-700 text-xs uppercase border border-red-700 px-1 pb-0.5 rounded opacity-70 mr-1">E</h2>}
             {track.artists.map((a, i) =>
-              <h2
-                onClick={() => navigate("/explore/tracks", { state: { redirectArtist: a.name } })}
-                key={a.id}
-                className="cursor-pointer hover:underline inline uppercase text-sm text-ellipsis whitespace-nowrap overflow-hidden"
-              >
-                {a.name}{i < track.artists.length - 1 ? ", " : ""}
-              </h2>
+              <Link to="/explore/tracks" state={{ redirectArtist: a.name }} key={a.id}>
+                <h2
+                  className="cursor-pointer hover:underline inline uppercase text-sm text-ellipsis whitespace-nowrap overflow-hidden"
+                >
+                  {a.name}{i < track.artists.length - 1 ? ", " : ""}
+                </h2>
+              </Link>
             )}
           </div>
         </div>
