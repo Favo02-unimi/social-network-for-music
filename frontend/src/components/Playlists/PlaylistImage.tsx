@@ -15,7 +15,7 @@ const PlaylistImage : FC<{tracks : Track[], customClasses : string}> = ({ tracks
   // only one track: track image
   if (tracks.length === 1) {
     return (
-      <img src={tracks[0].album.images[0].url} className={`${customClasses} opacity-60 saturate-[0.8]`} />
+      <img src={tracks[0].album.images[0]?.url ?? placeholderImg} className={`${customClasses} opacity-60 saturate-[0.8]`} />
     )
   }
 
@@ -23,8 +23,8 @@ const PlaylistImage : FC<{tracks : Track[], customClasses : string}> = ({ tracks
   if (tracks.length < 4) {
     return (
       <div className={`${customClasses} grid grid-rows-1 grid-cols-2 opacity-60 saturate-[0.8] overflow-hidden`}>
-        <img src={tracks[0].album.images[0].url} className="h-full object-cover" />
-        <img src={tracks[1].album.images[0].url} className="h-full object-cover" />
+        <img src={tracks[0].album.images[0]?.url ?? placeholderImg} className="h-full object-cover" />
+        <img src={tracks[1].album.images[0]?.url ?? placeholderImg} className="h-full object-cover" />
       </div>
     )
   }
@@ -32,10 +32,10 @@ const PlaylistImage : FC<{tracks : Track[], customClasses : string}> = ({ tracks
   // 4 or more tracks: first 4 tracks images
   return (
     <div className={`${customClasses} grid grid-rows-2 grid-cols-2 opacity-60 saturate-[0.8] overflow-hidden`}>
-      <img src={tracks[0].album.images[0].url} />
-      <img src={tracks[1].album.images[0].url} />
-      <img src={tracks[2].album.images[0].url} />
-      <img src={tracks[3].album.images[0].url} />
+      <img src={tracks[0].album.images[0]?.url ?? placeholderImg} />
+      <img src={tracks[1].album.images[0]?.url ?? placeholderImg} />
+      <img src={tracks[2].album.images[0]?.url ?? placeholderImg} />
+      <img src={tracks[3].album.images[0]?.url ?? placeholderImg} />
     </div>
   )
 }

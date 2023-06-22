@@ -8,6 +8,7 @@ import { MdPlayDisabled, MdPlaylistAdd } from "react-icons/md"
 import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
+import placeholderImg from "../../assets/images/playlist-placeholder.webp"
 import type Playlist from "../../interfaces/Playlist"
 import type Track from "../../interfaces/Track"
 import playlistsService from "../../services/playlists"
@@ -90,7 +91,7 @@ const TrackRow : FC<{
           : <MdPlayDisabled title="Preview unavailable" className="inline w-10 text-2xl mr-3 text-white/20" />
         }
 
-        <img src={track.album.images[0].url} className="w-16 h-16 opacity-80" />
+        <img src={track.album.images[0]?.url ?? placeholderImg} className="w-16 h-16 opacity-80" />
 
         <div className="w-full flex flex-col items-center px-2">
           <h1 className="w-full font-bold text-ellipsis whitespace-nowrap overflow-hidden">{track.name}</h1>

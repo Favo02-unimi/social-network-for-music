@@ -3,6 +3,7 @@ import { BsSpotify } from "react-icons/bs"
 import { IoCloseSharp } from "react-icons/io5"
 import { Link, useNavigate } from "react-router-dom"
 
+import playlistImg from "../../assets/images/playlist-placeholder.webp"
 import type Track from "../../interfaces/Track"
 import parseTime from "../../utils/parseTime"
 import Loading from "../Loading"
@@ -32,7 +33,7 @@ const OpenTrack : FC<{
         className="absolute -top-2 -left-2 md:left-auto md:top-2 md:right-2 h-6 w-6 cursor-pointer"
       />
 
-      <img src={track.album.images[0].url} className="w-72 h-72 rounded-md" />
+      <img src={track.album.images[0]?.url ?? playlistImg} className="w-72 h-72 rounded-md" />
 
       <h1 className="mt-4 text-2xl font-bold">{track.name}</h1>
 
