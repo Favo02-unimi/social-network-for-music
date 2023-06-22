@@ -19,10 +19,10 @@ const SideContent : FC = () => {
   return (
     <div className="w-full h-full border border-white/20 rounded-md flex flex-col justify-between text-center py-6">
 
-      <div className="">
+      <Link to="/home">
         <h1 className="text-6xl font-bold -skew-y-3 bg-spotify-green pb-1">SNM</h1>
         <h3 className="-skew-y-3 text-lg font-bold">Social Network for Music</h3>
-      </div>
+      </Link>
 
       <div className="">
         {links.map(l =>
