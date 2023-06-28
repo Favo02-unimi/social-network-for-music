@@ -111,6 +111,15 @@ usersRouter.patch("/edit", authenticateUser, async (req, res) => {
     }
 
     user.username = username
+
+    // update all playlists user is creator
+    user.playlists
+      .filter(p => p.isCreator)
+      .forEach(async playlist => {
+        const pl = await Playlist.findById(playlist.id)
+        pl.creator = username
+        await pl.save()
+      })
   }
 
   if (newPassword) {
