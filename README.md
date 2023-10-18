@@ -4,11 +4,11 @@
 
 Deployed _(automatically)_ at [socialnetworkformusic.favo02.dev](https://socialnetworkformusic.favo02.dev) (or [snm.favo02.dev](https://snm.favo02.dev), a bit shorter).
 
-## **Documentation (Relazione)**:
+## **Documentation**:
 
-_In italian:_ [RELAZIONE.md](RELAZIONE.md)
+_In italian:_
 
-<br>
+- [Relazione](RELAZIONE.md) (contains both installation manual and technical documentation)
 
 ## Workflow
 
